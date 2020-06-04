@@ -14,20 +14,32 @@ import PySimpleGUI as sg
 sg.theme(new_theme="DarkBrown1")
 sg.theme_background_color(color='#362217')
 
-def hacer_fila(num_fila):
+def hacer_fila(num_fila,fichas_especiales):
     lis = []
     keys = []
     for i in range(0,15):
-        lis.append(sg.Button(" ",key=str(num_fila)+"-"+str(i),pad=(0,0),size=(3,1),disabled=True,button_color=('black','#E5BE7D'),disabled_button_color=('black','#E5BE7D')))
+        nom=str(num_fila)+"-"+str(i)
+        if (nom in fichas_especiales["+2"]):
+            lis.append(sg.Button(" ",key=nom,pad=(0,0),size=(3,1),disabled=True,button_color=('black','#2283BB'),disabled_button_color=('black','#2283BB')))
+        elif (nom in fichas_especiales["+3"]):
+            lis.append(sg.Button(" ",key=nom,pad=(0,0),size=(3,1),disabled=True,button_color=('black','#45BB22'),disabled_button_color=('black','#45BB22')))
+        elif(nom in fichas_especiales["-1"]):
+            lis.append(sg.Button(" ",key=nom,pad=(0,0),size=(3,1),disabled=True,button_color=('black','#F0B121'),disabled_button_color=('black','#F0B121')))
+        elif(nom in fichas_especiales["-2"]):
+            lis.append(sg.Button(" ",key=nom,pad=(0,0),size=(3,1),disabled=True,button_color=('black','#F06C21'),disabled_button_color=('black','#F06C21')))
+        elif(nom in fichas_especiales["-3"]):
+            lis.append(sg.Button(" ",key=nom,pad=(0,0),size=(3,1),disabled=True,button_color=('black','#F02121'),disabled_button_color=('black','#F02121')))
+        else:
+            lis.append(sg.Button(" ",key=nom,pad=(0,0),size=(3,1),disabled=True,button_color=('black','#E5BE7D'),disabled_button_color=('black','#E5BE7D')))
         keys.append(str(num_fila)+"-"+str(i))
         
     return (lis,keys)
         
-def hacer_tablero():
+def hacer_tablero(fichas_especiales):
     lis = []
     keys = []
     for i in range(0,15):
-        valores = hacer_fila(i)
+        valores = hacer_fila(i,fichas_especiales)
         lis.append(valores[0])   
         keys=keys+valores[1]
 
@@ -42,7 +54,7 @@ def hacer_filafichasJ():
 def hacer_filafichasM():
     lis = []
     for i in range(0,7):
-        lis.append(sg.Button(" ",key="f-"+str(i+100),pad=(0,0),disabled=True,image_filename="google.png",image_size=(30,25)))
+        lis.append(sg.Button(" ",key="f-"+str(i+100),pad=(0,0),disabled=True))
     return lis
 
 def deshabilitar_tablero(pantalla_juego):
@@ -64,10 +76,14 @@ def crear_bolsa():
     
     return bolsa
 
-
+fichas_especiales={"+2":["1-5","1-9","5-1","5-13","6-6","6-8","8-6","8-8","9-1","9-13","13-5","13-9"],
+                    "+3":["0-3","0-11","2-6","2-8","3-0","3-7","3-14","6-2","6-12","7-3","7-11","8-2","8-12","11-0","11-14","11-7","12-6","12-8","14-3"],
+                    "-3":["0-0","0-7","0-14","7-0","7-14","14-0","14-7","14-14"],
+                    "-2":["1-1","1-13","2-2","2-12","12-2","12-12","13-1","13-13"],
+                    "-1":["3-3","3-11","4-4","4-10","5-5","5-9","9-5","9-9","10-4","10-10","11-3","11-11"]}
 bolsa=crear_bolsa()
 valores_fichas=["f-0","f-1","f-2","f-3","f-4","f-5","f-6"]
-valores_tablero= hacer_tablero()
+valores_tablero= hacer_tablero(fichas_especiales)
 keys_tablero=valores_tablero[1]
 layout_tablero = valores_tablero[0]
 layout_fichasMaquina = [hacer_filafichasM()]

@@ -69,7 +69,6 @@ layout_barraDate = [
     [sg.Text("Tus puntos:"),sg.Text("(puntos del jugador)")],
     [sg.Text("Turno:"),sg.Text("(turno correspondiente)")],
     [sg.Button("Confirmar Jugada")],
-    [sg.Button(image_filename="bolsa_fichas.jpg")],
     [sg.Button("Cambiar fichas")],
     [sg.Text("Seleccione las fichas que desea cambiar",visible=False)],
     [sg.Button("Aceptar",visible=False)]

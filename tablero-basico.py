@@ -20,15 +20,15 @@ def hacer_tablero(casillas_especiales):
         for i in range(0,15):
             nom=str(num_fila)+"-"+str(i)
             if (nom in casillas_especiales["+2"]):
-                lis.append(sg.Button(" ",key=nom,pad=(0,0),size=(3,1),disabled=True,button_color=('black','#2283BB'),disabled_button_color=('black','#2283BB')))
+                lis.append(sg.Button("+2",key=nom,pad=(0,0),size=(3,1),disabled=True,button_color=('black','#2283BB'),disabled_button_color=('black','#2283BB')))
             elif (nom in casillas_especiales["+3"]):
-                lis.append(sg.Button(" ",key=nom,pad=(0,0),size=(3,1),disabled=True,button_color=('black','#45BB22'),disabled_button_color=('black','#45BB22')))
+                lis.append(sg.Button("+3",key=nom,pad=(0,0),size=(3,1),disabled=True,button_color=('black','#45BB22'),disabled_button_color=('black','#45BB22')))
             elif(nom in casillas_especiales["-1"]):
-                lis.append(sg.Button(" ",key=nom,pad=(0,0),size=(3,1),disabled=True,button_color=('black','#F0B121'),disabled_button_color=('black','#F0B121')))
+                lis.append(sg.Button("-1",key=nom,pad=(0,0),size=(3,1),disabled=True,button_color=('black','#F0B121'),disabled_button_color=('black','#F0B121')))
             elif(nom in casillas_especiales["-2"]):
-                lis.append(sg.Button(" ",key=nom,pad=(0,0),size=(3,1),disabled=True,button_color=('black','#F06C21'),disabled_button_color=('black','#F06C21')))
+                lis.append(sg.Button("-2",key=nom,pad=(0,0),size=(3,1),disabled=True,button_color=('black','#F06C21'),disabled_button_color=('black','#F06C21')))
             elif(nom in casillas_especiales["-3"]):
-                lis.append(sg.Button(" ",key=nom,pad=(0,0),size=(3,1),disabled=True,button_color=('black','#F02121'),disabled_button_color=('black','#F02121')))
+                lis.append(sg.Button("-3",key=nom,pad=(0,0),size=(3,1),disabled=True,button_color=('black','#F02121'),disabled_button_color=('black','#F02121')))
             else:            
                 lis.append(sg.Button(" ",key=str(num_fila)+"-"+str(i),pad=(0,0),size=(3,1),disabled=True,disabled_button_color=('black','white'),button_color=('black','white')))
             keys.append(str(num_fila)+"-"+str(i))
@@ -61,7 +61,7 @@ def fila_fichasJ():
     lis = []
     keys = []
     for i in range(0,7):
-        lis.append(sg.Button(str(i),key="fJ-"+str(i),pad=(0,0),size=(7,1),disabled_button_color=('black','white'),button_color=('black','white')))
+        lis.append(sg.Button(str(i),key="fJ-"+str(i),pad=(0,0),size=(7,1),disabled_button_color=('#747678','#747678'),button_color=('black','white')))
         keys.append("fJ-"+str(i)) 
 
     return (lis,keys)
@@ -69,7 +69,7 @@ def fila_fichasJ():
 def fila_fichasM():
     lis = []
     for i in range(0,7):
-        lis.append(sg.Button(" ",key="fM-"+str(i),pad=(0,0),size=(7,1),disabled_button_color=('black','white'),button_color=('black','white')))
+        lis.append(sg.Button(" ",key="fM-"+str(i),pad=(0,0),size=(7,1),disabled_button_color=('black','white'),button_color=('black','white'),disabled=True))
 
     return lis
 
@@ -110,6 +110,7 @@ pantalla_juego = sg.Window("Scrabble",layout,background_color="#71B3BD",size=(72
 def main():
     while True:
         event, values = pantalla_juego.read()
+        print(values)
         if(event is None):
             break
         elif(event in keys_fichasJ):

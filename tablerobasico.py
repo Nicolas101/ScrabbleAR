@@ -1,62 +1,56 @@
 import PySimpleGUI as sg
+import tableros
+import random
 
 # {---------------------------------------------------------------------------------}
 # {----------------------------------- TABLERO -------------------------------------}
 # {---------------------------------------------------------------------------------}
 
-def habilitar_tablero(pantalla_juego):
-    for i in range(0,15):
-        for j in range(0,15):
+def habilitar_tablero(pantalla_juego,tam):
+    for i in range(0,tam):
+        for j in range(0,tam):
             key = str(i)+"-"+str(j)
             pantalla_juego[key].Update(disabled=False)
 
-def desabilitar_tablero(pantalla_juego):
-    for i in range(0,15):
-        for j in range(0,15):
+def desabilitar_tablero(pantalla_juego,tam):
+    for i in range(0,tam):
+        for j in range(0,tam):
             key = str(i)+"-"+str(j)
             pantalla_juego[key].Update(disabled=True)   
 
-def hacer_tablero(casillas_especiales):
-    def hacer_fila(num_fila,casillas_especiales):
-        lis = []
-        keys = []
-        for i in range(0,15):
-            nom=str(num_fila)+"-"+str(i)
-            if (nom in casillas_especiales["+2"]):
-                lis.append(sg.Button("+2",key=nom,pad=(0,0),size=(3,1),disabled=True,button_color=('black','#2283BB'),disabled_button_color=('black','#2283BB')))
-            elif (nom in casillas_especiales["+3"]):
-                lis.append(sg.Button("+3",key=nom,pad=(0,0),size=(3,1),disabled=True,button_color=('black','#45BB22'),disabled_button_color=('black','#45BB22')))
-            elif(nom in casillas_especiales["-1"]):
-                lis.append(sg.Button("-1",key=nom,pad=(0,0),size=(3,1),disabled=True,button_color=('black','#F0B121'),disabled_button_color=('black','#F0B121')))
-            elif(nom in casillas_especiales["-2"]):
-                lis.append(sg.Button("-2",key=nom,pad=(0,0),size=(3,1),disabled=True,button_color=('black','#F06C21'),disabled_button_color=('black','#F06C21')))
-            elif(nom in casillas_especiales["-3"]):
-                lis.append(sg.Button("-3",key=nom,pad=(0,0),size=(3,1),disabled=True,button_color=('black','#F02121'),disabled_button_color=('black','#F02121')))
-            else:            
-                lis.append(sg.Button(" ",key=str(num_fila)+"-"+str(i),pad=(0,0),size=(3,1),disabled=True,disabled_button_color=('black','white'),button_color=('black','white')))
-            keys.append(str(num_fila)+"-"+str(i))
-        
-        return (lis,keys) 
-
-    lis = []
-    keys = []
-    for i in range(0,15):
-        valores = hacer_fila(i,casillas_especiales)
-        lis.append(valores[0])   
-        keys = keys + valores[1]
-
-    return (lis,keys)
 
 
-casillas_especiales={"+2":["1-5","1-9","5-1","5-13","6-6","6-8","8-6","8-8","9-1","9-13","13-5","13-9"],
-                    "+3":["0-3","0-11","2-6","2-8","3-0","3-7","3-14","6-2","6-12","7-3","7-11","8-2","8-12","11-0","11-14","11-7","12-6","12-8","14-3"],
-                    "-3":["0-0","0-7","0-14","7-0","7-14","14-0","14-7","14-14"],
-                    "-2":["1-1","1-13","2-2","2-12","12-2","12-12","13-1","13-13"],
-                    "-1":["3-3","3-11","4-4","4-10","5-5","5-9","9-5","9-9","10-4","10-10","11-3","11-11"]}
-
-valores_tablero = hacer_tablero(casillas_especiales)  
+valores_tablero = tableros.main() 
 keys_tablero = valores_tablero[1]   # Lista de keys de cada boton del tablero
-layout_tablero = valores_tablero[0]   
+layout_tablero = valores_tablero[0]
+tamanio=valores_tablero[2]  
+
+
+# {---------------------------------------------------------------------------------}
+# {-------------------------------- BOLSA DE FICHAS --------------------------------}
+# {---------------------------------------------------------------------------------}
+
+
+
+def letra_random(bolsa_fichas):
+    letras = list(bolsa_fichas.keys())
+    string_letras=''
+    for i in letras:
+        string_letras=string_letras+(i*bolsa_fichas[i]['cantidad'])
+    print(string_letras)
+    return random.choice(string_letras)
+
+
+bolsa_fichas = {'A':{'puntuacion':1,'cantidad':11},'B':{'puntuacion':3,'cantidad':3},'C':{'puntuacion':2,'cantidad':4},
+                'D':{'puntuacion':2,'cantidad':4},'E':{'puntuacion':1,'cantidad':11},'F':{'puntuacion':4,'cantidad':2},
+                'G':{'puntuacion':2,'cantidad':2},'H':{'puntuacion':4,'cantidad':2},'I':{'puntuacion':1,'cantidad':6},
+                'J':{'puntuacion':6,'cantidad':2},'K':{'puntuacion':8,'cantidad':1},'L':{'puntuacion':1,'cantidad':4},
+                'M':{'puntuacion':3,'cantidad':3},'N':{'puntuacion':1,'cantidad':5},'Ñ':{'puntuacion':8,'cantidad':1},
+                'O':{'puntuacion':1,'cantidad':8},'P':{'puntuacion':3,'cantidad':2},'Q':{'puntuacion':8,'cantidad':1},
+                'R':{'puntuacion':1,'cantidad':4},'S':{'puntuacion':1,'cantidad':7},'T':{'puntuacion':1,'cantidad':4},
+                'U':{'puntuacion':1,'cantidad':6},'V':{'puntuacion':4,'cantidad':2},'W':{'puntuacion':8,'cantidad':1},
+                'X':{'puntuacion':8,'cantidad':1},'Y':{'puntuacion':4,'cantidad':1},'Z':{'puntuacion':10,'cantidad':1}}
+
 
 
 # {---------------------------------------------------------------------------------}
@@ -67,7 +61,7 @@ def fila_fichasJ():
     lis = []
     keys = []
     for i in range(0,7):
-        lis.append(sg.Button(str(i),key="fJ-"+str(i),pad=(0,0),size=(7,1),disabled_button_color=('#747678','#747678'),button_color=('black','white')))
+        lis.append(sg.Button(letra_random(bolsa_fichas),key="fJ-"+str(i),pad=(0,0),size=(7,1),disabled_button_color=('#747678','#747678'),button_color=('black','white')))
         keys.append("fJ-"+str(i)) 
 
     return (lis,keys)
@@ -90,6 +84,10 @@ layout_fichasJugador = [valores_fichasJugador[0]]
 # {------------------------------ BARRA DE DATOS -----------------------------------}
 # {---------------------------------------------------------------------------------}
 
+
+
+
+
 layout_barraDate = [
     [sg.Text("DATOS DE PARTIDA")],
     [sg.Text("Tiempo:"),sg.Text("(tiempo correspondiente)")],
@@ -104,9 +102,11 @@ layout_barraDate = [
 ]
 
 
+
 # {---------------------------------------------------------------------------------}
 # {----------------------------- PANTALLA DE JUEGO ---------------------------------}
 # {---------------------------------------------------------------------------------}
+
 layout_game = [  
     [sg.Column(layout_fichasMaquina,pad=((0,0),(0,20)))],
     [sg.Column(layout_tablero)],
@@ -117,7 +117,7 @@ layout = [
     [sg.Column(layout_game,background_color="#71B3BD"), sg.Column(layout_barraDate,element_justification="center",size=(223,450))]
 ]
 
-pantalla_juego = sg.Window("Scrabble",layout,background_color="#71B3BD",size=(725,480))
+pantalla_juego = sg.Window("Scrabble",layout,background_color="#71B3BD")
 
 
 # {---------------------------------------------------------------------------------}
@@ -131,12 +131,12 @@ def main():
         if(event is None):
             break
         elif(event in keys_fichasJ):
-            habilitar_tablero(pantalla_juego)
+            habilitar_tablero(pantalla_juego,tamanio)
             ficha_clicked = event
         elif(event in keys_tablero):
             pantalla_juego[event].Update(pantalla_juego[ficha_clicked].GetText())
             pantalla_juego[ficha_clicked].Update(disabled=True)
-            desabilitar_tablero(pantalla_juego)
+            desabilitar_tablero(pantalla_juego,tamanio)
         
     pantalla_juego.close() 
 

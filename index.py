@@ -1,9 +1,9 @@
-class juego():
-    pass
-
+import PySimpleGUI as sg
+import menubasico as menu
 
 def main():
-    pass
+    menu.main()
+
 
 if __name__ == "__main__":
     main()

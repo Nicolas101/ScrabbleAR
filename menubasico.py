@@ -1,4 +1,5 @@
 import PySimpleGUI as sg 
+import tablerobasico as tablero
 
 layout = [
     [sg.Text("ScrabbleAR - Game",background_color="#71B3BD",font=("Fixedsys",40),pad=((0,0),(30,70)))],
@@ -13,6 +14,12 @@ def main():
         event,values = pantalla_menu.read()
         if event is None:
             break
+        elif event == "Jugar":
+            print("jaja")
+            pantalla_menu.Hide()
+            tablero.main()
+            pantalla_menu.UnHide()
+            
 
     pantalla_menu.close()
 

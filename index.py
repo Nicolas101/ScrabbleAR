@@ -1,8 +1,8 @@
 import PySimpleGUI as sg
-import menubasico as menu
+import pantallaMenu 
 
 def main():
-    menu.main()
+    pantallaMenu.main()
 
 
 if __name__ == "__main__":

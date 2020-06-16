@@ -1,43 +1,40 @@
 import PySimpleGUI as sg
-import tableros
+from claseTablero import Tablero
+from claseTablero import Casilla
 import random
 
 # {---------------------------------------------------------------------------------}
 # {----------------------------------- TABLERO -------------------------------------}
-# {---------------------------------------------------------------------------------}
+# {---------------------------------------------------------------------------------}  
 
-def habilitar_tablero(pantalla_juego,tam):
-    for i in range(0,tam):
-        for j in range(0,tam):
-            key = str(i)+"-"+str(j)
-            pantalla_juego[key].Update(disabled=False)
+num_random = random.randint(1,3)
 
-def desabilitar_tablero(pantalla_juego,tam):
-    for i in range(0,tam):
-        for j in range(0,tam):
-            key = str(i)+"-"+str(j)
-            pantalla_juego[key].Update(disabled=True)   
+casillas_especiales1 = {
+    "+2":(("2-6","2-10","6-2","6-14","7-7","7-9","9-7","9-9","10-2","10-14","14-6","14-10",), "#2283BB"),
+    "+3":(("1-4","1-12","3-7","3-9","4-1","4-8","4-15","7-3","7-13","8-4","8-12","9-3","9-13","12-1","12-15","12-8","13-7","13-9","15-4"), "#45BB22"),
+    "-3":(("1-1","1-8","1-15","8-1","8-15","15-1","15-8","15-15"), '#F02121'),
+    "-2":(("2-2","2-14","3-3","3-13","13-3","13-13","14-2","14-14"), '#F06C21'),
+    "-1":(("4-4","4-12","5-5","5-11","6-6","6-10","10-6","10-10","11-5","11-11","12-4","12-12"), '#F0B121')
+}
+casillas_especiales2 = {}
+casillas_especiales3 = {}
 
-
-
-valores_tablero = tableros.main() 
-keys_tablero = valores_tablero[1]   # Lista de keys de cada boton del tablero
-layout_tablero = valores_tablero[0]
-tamanio=valores_tablero[2]  
-
+if num_random == 1:
+    tablero = Tablero(15,15,casillas_especiales1)
+elif num_random == 2:
+    tablero = Tablero(20,20,casillas_especiales1)#2
+else:
+    tablero = Tablero(25,25,casillas_especiales1)#3
 
 # {---------------------------------------------------------------------------------}
 # {-------------------------------- BOLSA DE FICHAS --------------------------------}
 # {---------------------------------------------------------------------------------}
-
-
 
 def letra_random(bolsa_fichas):
     letras = list(bolsa_fichas.keys())
     string_letras=''
     for i in letras:
         string_letras=string_letras+(i*bolsa_fichas[i]['cantidad'])
-    print(string_letras)
     return random.choice(string_letras)
 
 
@@ -51,8 +48,6 @@ bolsa_fichas = {'A':{'puntuacion':1,'cantidad':11},'B':{'puntuacion':3,'cantidad
                 'U':{'puntuacion':1,'cantidad':6},'V':{'puntuacion':4,'cantidad':2},'W':{'puntuacion':8,'cantidad':1},
                 'X':{'puntuacion':8,'cantidad':1},'Y':{'puntuacion':4,'cantidad':1},'Z':{'puntuacion':10,'cantidad':1}}
 
-
-
 # {---------------------------------------------------------------------------------}
 # {------------------------------ FILA DE FICHAS -----------------------------------}
 # {---------------------------------------------------------------------------------}
@@ -60,7 +55,7 @@ bolsa_fichas = {'A':{'puntuacion':1,'cantidad':11},'B':{'puntuacion':3,'cantidad
 def fila_fichasJ():
     lis = []
     keys = []
-    for i in range(0,7):
+    for i in range(1,8):
         lis.append(sg.Button(letra_random(bolsa_fichas),key="fJ-"+str(i),pad=(0,0),size=(7,1),disabled_button_color=('#747678','#747678'),button_color=('black','white')))
         keys.append("fJ-"+str(i)) 
 
@@ -68,7 +63,7 @@ def fila_fichasJ():
 
 def fila_fichasM():
     lis = []
-    for i in range(0,7):
+    for i in range(1,8):
         lis.append(sg.Button(" ",key="fM-"+str(i),pad=(0,0),size=(7,1),disabled_button_color=('black','white'),button_color=('black','white'),disabled=True))
 
     return lis
@@ -84,10 +79,6 @@ layout_fichasJugador = [valores_fichasJugador[0]]
 # {------------------------------ BARRA DE DATOS -----------------------------------}
 # {---------------------------------------------------------------------------------}
 
-
-
-
-
 layout_barraDate = [
     [sg.Text("DATOS DE PARTIDA")],
     [sg.Text("Tiempo:"),sg.Text("(tiempo correspondiente)")],
@@ -101,15 +92,13 @@ layout_barraDate = [
     [sg.Button("Aceptar",visible=False)]
 ]
 
-
-
 # {---------------------------------------------------------------------------------}
 # {----------------------------- PANTALLA DE JUEGO ---------------------------------}
 # {---------------------------------------------------------------------------------}
 
 layout_game = [  
     [sg.Column(layout_fichasMaquina,pad=((0,0),(0,20)))],
-    [sg.Column(layout_tablero)],
+    [sg.Column(tablero.getDiseño())],
     [sg.Column(layout_fichasJugador,pad=((0,0),(20,0)))]
 ]
 
@@ -131,12 +120,12 @@ def main():
         if(event is None):
             break
         elif(event in keys_fichasJ):
-            habilitar_tablero(pantalla_juego,tamanio)
+            tablero.habilitar(pantalla_juego)
             ficha_clicked = event
-        elif(event in keys_tablero):
+        elif(event in tablero.getKeys()):
             pantalla_juego[event].Update(pantalla_juego[ficha_clicked].GetText())
             pantalla_juego[ficha_clicked].Update(disabled=True)
-            desabilitar_tablero(pantalla_juego,tamanio)
+            tablero.deshabilitar(pantalla_juego)
         
     pantalla_juego.close() 
 

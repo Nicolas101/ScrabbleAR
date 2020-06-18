@@ -1,6 +1,8 @@
 import PySimpleGUI as sg
 from claseTablero import Tablero
 from claseTablero import Casilla
+from claseTablero import FilaFichas
+from claseTablero import BolsaFichas
 import random
 
 # {---------------------------------------------------------------------------------}
@@ -20,25 +22,17 @@ casillas_especiales2 = {}
 casillas_especiales3 = {}
 
 if num_random == 1:
-    tablero = Tablero(15,15,casillas_especiales1)
+    tablero = Tablero(15,casillas_especiales1)
 elif num_random == 2:
-    tablero = Tablero(20,20,casillas_especiales1)#2
+    tablero = Tablero(18,casillas_especiales1)#2
 else:
-    tablero = Tablero(25,25,casillas_especiales1)#3
+    tablero = Tablero(20,casillas_especiales1)#3
 
 # {---------------------------------------------------------------------------------}
 # {-------------------------------- BOLSA DE FICHAS --------------------------------}
 # {---------------------------------------------------------------------------------}
 
-def letra_random(bolsa_fichas):
-    letras = list(bolsa_fichas.keys())
-    string_letras=''
-    for i in letras:
-        string_letras=string_letras+(i*bolsa_fichas[i]['cantidad'])
-    return random.choice(string_letras)
-
-
-bolsa_fichas = {'A':{'puntuacion':1,'cantidad':11},'B':{'puntuacion':3,'cantidad':3},'C':{'puntuacion':2,'cantidad':4},
+dic_fichas = {'A':{'puntuacion':1,'cantidad':11},'B':{'puntuacion':3,'cantidad':3},'C':{'puntuacion':2,'cantidad':4},
                 'D':{'puntuacion':2,'cantidad':4},'E':{'puntuacion':1,'cantidad':11},'F':{'puntuacion':4,'cantidad':2},
                 'G':{'puntuacion':2,'cantidad':2},'H':{'puntuacion':4,'cantidad':2},'I':{'puntuacion':1,'cantidad':6},
                 'J':{'puntuacion':6,'cantidad':2},'K':{'puntuacion':8,'cantidad':1},'L':{'puntuacion':1,'cantidad':4},
@@ -48,32 +42,14 @@ bolsa_fichas = {'A':{'puntuacion':1,'cantidad':11},'B':{'puntuacion':3,'cantidad
                 'U':{'puntuacion':1,'cantidad':6},'V':{'puntuacion':4,'cantidad':2},'W':{'puntuacion':8,'cantidad':1},
                 'X':{'puntuacion':8,'cantidad':1},'Y':{'puntuacion':4,'cantidad':1},'Z':{'puntuacion':10,'cantidad':1}}
 
+bolsa_fichas = BolsaFichas(dic_fichas)
+
 # {---------------------------------------------------------------------------------}
 # {------------------------------ FILA DE FICHAS -----------------------------------}
 # {---------------------------------------------------------------------------------}
 
-def fila_fichasJ():
-    lis = []
-    keys = []
-    for i in range(1,8):
-        lis.append(sg.Button(letra_random(bolsa_fichas),key="fJ-"+str(i),pad=(0,0),size=(7,1),disabled_button_color=('#747678','#747678'),button_color=('black','white')))
-        keys.append("fJ-"+str(i)) 
-
-    return (lis,keys)
-
-def fila_fichasM():
-    lis = []
-    for i in range(1,8):
-        lis.append(sg.Button(" ",key="fM-"+str(i),pad=(0,0),size=(7,1),disabled_button_color=('black','white'),button_color=('black','white'),disabled=True))
-
-    return lis
-
-layout_fichasMaquina = [fila_fichasM()]
-
-valores_fichasJugador = fila_fichasJ()
-keys_fichasJ = valores_fichasJugador[1]
-layout_fichasJugador = [valores_fichasJugador[0]]   
-
+fila_fichasJ = FilaFichas(key_add='FJ', letras=bolsa_fichas.letras_random(7))
+fila_fichasM = FilaFichas(key_add='FM', letras=bolsa_fichas.letras_random(7))
 
 # {---------------------------------------------------------------------------------}
 # {------------------------------ BARRA DE DATOS -----------------------------------}
@@ -88,7 +64,7 @@ layout_barraDate = [
     [sg.Text("Turno:"),sg.Text("(turno correspondiente)")],
     [sg.Button("Confirmar Jugada")],
     [sg.Button("Cambiar fichas")],
-    [sg.Text("Seleccione las fichas que desea cambiar",visible=False)],
+    [sg.Text("Seleccione fichas para cambiar",key='cambiar_fichas_text',visible=False)],
     [sg.Button("Aceptar",visible=False)]
 ]
 
@@ -97,9 +73,9 @@ layout_barraDate = [
 # {---------------------------------------------------------------------------------}
 
 layout_game = [  
-    [sg.Column(layout_fichasMaquina,pad=((0,0),(0,20)))],
-    [sg.Column(tablero.getDiseño())],
-    [sg.Column(layout_fichasJugador,pad=((0,0),(20,0)))]
+    [sg.Column(fila_fichasM.getLayout(),pad=((0,0),(0,20)))],
+    [sg.Column(tablero.getLayout())],
+    [sg.Column(fila_fichasJ.getLayout(),pad=((0,0),(20,0)))]
 ]
 
 layout = [
@@ -116,17 +92,24 @@ pantalla_juego = sg.Window("Scrabble",layout,background_color="#71B3BD")
 def main():
     while True:
         event, values = pantalla_juego.read()
-        print(values)
         if(event is None):
             break
-        elif(event in keys_fichasJ):
-            tablero.habilitar(pantalla_juego)
-            ficha_clicked = event
-        elif(event in tablero.getKeys()):
-            pantalla_juego[event].Update(pantalla_juego[ficha_clicked].GetText())
-            pantalla_juego[ficha_clicked].Update(disabled=True)
+        elif(event in fila_fichasJ.getKeysFila()): # si clickeo en una ficha
+            tablero.habilitar(pantalla_juego) 
+            ficha_clicked = event # guardo la ficha que eligio
+        elif(event in tablero.getKeysCasillas()): # si clickeo en una casilla del tablero
+            dato = pantalla_juego[ficha_clicked].GetText()
+            tablero.insertar(dato,event,pantalla_juego)
+            fila_fichasJ.deshabilitar_ficha(ficha_clicked, pantalla_juego)
             tablero.deshabilitar(pantalla_juego)
-        
+        elif(event == 'Cambiar fichas'):
+            pantalla_juego['cambiar_fichas_text'].Update(visible=True)
+            pantalla_juego['Aceptar'].Update(visible=True)
+        elif(event == 'Aceptar'):
+            pantalla_juego['cambiar_fichas_text'].Update(visible=False)
+            pantalla_juego['Aceptar'].Update(visible=False)
+
+
     pantalla_juego.close() 
 
 if __name__ == "__main__":

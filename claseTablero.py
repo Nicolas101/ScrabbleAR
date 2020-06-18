@@ -1,15 +1,18 @@
 import PySimpleGUI as sg 
 import random
 
+# {---------------------------------------------------------------------------------}
+# {------------------------------ CLASE CASILLA ------------------------------------}
+# {---------------------------------------------------------------------------------}
 
 class Casilla():
-    def __init__(self, contenido='', tamaño=(3,1), color='#FFFFFF', clave=None, estado='libre'):
+    def __init__(self, contenido='', tamaño=None, color='#FFFFFF', clave=None, ocupado=False):
         self._contenido = contenido
         self._tamaño = tamaño
         self._color = color
         self._key = clave
-        self._estado = estado
-        self._diseño = sg.Button(self._contenido,key=self._key, pad=(0,0), size=self._tamaño, button_color=('black',self._color),disabled_button_color=('black',self._color))
+        self._ocupado = ocupado
+        self._diseño = sg.Button(self._contenido,key=self._key, pad=(0,0), size=self._tamaño, button_color=('black',self._color),disabled_button_color=('black',self._color), disabled=self._ocupado)
 
     def getKey(self):
         return self._key
@@ -17,75 +20,144 @@ class Casilla():
     def getDiseño(self):
         return self._diseño
 
+    def habilitar(self):
+        self._ocupado = False
 
+    def deshabilitar(self):
+        self._ocupado = True
+
+    def setContenido(self,dato):
+        self._contenido = dato
+
+# {---------------------------------------------------------------------------------}
+# {------------------------------ CLASE TABLERO ------------------------------------}
+# {---------------------------------------------------------------------------------}
 
 class Tablero:
-    def __init__(self,filas=0,columnas=0,casilas_especiales=None):
-        self._cant_filas = filas
-        self._cant_columnas = columnas
+    def __init__(self,tamaño=0,casilas_especiales=None):
+        self._tamaño = tamaño
         self._casillas_especiales = casilas_especiales
-        self._key_casillas = []
-        self._diseño = self.armar()
-        
-    def getDiseño(self):
-        return self._diseño
+        self._lista_casillas = []
+        self._layout = self._armar()
+          
+    def getLayout(self):
+        return self._layout
 
-    def getKeys(self):
-        return self._key_casillas
+    def getKeysCasillas(self):
+        lista_keys = []
+        for casilla in self._lista_casillas:
+            lista_keys.append(casilla.getKey())
+        return lista_keys
 
-    def armar(self):
+    def _armar(self):
         layout = [] 
-        for i in range(1, self._cant_filas + 1):
+        for i in range(1, self._tamaño + 1):
             fila_casillas = []
-            for j in range(1, self._cant_columnas + 1):
+            for j in range(1, self._tamaño + 1):
                 especial = False
                 key = str(i)+"-"+str(j)
                 for clave in self._casillas_especiales:
                     if(key in self._casillas_especiales[clave][0]):
-                        casilla = Casilla(clave=key, contenido=clave, color=self._casillas_especiales[clave][1]) #casilla especial
+                        casilla = Casilla(clave=key,tamaño=(3,1), contenido=clave, color=self._casillas_especiales[clave][1], ocupado=True) #casilla especial
                         especial = True
                 if not especial:
-                    casilla = Casilla(clave=key) #casilla normal
-                fila_casillas.append(casilla.getDiseño()) 
-                self._key_casillas.append(key) 
+                    casilla = Casilla(clave=key,tamaño=(3,1), ocupado=True) #casilla normal
+                fila_casillas.append(casilla.getDiseño())
+                self._lista_casillas.append(casilla)  
             layout.append(fila_casillas)
         return layout
 
     def habilitar(self, pantalla_juego):
-        for i in range(1,self._cant_filas + 1):
-            for j in range(1,self._cant_filas + 1):
-                key = str(i)+"-"+str(j)
-                pantalla_juego[key].Update(disabled=False)
+        for casilla in self._lista_casillas:
+            pantalla_juego[casilla.getKey()].Update(disabled=False)
+            casilla.habilitar()
     
     def deshabilitar(self, pantalla_juego):
-        for i in range(1,self._cant_filas + 1):
-            for j in range(1,self._cant_filas + 1):
-                key = str(i)+"-"+str(j)
-                pantalla_juego[key].Update(disabled=True)
+        for casilla in self._lista_casillas:
+            pantalla_juego[casilla.getKey()].Update(disabled=True)
+            casilla.deshabilitar()
 
+    def insertar(self,dato,key,pantalla_juego):
+        pantalla_juego[key].Update(dato)
+        aux = key.split('-')
+        self._lista_casillas[((int(aux[1])-1)+(int(aux[0])-1)*self._tamaño)].setContenido(dato)
 
-# PRUEBA 
-def main():
-    num_random = random.randint(1,3)
+# {---------------------------------------------------------------------------------}
+# {--------------------------- CLASE FILA DE FICHAS --------------------------------}
+# {---------------------------------------------------------------------------------}
 
-    casillas_especiales1 = {
-        "+2":(("2-6","2-10","6-2","6-14","7-7","7-9","9-7","9-9","10-2","10-14","14-6","14-10",), "#2283BB"),
-        "+3":(("1-4","1-12","3-7","3-9","4-1","4-8","4-15","7-3","7-13","8-4","8-12","9-3","9-13","12-1","12-15","12-8","13-7","13-9","15-4"), "#45BB22"),
-        "-3":(("1-1","1-8","1-15","8-1","8-15","15-1","15-8","15-15"), '#F02121'),
-        "-2":(("2-2","2-14","3-3","3-13","13-3","13-13","14-2","14-14"), '#F06C21'),
-        "-1":(("4-4","4-12","5-5","5-11","6-6","6-10","10-6","10-10","11-5","11-11","12-4","12-12"), '#F0B121')
-    }
-    casillas_especiales2 = {}
-    casillas_especiales3 = {}
-
-    if num_random == 1:
-        tablero = Tablero(15,15,casillas_especiales1)
-    elif num_random == 2:
-        tablero = Tablero(20,20,casillas_especiales1)#2
-    else:
-        tablero = Tablero(25,25,casillas_especiales1)#3    
+class FilaFichas():
+    def __init__(self, fichas=7, key_add=None, letras=None):
+        self._cant_fichas = fichas
+        self._key_add = key_add
+        self._letras = letras 
+        self._fila_fichas = []
+        self._layout = self._armar() 
         
+    def _armar(self):
+        layout = []
+        for i in range(1,8):
+            key = self._key_add +'-'+ str(i)
+            if (self._key_add == 'FJ'):
+                ficha = Casilla(clave=key,tamaño=(7,1),contenido=self._letras[i-1]) # fichas del jugador
+            else:
+                ficha = Casilla(clave=key,tamaño=(7,1), ocupado=True) # fichas de la maquina
+            self._fila_fichas.append(ficha)
+            layout.append(ficha.getDiseño())     
+        return [layout]
+    
+    def habilitar_fila(self, pantalla_juego):
+        for ficha in self._fila_fichas:
+            pantalla_juego[ficha.getKey()].Update(disabled=False)
+            ficha.habilitar()
+
+    def deshabilitar_fila(self, pantalla_juego):
+        for ficha in self._fila_fichas:
+            pantalla_juego[ficha.getKey()].Update(disabled=True)
+            ficha.deshabilitar()
+            
+    def habilitar_ficha(self, key, pantalla_juego):
+        pantalla_juego[key].Update(disabled=False)
+        aux = key.split('-')
+        self._fila_fichas[int(aux[1])-1].habilitar()
 
 
-if __name__ == "__main__":
-    main()
+    def deshabilitar_ficha(self, key, pantalla_juego):
+        pantalla_juego[key].Update('', disabled=True)
+        aux = key.split('-')
+        self._fila_fichas[int(aux[1])-1].deshabilitar()
+
+    def getLayout(self):
+        return self._layout
+
+    def getKeysFila(self):
+        lista_keys = []
+        for ficha in self._fila_fichas:
+            lista_keys.append(ficha.getKey())
+        return lista_keys
+
+
+# {---------------------------------------------------------------------------------}
+# {--------------------------- CLASE BOLSA DE FICHAS -------------------------------}
+# {---------------------------------------------------------------------------------}
+
+class BolsaFichas():
+    def __init__(self, bolsa_fichas):
+        self._bolsa_fichas = bolsa_fichas
+
+    def letras_random(self, cantidad):
+        letras = list(self._bolsa_fichas.keys())
+        string_letras=''
+        for i in letras:
+            string_letras=string_letras+(i*self._bolsa_fichas[i]['cantidad'])
+        lista_letras=[]
+        for x in range(0,cantidad):
+            letra_elegida = random.choice(string_letras)
+            lista_letras.append(letra_elegida)
+            self._bolsa_fichas[letra_elegida]['cantidad']=self._bolsa_fichas[letra_elegida]['cantidad']-1
+        return lista_letras
+    
+    
+
+
+        

@@ -28,6 +28,9 @@ class Casilla():
 
     def setContenido(self,dato):
         self._contenido = dato
+    
+    def setColor(self,color):
+        self._color = color
 
 # {---------------------------------------------------------------------------------}
 # {------------------------------ CLASE TABLERO ------------------------------------}
@@ -78,19 +81,21 @@ class Tablero:
             casilla.deshabilitar()
 
     def insertar(self,dato,key,pantalla_juego):
-        pantalla_juego[key].Update(dato)
+        pantalla_juego[key].Update(dato, button_color=('white','#684225'), disabled_button_color=('white','#684225'))
         aux = key.split('-')
         self._lista_casillas[((int(aux[1])-1)+(int(aux[0])-1)*self._tamaño)].setContenido(dato)
+        self._lista_casillas[((int(aux[1])-1)+(int(aux[0])-1)*self._tamaño)].setColor('#684225')
 
 # {---------------------------------------------------------------------------------}
 # {--------------------------- CLASE FILA DE FICHAS --------------------------------}
 # {---------------------------------------------------------------------------------}
 
 class FilaFichas():
-    def __init__(self, fichas=7, key_add=None, letras=None):
-        self._cant_fichas = fichas
+    def __init__(self, cant_fichas=7, key_add=None, letras=None):
+        self._cant_fichas = cant_fichas
         self._key_add = key_add
         self._letras = letras 
+        self._ficha_selected = [False,None]
         self._fila_fichas = []
         self._layout = self._armar() 
         
@@ -99,33 +104,28 @@ class FilaFichas():
         for i in range(1,8):
             key = self._key_add +'-'+ str(i)
             if (self._key_add == 'FJ'):
-                ficha = Casilla(clave=key,tamaño=(7,1),contenido=self._letras[i-1]) # fichas del jugador
+                ficha = Casilla(clave=key, tamaño=(6,2),contenido=self._letras[i-1]) # fichas del jugador
             else:
-                ficha = Casilla(clave=key,tamaño=(7,1), ocupado=True) # fichas de la maquina
+                ficha = Casilla(clave=key, tamaño=(6,2), ocupado=True) # fichas de la maquina
             self._fila_fichas.append(ficha)
             layout.append(ficha.getDiseño())     
         return [layout]
     
-    def habilitar_fila(self, pantalla_juego):
+    def habilitarFila(self, pantalla_juego):
         for ficha in self._fila_fichas:
             pantalla_juego[ficha.getKey()].Update(disabled=False)
             ficha.habilitar()
 
-    def deshabilitar_fila(self, pantalla_juego):
+    def deshabilitarFila(self, pantalla_juego):
         for ficha in self._fila_fichas:
             pantalla_juego[ficha.getKey()].Update(disabled=True)
             ficha.deshabilitar()
-            
-    def habilitar_ficha(self, key, pantalla_juego):
-        pantalla_juego[key].Update(disabled=False)
-        aux = key.split('-')
-        self._fila_fichas[int(aux[1])-1].habilitar()
 
-
-    def deshabilitar_ficha(self, key, pantalla_juego):
-        pantalla_juego[key].Update('', disabled=True)
-        aux = key.split('-')
+    def deshabilitarFicha(self, pantalla_juego):
+        pantalla_juego[self._ficha_selected[1]].Update('', disabled=True,button_color=('black','#CCCCCC'))
+        aux = self._ficha_selected[1].split('-')
         self._fila_fichas[int(aux[1])-1].deshabilitar()
+        self._fila_fichas[int(aux[1])-1].setColor('#CCCCCC')
 
     def getLayout(self):
         return self._layout
@@ -135,6 +135,26 @@ class FilaFichas():
         for ficha in self._fila_fichas:
             lista_keys.append(ficha.getKey())
         return lista_keys
+
+    def marcarFichaSelected(self,pantalla_juego,key):
+        self._ficha_selected[0] = True
+        self._ficha_selected[1] = key       
+        aux = key.split('-')
+        self._fila_fichas[int(aux[1])-1].setColor("#5fefaa")
+        pantalla_juego[key].Update(button_color=('black',"#5fefaa"))
+
+    def desmarcarFichaSelected(self,pantalla_juego):
+        pantalla_juego[self._ficha_selected[1]].Update(button_color=('black','white'))
+        aux = self._ficha_selected[1].split('-')
+        self._fila_fichas[int(aux[1])-1].setColor("white")
+        self._ficha_selected[0] = False
+
+    def hayFichaSelected(self):
+        return self._ficha_selected[0]
+
+    def getFichaSelected(self):
+        return self._ficha_selected[1]
+
 
 
 # {---------------------------------------------------------------------------------}

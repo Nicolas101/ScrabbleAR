@@ -13,7 +13,7 @@ num_random = random.randint(1,3)
 
 casillas_especiales1 = {
     "+2":(("2-6","2-10","6-2","6-14","7-7","7-9","9-7","9-9","10-2","10-14","14-6","14-10",), "#2283BB"),
-    "+3":(("1-4","1-12","3-7","3-9","4-1","4-8","4-15","7-3","7-13","8-4","8-12","9-3","9-13","12-1","12-15","12-8","13-7","13-9","15-4"), "#45BB22"),
+    "+3":(("1-4","1-12","3-7","3-9","4-1","4-8","4-15","7-3","7-13","8-4","8-12","9-3","9-13","12-1","12-15","12-8","13-7","13-9","15-4","15-12"), "#45BB22"),
     "-3":(("1-1","1-8","1-15","8-1","8-15","15-1","15-8","15-15"), '#F02121'),
     "-2":(("2-2","2-14","3-3","3-13","13-3","13-13","14-2","14-14"), '#F06C21'),
     "-1":(("4-4","4-12","5-5","5-11","6-6","6-10","10-6","10-10","11-5","11-11","12-4","12-12"), '#F0B121')
@@ -73,9 +73,9 @@ layout_barraDate = [
 # {---------------------------------------------------------------------------------}
 
 layout_game = [  
-    [sg.Column(fila_fichasM.getLayout(),pad=((0,0),(0,20)))],
+    [sg.Column(fila_fichasM.getLayout(),pad=((80,0),(0,10)))],
     [sg.Column(tablero.getLayout())],
-    [sg.Column(fila_fichasJ.getLayout(),pad=((0,0),(20,0)))]
+    [sg.Column(fila_fichasJ.getLayout(),pad=((80,0),(10,0)))]
 ]
 
 layout = [
@@ -90,25 +90,40 @@ pantalla_juego = sg.Window("Scrabble",layout,background_color="#71B3BD")
 # {---------------------------------------------------------------------------------}
 
 def main():
+    cambiar_fichas = False
+
     while True:
         event, values = pantalla_juego.read()
         if(event is None):
             break
-        elif(event in fila_fichasJ.getKeysFila()): # si clickeo en una ficha
-            tablero.habilitar(pantalla_juego) 
-            ficha_clicked = event # guardo la ficha que eligio
-        elif(event in tablero.getKeysCasillas()): # si clickeo en una casilla del tablero
-            dato = pantalla_juego[ficha_clicked].GetText()
-            tablero.insertar(dato,event,pantalla_juego)
-            fila_fichasJ.deshabilitar_ficha(ficha_clicked, pantalla_juego)
+
+        elif(event in fila_fichasJ.getKeysFila())and(not cambiar_fichas): 
+            if not fila_fichasJ.hayFichaSelected():
+                fila_fichasJ.marcarFichaSelected(pantalla_juego,event)
+                tablero.habilitar(pantalla_juego) 
+            else:
+                fila_fichasJ.desmarcarFichaSelected(pantalla_juego)
+                fila_fichasJ.marcarFichaSelected(pantalla_juego,event)
+
+        elif(event in tablero.getKeysCasillas())and(not cambiar_fichas): 
+            dato = pantalla_juego[fila_fichasJ.getFichaSelected()].GetText()
+            tablero.insertar(dato,event,pantalla_juego)        
+            fila_fichasJ.desmarcarFichaSelected(pantalla_juego)  
+            fila_fichasJ.deshabilitarFicha(pantalla_juego)          
             tablero.deshabilitar(pantalla_juego)
+
         elif(event == 'Cambiar fichas'):
+            cambiar_fichas = True
+            tablero.deshabilitar(pantalla_juego)
             pantalla_juego['cambiar_fichas_text'].Update(visible=True)
             pantalla_juego['Aceptar'].Update(visible=True)
+            
+
         elif(event == 'Aceptar'):
+            cambiar_fichas = False
             pantalla_juego['cambiar_fichas_text'].Update(visible=False)
             pantalla_juego['Aceptar'].Update(visible=False)
-
+            
 
     pantalla_juego.close() 
 

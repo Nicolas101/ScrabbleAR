@@ -3,9 +3,16 @@ from clasesJuego import Tablero
 from clasesJuego import Casilla
 from clasesJuego import FilaFichas
 from clasesJuego import BolsaFichas
-from validarPalabra import Validar, Clasificar
+from validarPalabra import validar, clasificar
 import random
 
+num_random = random.randint(1,3)
+
+pad_tablero = {
+    1:{"pad-izq":140,"pad-der":160,"pad-top":70,"pad-bot":70}, # medidas para tablero 1
+    2:{"pad-izq":100,"pad-der":110,"pad-top":35,"pad-bot":35}, # medidas para tablero 2
+    3:{"pad-izq":75,"pad-der":75,"pad-top":10,"pad-bot":10}, # medidas para tablero 3
+}
 
 # {---------------------------------------------------------------------------------}
 # {-------------------------------- BOLSA DE FICHAS --------------------------------}
@@ -26,8 +33,6 @@ bolsa_fichas = BolsaFichas(dic_fichas)
 # {---------------------------------------------------------------------------------}
 # {----------------------------------- TABLERO -------------------------------------}
 # {---------------------------------------------------------------------------------}  
-
-num_random = random.randint(1,3)
 
 casillas_especiales1 = {
     "x2":(("2-6","2-10","6-2","6-14","7-7","7-9","9-7","9-9","10-2","10-14","14-6","14-10",), "#2283BB"),
@@ -75,30 +80,30 @@ layout_barraDate = [
 # {----------------------------- PANTALLA DE JUEGO ---------------------------------}
 # {---------------------------------------------------------------------------------}
 
+window_size = (1000,600)
+
 layout_game = [  
-    [sg.Column(fila_fichasM.getLayout(),pad=((80,0),(0,10)))],
-    [sg.Column(tablero.getLayout())],
-    [sg.Column(fila_fichasJ.getLayout(),pad=((80,0),(10,0)))]
+    [sg.Column(fila_fichasM.getLayout(),pad=((40,0),(0,0)))],
+    [sg.Column(tablero.getLayout(),pad=((pad_tablero[num_random]["pad-izq"],pad_tablero[num_random]["pad-der"]),(pad_tablero[num_random]["pad-top"],pad_tablero[num_random]["pad-bot"])))],
+    [sg.Column(fila_fichasJ.getLayout(),pad=((40,0),(0,0)))]
 ]
 
 layout = [
-    [sg.Column(layout_game,background_color="#71B3BD"), sg.Column(layout_barraDate,element_justification="center",size=(223,450))]
+    [sg.Column(layout_game,background_color="#71B3BD"), sg.Column(layout_barraDate,element_justification="center",size=(223,600),pad=((0,0),(0,0)))]
 ]
 
-pantalla_juego = sg.Window("ScrabbleAR",layout,background_color="#71B3BD")
+pantalla_juego = sg.Window("ScrabbleAR - En Juego",layout,size=window_size,background_color="#71B3BD")
 
 # {---------------------------------------------------------------------------------}
 # {----------------------- PANTALLA DE SELECCIONAR NIVEL ---------------------------}
 # {---------------------------------------------------------------------------------}
 
 layout_nivel = [
-    [sg.Text("¿Qué nivel deseas jugar?",background_color="#71B3BD",font=("Fixedsys",26),pad=((30,30),(0,30)))],
-    [sg.Button("Fácil",key="-FACIL-",size=(18,1),font=("Arial",14),pad=((0,0),(8,0)))],
-    [sg.Button("Medio",key="-MEDIO-",size=(18,1),font=("Arial",14),pad=((0,0),(8,0)))],
-    [sg.Button("Dificil",key="-DIFICL-",size=(18,1),font=("Arial",14),pad=((0,0),(8,0)))],
-    [sg.Button("Personalizado",key="-PERSONALIZADO-",size=(18,1),font=("Arial",14),pad=((0,0),(8,30)))],
+    [sg.Text("¿Qué nivel deseas jugar?",background_color="#71B3BD",font=("Fixedsys",34),pad=((30,30),(150,50)))],
+    [sg.Button("Fácil",key="-FACIL-",size=(18,1),font=("Arial",18),pad=((0,15),(0,15))),sg.Button("Medio",key="-MEDIO-",size=(18,1),font=("Arial",18),pad=((0,0),(0,15)))],
+    [sg.Button("Dificil",key="-DIFICL-",size=(18,1),font=("Arial",18),pad=((0,15),(0,0))),sg.Button("Personalizado",key="-PERSONALIZADO-",size=(18,1),font=("Arial",18),pad=((0,0),(0,0)))],
 ]
-pantalla_nivel = sg.Window("ScrabbleAR",layout_nivel,background_color="#71B3BD",element_justification="center",disable_close=True,disable_minimize=True)
+pantalla_nivel = sg.Window("ScrabbleAR - Selección de nivel",layout_nivel,size=window_size,background_color="#71B3BD",element_justification="center",disable_close=True,disable_minimize=True)
 
 # {---------------------------------------------------------------------------------}
 # {--------------------------- PROGRAMA PRINCIAPL ----------------------------------}
@@ -145,7 +150,7 @@ def main():
 
         elif(event == "Confirmar Jugada"):
             palabra = tablero.getPalabra()
-            if (Validar(palabra,nivel)):
+            if (validar(palabra,nivel)):
                 pantalla_juego['text-confirmar'].update('Palabra correcta',visible=True)
             else:
                 fichas_a_devolver=tablero.devolverFichas(pantalla_juego)

@@ -2,13 +2,15 @@ import PySimpleGUI as sg
 import pantallaJuego 
 import pantallaConfig
 
+window_size = (1000,600)
+
 layout = [
-    [sg.Text("ScrabbleAR - Game",background_color="#71B3BD",font=("Fixedsys",40),pad=((0,0),(30,70)))],
+    [sg.Text("ScrabbleAR - Game",background_color="#71B3BD",font=("Fixedsys",40),pad=((0,0),(100,70)))],
     [sg.Button("Cómo jugar",size=(18,1),pad=((0,0),(0,20)),font=("Fixedsys",18),auto_size_button=False)],
     [sg.Button("Jugar",key="-PLAY-",size=(24,2),pad=((0,0),(0,20)),font=("Fixedsys",18),auto_size_button=False)],
     [sg.Button("Configuración",key="-CONFIG-",size=(18,1),pad=((0,0),(0,20)),font=("Fixedsys",18),auto_size_button=False)]
 ]
-pantalla_menu = sg.Window("Menu",layout,element_justification="center",size=(725,480),background_color="#71B3BD")
+pantalla_menu = sg.Window("ScrabbleAR - Menú",layout,element_justification="center",size=window_size,background_color="#71B3BD")
 
 def main():
     while True:

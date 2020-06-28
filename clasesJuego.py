@@ -44,13 +44,13 @@ class Casilla():
 # {---------------------------------------------------------------------------------}
 
 class Tablero:
-    def __init__(self, tamaño=0, casilas_especiales=None, inicio=(None, None)):
-        self._tamaño = tamaño
-        self._casillas_especiales = casilas_especiales
-        self._lista_casillas = []
-        self._inicio = inicio
-        self._palabra = [inicio[0]]
-        self._layout = self._armar()
+    def __init__(self, tamaño, casilas_especiales, inicio):
+        self._tamaño = tamaño  # largo de las filas y columnas
+        self._casillas_especiales = casilas_especiales # diccionario de casilla especiales
+        self._lista_casillas = [] # objetos casilla
+        self._inicio = inicio # casilla de inicio. Formato: (key,letra inicial)
+        self._palabra = [inicio[0]] # letras de la palabra a formar
+        self._layout = self._armar() # diseño para el GUI
 
     def getLayout(self):
         return self._layout
@@ -145,32 +145,27 @@ class Tablero:
         else:
             return 'xxxxxx'
 
-    
-
-    
-            
-
 # {---------------------------------------------------------------------------------}
 # {--------------------------- CLASE FILA DE FICHAS --------------------------------}
 # {---------------------------------------------------------------------------------}
 
 class FilaFichas():
     def __init__(self, cant_fichas=7, key_add=None, letras=None):
-        self._cant_fichas = cant_fichas
-        self._key_add = key_add
-        self._letras = letras # lista de letras que contiene la fila
-        self._ficha_selected = [False,None]
-        self._fila_fichas = [] # lista de objetos "casilla" de la fila
-        self._layout = self._armar() 
+        self._cant_fichas = cant_fichas # cantidad de fichas/botones a poner en la fila
+        self._key_add = key_add # string adicional para agregar a las keys de las fichas
+        self._letras = letras # letras a poner en las fichas
+        self._ficha_selected = [False,None] # [True/False,key de la ficha seleccionada]
+        self._fila_fichas = [] # lista de objetos casilla de la fila
+        self._layout = self._armar() # diseño para el GUI
         
     def _armar(self):
         layout = []
         for i in range(1,8):
             key = self._key_add +'-'+ str(i)
             if (self._key_add == 'FJ'):
-                ficha = Casilla(clave=key, tamaño=(6,2),contenido=self._letras[i-1]) # fichas del jugador
+                ficha = Casilla(clave=key, tamaño=(11,2),contenido=self._letras[i-1]) # fichas del jugador
             else:
-                ficha = Casilla(clave=key, tamaño=(6,2), ocupado=True) # fichas de la maquina
+                ficha = Casilla(clave=key, tamaño=(11,2), ocupado=True) # fichas de la maquina
             self._fila_fichas.append(ficha)
             layout.append(ficha.getDiseño())     
         return [layout]

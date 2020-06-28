@@ -49,7 +49,7 @@ class Tablero:
         self._casillas_especiales = casilas_especiales
         self._lista_casillas = []
         self._inicio = inicio
-        self._palabra = []
+        self._palabra = [inicio[0]]
         self._layout = self._armar()
 
     def getLayout(self):
@@ -103,16 +103,49 @@ class Tablero:
     def devolverFichas(self,pantalla_juego):
         lis_letras = []
         for key in self._palabra:
-            lis_letras.append(pantalla_juego[key].GetText())
-            especial = False
-            for clave in self._casillas_especiales:
-                if key in self._casillas_especiales[clave][0]:
-                    pantalla_juego[key].Update(clave, button_color=('black',self._casillas_especiales[clave][1]),disabled_button_color=('black',self._casillas_especiales[clave][1]))
-                    especial = True
-            if not especial:
-                pantalla_juego[key].Update('', button_color=('black','white'),disabled_button_color=('black','white'))
+            if (key!=self._inicio[0]):
+                lis_letras.append(pantalla_juego[key].GetText())
+                especial = False
+                for clave in self._casillas_especiales:
+                    if key in self._casillas_especiales[clave][0]:
+                        pantalla_juego[key].Update(clave, button_color=('black',self._casillas_especiales[clave][1]),disabled_button_color=('black',self._casillas_especiales[clave][1]))
+                        especial = True
+                if not especial:
+                    pantalla_juego[key].Update('', button_color=('black','white'),disabled_button_color=('black','white'))
         return lis_letras
 
+    def getPalabra(self):
+        lis_aux=[]
+        for x in self._palabra:
+            elems=x.split('-')
+            for i in range(0,2):
+                elems[i]=int(elems[i])
+            lis_aux.append(elems)
+        a_comparar=lis_aux[0][0]
+        horizontal=True
+        vertical=True
+        for e in lis_aux:
+            if(e[0]!=a_comparar):
+                horizontal=False
+        if (horizontal==False):
+            a_comparar=lis_aux[0][1]
+            
+            for e in lis_aux:
+                if(e[1]!=a_comparar):
+                    vertical=False
+            if (vertical==True):
+                lis_ord=sorted(lis_aux, key=lambda valor: valor[0])
+        else:
+            lis_ord=sorted(lis_aux, key=lambda valor: valor[1])
+        if (horizontal==True)or(vertical==True):
+            pal=''
+            for key in lis_ord:
+                pal+= self._lista_casillas[((int(key[1])-1)+(int(key[0])-1)*self._tamaño)].getContenido()
+            return pal
+        else:
+            return 'xxxxxx'
+
+    
 
     
             

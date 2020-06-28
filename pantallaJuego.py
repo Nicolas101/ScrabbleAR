@@ -1,8 +1,9 @@
 import PySimpleGUI as sg
-from claseTablero import Tablero
-from claseTablero import Casilla
-from claseTablero import FilaFichas
-from claseTablero import BolsaFichas
+from clasesJuego import Tablero
+from clasesJuego import Casilla
+from clasesJuego import FilaFichas
+from clasesJuego import BolsaFichas
+from validarPalabra import Validar, Clasificar
 import random
 
 
@@ -84,16 +85,44 @@ layout = [
     [sg.Column(layout_game,background_color="#71B3BD"), sg.Column(layout_barraDate,element_justification="center",size=(223,450))]
 ]
 
-pantalla_juego = sg.Window("Scrabble",layout,background_color="#71B3BD")
+pantalla_juego = sg.Window("ScrabbleAR",layout,background_color="#71B3BD")
 
+# {---------------------------------------------------------------------------------}
+# {----------------------- PANTALLA DE SELECCIONAR NIVEL ---------------------------}
+# {---------------------------------------------------------------------------------}
+
+layout_nivel = [
+    [sg.Text("¿Qué nivel deseas jugar?",background_color="#71B3BD",font=("Fixedsys",26),pad=((30,30),(0,30)))],
+    [sg.Button("Fácil",key="-FACIL-",size=(18,1),font=("Arial",14),pad=((0,0),(8,0)))],
+    [sg.Button("Medio",key="-MEDIO-",size=(18,1),font=("Arial",14),pad=((0,0),(8,0)))],
+    [sg.Button("Dificil",key="-DIFICL-",size=(18,1),font=("Arial",14),pad=((0,0),(8,0)))],
+    [sg.Button("Personalizado",key="-PERSONALIZADO-",size=(18,1),font=("Arial",14),pad=((0,0),(8,30)))],
+]
+pantalla_nivel = sg.Window("ScrabbleAR",layout_nivel,background_color="#71B3BD",element_justification="center",disable_close=True,disable_minimize=True)
 
 # {---------------------------------------------------------------------------------}
 # {--------------------------- PROGRAMA PRINCIAPL ----------------------------------}
 # {---------------------------------------------------------------------------------}
 
 def main():
-    cambiar_fichas = False
+    while True:
+        event, values = pantalla_nivel.read()
+        if event == "-FACIL-":
+            nivel = "facil"
+            break
+        elif event == "-MEDIO-":
+            nivel = "medio"
+            break
+        elif event == "-DIFICL-":
+            nivel = "dificil"
+            break
+        elif event == "-PERSONALIZADO-":
+            nivel = "personalizado"
+            break
+    pantalla_nivel.close()
 
+    cambiar_fichas = False
+    #pantalla_juego.UnHide()
     while True:
         event, values = pantalla_juego.read()
         if(event is None):
@@ -115,12 +144,13 @@ def main():
             tablero.deshabilitar(pantalla_juego)
 
         elif(event == "Confirmar Jugada"):
-            #validar la palabra:
-            #si es correcta:
-            #pantalla_juego['text-comfirmar'].update('Palabra correcta',visible=True)
-            fichas_a_devolver=tablero.devolverFichas(pantalla_juego)
-            fila_fichasJ.insertarFichas(pantalla_juego,fichas_a_devolver)
-            pantalla_juego['text-confirmar'].update('Palabra incorrecta',visible=True)
+            palabra = tablero.getPalabra()
+            if (Validar(palabra,nivel)):
+                pantalla_juego['text-confirmar'].update('Palabra correcta',visible=True)
+            else:
+                fichas_a_devolver=tablero.devolverFichas(pantalla_juego)
+                fila_fichasJ.insertarFichas(pantalla_juego,fichas_a_devolver)
+                pantalla_juego['text-confirmar'].update('Palabra incorrecta',visible=True)
 
 
         elif(event == 'Cambiar fichas'):
@@ -135,7 +165,7 @@ def main():
             pantalla_juego['cambiar_fichas_text'].Update(visible=False)
             pantalla_juego['Aceptar'].Update(visible=False)
             
-
+    #pantalla_juego.Hide()
     pantalla_juego.close() 
 
 if __name__ == "__main__":

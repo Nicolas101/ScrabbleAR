@@ -84,9 +84,8 @@ class Tablero:
 
     def habilitar(self, pantalla_juego):
         for casilla in self._lista_casillas:
-            if (casilla.getContenido() in 'x2x3-2-1-3'):
-                pantalla_juego[casilla.getKey()].Update(disabled=False)
-                casilla.habilitar()
+            pantalla_juego[casilla.getKey()].Update(disabled=False)
+            casilla.habilitar()
 
     def deshabilitar(self, pantalla_juego):
         for casilla in self._lista_casillas:
@@ -100,6 +99,15 @@ class Tablero:
         self._lista_casillas[((int(aux[1])-1)+(int(aux[0])-1)*self._tamaño)].setColor(('white','#684225'))
         self._palabra.append(key)
 
+    def reiniciarPalabra(self):
+        self._palabra=[]
+
+    def _reiniciarPalabraInicio(self):
+        if (self._inicio[0] in self._palabra):
+            self._palabra=[self._inicio[0]]
+        else:
+            self._palabra=[]
+
     def devolverFichas(self,pantalla_juego):
         lis_letras = []
         for key in self._palabra:
@@ -112,6 +120,7 @@ class Tablero:
                         especial = True
                 if not especial:
                     pantalla_juego[key].Update('', button_color=('black','white'),disabled_button_color=('black','white'))
+        self._reiniciarPalabraInicio()
         return lis_letras
 
     def getPalabra(self):
@@ -144,6 +153,7 @@ class Tablero:
             return pal
         else:
             return 'xxxxxx'
+
 
 # {---------------------------------------------------------------------------------}
 # {--------------------------- CLASE FILA DE FICHAS --------------------------------}

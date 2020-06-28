@@ -135,11 +135,11 @@ def main():
         
         elif(event in fila_fichasJ.getKeysFila())and(not cambiar_fichas): 
             if not fila_fichasJ.hayFichaSelected():
-                fila_fichasJ.marcarFichaSelected(pantalla_juego,event)
-                tablero.habilitar(pantalla_juego) 
+                fila_fichasJ.marcarFichaSelected(pantalla_juego,event) 
             else:
                 fila_fichasJ.desmarcarFichaSelected(pantalla_juego)
                 fila_fichasJ.marcarFichaSelected(pantalla_juego,event)
+            tablero.habilitar(pantalla_juego)
 
         elif(event in tablero.getKeysCasillas())and(not cambiar_fichas): 
             dato = pantalla_juego[fila_fichasJ.getFichaSelected()].GetText()
@@ -152,6 +152,7 @@ def main():
             palabra = tablero.getPalabra()
             if (validar(palabra,nivel)):
                 pantalla_juego['text-confirmar'].update('Palabra correcta',visible=True)
+                tablero.reiniciarPalabra()
             else:
                 fichas_a_devolver=tablero.devolverFichas(pantalla_juego)
                 fila_fichasJ.insertarFichas(pantalla_juego,fichas_a_devolver)

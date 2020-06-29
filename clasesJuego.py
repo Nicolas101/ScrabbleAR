@@ -6,6 +6,9 @@ import random
 # {---------------------------------------------------------------------------------}
 
 class Casilla():
+    """ Esta clase se utiliza para crear todos los botones de la matriz del 
+    tablero y de la fila de fichas """
+
     def __init__(self, contenido='', tamaño=None, color=('black','#FFFFFF'), clave=None, ocupado=False, especial=[False, None]):
         self._contenido = contenido
         self._tamaño = tamaño
@@ -44,13 +47,16 @@ class Casilla():
 # {---------------------------------------------------------------------------------}
 
 class Tablero:
+    """ Esta clase proporciona tableros de distinto tamaño con diferentes casillas
+    """
+
     def __init__(self, tamaño, casilas_especiales, inicio):
-        self._tamaño = tamaño  # largo de las filas y columnas
+        self._tamaño = tamaño  # tamaño de la matriz 
         self._casillas_especiales = casilas_especiales # diccionario de casilla especiales
         self._lista_casillas = [] # objetos casilla
         self._inicio = inicio # casilla de inicio. Formato: (key,letra inicial)
         self._palabra = [inicio[0]] # letras de la palabra a formar
-        self._layout = self._armar() # diseño para el GUI
+        self._layout = self._armar() # layout para PySimpleGUI
 
     def getLayout(self):
         return self._layout
@@ -154,21 +160,28 @@ class Tablero:
         else:
             return 'xxxxxx'
 
-
 # {---------------------------------------------------------------------------------}
 # {--------------------------- CLASE FILA DE FICHAS --------------------------------}
 # {---------------------------------------------------------------------------------}
 
 class FilaFichas():
-    def __init__(self, cant_fichas=7, key_add=None, letras=None):
-        self._cant_fichas = cant_fichas # cantidad de fichas/botones a poner en la fila
-        self._key_add = key_add # string adicional para agregar a las keys de las fichas
-        self._letras = letras # letras a poner en las fichas
+    """ Esta clase se utiliza para crear el "atril" de fichas para el jugador y para la computadora.\n
+    key_add: es un string adicional que se le agrega a la key de cada ficha, con el fin de diferenciar
+    distintas filas de fichas.\n
+    letras: es una lista que contiene las letras a colocar en las fichas.\n
+    """
+
+    def __init__(self, key_add, letras):
+        self._key_add = key_add
+        self._letras = letras
         self._ficha_selected = [False,None] # [True/False,key de la ficha seleccionada]
-        self._fila_fichas = [] # lista de objetos casilla de la fila
-        self._layout = self._armar() # diseño para el GUI
+        self._fichas = [] # lista de objetos casilla de la fila
+        self._layout = self._armar() # layout para PySimpleGUI
         
     def _armar(self):
+        """ Este método arma una lista para la interfaz gráfica que contiene 7 fichas.
+        """
+
         layout = []
         for i in range(1,8):
             key = self._key_add +'-'+ str(i)
@@ -176,33 +189,33 @@ class FilaFichas():
                 ficha = Casilla(clave=key, tamaño=(11,2),contenido=self._letras[i-1]) # fichas del jugador
             else:
                 ficha = Casilla(clave=key, tamaño=(11,2), ocupado=True) # fichas de la maquina
-            self._fila_fichas.append(ficha)
+            self._fichas.append(ficha)
             layout.append(ficha.getDiseño())     
         return [layout]
     
     def habilitarFila(self, pantalla_juego):
-        for ficha in self._fila_fichas:
+        for ficha in self._fichas:
             pantalla_juego[ficha.getKey()].Update(disabled=False)
             ficha.habilitar()
 
     def deshabilitarFila(self, pantalla_juego):
-        for ficha in self._fila_fichas:
+        for ficha in self._fichas:
             pantalla_juego[ficha.getKey()].Update(disabled=True)
             ficha.deshabilitar()
 
     def deshabilitarFicha(self, pantalla_juego):
         pantalla_juego[self._ficha_selected[1]].Update('', disabled=True,button_color=('black','#CCCCCC'))
         aux = self._ficha_selected[1].split('-')
-        self._fila_fichas[int(aux[1])-1].setContenido("")
-        self._fila_fichas[int(aux[1])-1].deshabilitar()
-        self._fila_fichas[int(aux[1])-1].setColor(('black','#CCCCCC'))
+        self._fichas[int(aux[1])-1].setContenido("")
+        self._fichas[int(aux[1])-1].deshabilitar()
+        self._fichas[int(aux[1])-1].setColor(('black','#CCCCCC'))
 
     def getLayout(self):
         return self._layout
 
     def getKeysFila(self):
         lista_keys = []
-        for ficha in self._fila_fichas:
+        for ficha in self._fichas:
             lista_keys.append(ficha.getKey())
         return lista_keys
 
@@ -210,13 +223,13 @@ class FilaFichas():
         self._ficha_selected[0] = True
         self._ficha_selected[1] = key       
         aux = key.split('-')
-        self._fila_fichas[int(aux[1])-1].setColor(('black',"#5fefaa"))
+        self._fichas[int(aux[1])-1].setColor(('black',"#5fefaa"))
         pantalla_juego[key].Update(button_color=('black',"#5fefaa"))
 
     def desmarcarFichaSelected(self,pantalla_juego):
         pantalla_juego[self._ficha_selected[1]].Update(button_color=('black','white'))
         aux = self._ficha_selected[1].split('-')
-        self._fila_fichas[int(aux[1])-1].setColor(('black','white'))
+        self._fichas[int(aux[1])-1].setColor(('black','white'))
         self._ficha_selected[0] = False
 
     def hayFichaSelected(self):
@@ -226,15 +239,12 @@ class FilaFichas():
         return self._ficha_selected[1]
 
     def insertarFichas(self,pantalla_juego,fichas):
-        for casilla in self._fila_fichas:
+        for casilla in self._fichas:
             if casilla.getContenido()=='':
                 ficha=fichas.pop()
                 casilla.setContenido(ficha)
                 pantalla_juego[casilla.getKey()].Update(ficha, disabled=False, button_color=('black','white'))
                 
-
-
-
 # {---------------------------------------------------------------------------------}
 # {--------------------------- CLASE BOLSA DE FICHAS -------------------------------}
 # {---------------------------------------------------------------------------------}

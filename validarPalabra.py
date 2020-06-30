@@ -8,7 +8,7 @@ def clasificar(palabra,clases_validas):
     else:
         return False
 
-def validar(palabra,dificultad):
+def esValida(palabra,dificultad):
     clases_validas=['B-ADJP','B-VP']
     if (not palabra.lower() in verbs):
         if (not palabra.lower() in spelling):

@@ -1,5 +1,6 @@
 import PySimpleGUI as sg 
-import pantallaJuego 
+#import pantallaJuego
+from PantallaJuego import pantallaJuego
 import pantallaConfig
 
 window_size = (1000,600)

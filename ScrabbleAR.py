@@ -1,11 +1,5 @@
-import PySimpleGUI as sg
-import pantallaMenu 
+from Menu import mainMenu
 
-def main():
-    pantallaMenu.main()
-
-
-if __name__ == "__main__":
-    main()
+mainMenu.mostrar_menu()
 
 

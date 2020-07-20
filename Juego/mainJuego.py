@@ -1,28 +1,32 @@
 def start_game():
+    def seleccionar_nivel():
+        #PANTALLA NIVEL
+        from Juego.Windows import windowNivel
+        window_nivel = windowNivel.hacer_vetnana((1000,600))
 
-    #PANTALLA NIVEL
-    from Juego.Windows import windowNivel
-    window_nivel = windowNivel.hacer_vetnana((1000,600))
+        nivel = ""
+        while True:
+            event, values = window_nivel.read()
+            if event is None:
+                nivel = ""
+                break
+            elif event == "-FACIL-":
+                nivel = "facil"
+                break
+            elif event == "-MEDIO-":
+                nivel = "medio"
+                break
+            elif event == "-DIFICL-":
+                nivel = "dificil"
+                break
+            elif event == "-PERSONALIZADO-":
+                nivel = "personalizado"
+                break
+        window_nivel.close()
+        
+        return nivel
 
-    nivel = ""
-    while True:
-        event, values = window_nivel.read()
-        if event is None:
-            break
-        elif event == "-FACIL-":
-            nivel = "facil"
-            break
-        elif event == "-MEDIO-":
-            nivel = "medio"
-            break
-        elif event == "-DIFICL-":
-            nivel = "dificil"
-            break
-        elif event == "-PERSONALIZADO-":
-            nivel = "personalizado"
-            break
-
-    window_nivel.close()
+    nivel = seleccionar_nivel()
 
     if nivel != "":
         from Juego.validarPalabra import esValida, clasificar
@@ -74,7 +78,7 @@ def start_game():
                     puntos_jugador += bolsa_fichas.devolverPuntaje(palabra)
                     window_game["-misPuntos-"].update(str(puntos_jugador))
                     tablero.reiniciarPalabra()
-                    cant_letras=len(palabra)
+                    cant_letras = len(palabra)
                     fila_fichasJ.insertarFichas(window_game,bolsa_fichas.letras_random(cant_letras))
                 else:
                     fichas_a_devolver=tablero.devolverFichas(window_game)
@@ -90,8 +94,7 @@ def start_game():
             elif(event == 'Aceptar'):
                 bolsa_fichas.deshabilitar()
                 window_game['cambiar_fichas_text'].Update(visible=False)
-                window_game['Aceptar'].Update(visible=False)
-                
+                window_game['Aceptar'].Update(visible=False)             
         window_game.close() 
 
 if __name__ == "__main__":

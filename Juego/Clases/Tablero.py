@@ -1,6 +1,9 @@
 import PySimpleGUI as sg 
 import random
-from Juego.Clases.Casilla import Casilla
+try:
+    from Juego.Clases.Casilla import Casilla
+except ModuleNotFoundError:
+    from Clases.Casilla import Casilla
 
 class Tablero:
     """ Esta clase crea un objeto Tablero que es una matriz de objetos "Casilla".\n
@@ -119,34 +122,40 @@ class Tablero:
 
     def getPalabra(self):
         lis_aux=[]
-        for x in self._palabra:
-            elems=x.split('-')
-            for i in range(0,2):
-                elems[i]=int(elems[i])
-            lis_aux.append(elems)
-        a_comparar=lis_aux[0][0]
-        horizontal=True
-        vertical=True
-        for e in lis_aux:
-            if(e[0]!=a_comparar):
-                horizontal=False
-        if (horizontal==False):
-            a_comparar=lis_aux[0][1]
-            
-            for e in lis_aux:
-                if(e[1]!=a_comparar):
-                    vertical=False
-            if (vertical==True):
-                lis_ord=sorted(lis_aux, key=lambda valor: valor[0])
-        else:
+        if (len(self._palabra)>1):
+            for x in self._palabra:
+                elems=x.split('-')
+                for i in range(0,2):
+                    elems[i]=int(elems[i])
+                lis_aux.append(elems)
             lis_ord=sorted(lis_aux, key=lambda valor: valor[1])
-        if (horizontal==True)or(vertical==True):
-            pal=''
-            for key in lis_ord:
-                pal+= self._casillas[key[0]-1][key[1]-1].getContenido()
-            return pal
+            a_comparar1=lis_ord[0][0]
+            a_comparar2 = lis_ord[0][1]
+            horizontal=True
+            vertical=True
+            for e in lis_ord:
+                if(e[0]!=a_comparar1)or(e[1] != a_comparar2):
+                    horizontal=False
+                a_comparar2 += 1
+            if (horizontal==False):
+                lis_ord=sorted(lis_aux, key=lambda valor: valor[0])
+                a_comparar1=lis_ord[0][1]
+                a_comparar2 = lis_ord[0][0]
+                for e in lis_ord:
+                    if(e[1]!=a_comparar1)or(e[0] != a_comparar2):
+                        vertical=False
+                    a_comparar2 += 1
+            if (horizontal==True)or(vertical==True):
+                pal=''
+                for key in lis_ord:
+                    pal+= self._casillas[key[0]-1][key[1]-1].getContenido()
+                return pal
+            else:
+                return 'xxxxxx'
         else:
             return 'xxxxxx'
+
+
 
 def crearTablero(bolsa_fichas):
     casillas_especiales1 = {

@@ -12,7 +12,7 @@ def mostrar_menu():
 
         elif event == "-PLAY-":
             window_menu.Hide()
-            mainJuego.start_game()
+            mainJuego.start_game(mainJuego.seleccionar_nivel())
             window_menu.UnHide()
 
         elif event == "-CONFIG-":

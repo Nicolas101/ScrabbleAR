@@ -1,6 +1,9 @@
 import PySimpleGUI as sg 
 import random
-from Juego.Clases.Casilla import Casilla
+try:
+    from Juego.Clases.Casilla import Casilla
+except ModuleNotFoundError:
+    from Clases.Casilla import Casilla
 
 class FilaFichas():
     """ Esta clase se utiliza para crear el "atril" de fichas para el jugador y para la computadora.\n

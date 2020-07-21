@@ -46,6 +46,12 @@ def start_game(nivel):
             #PANTALLA DE JUEGO
             from Juego.Windows import windowJuego
             window_game = windowJuego.hacer_ventana(tablero.getLayout(),fila_fichasJ.getLayout(),fila_fichasM.getLayout(),num_random,pad_tablero,(1000,600))
+
+            #USUARIO Y MAQUINA
+            from Juego.Clases.Jugador import Jugador
+            from Juego.Clases.Maquina import Maquina
+            usuario = Jugador()
+            maquina = Maquina()
         except ModuleNotFoundError:
             from validarPalabra import esValida,clasificar
 
@@ -66,6 +72,11 @@ def start_game(nivel):
             from Windows import windowJuego
             window_game = windowJuego.hacer_ventana(tablero.getLayout(),fila_fichasJ.getLayout(),fila_fichasM.getLayout(),num_random,pad_tablero,(1000,600))
 
+            #USUARIO Y MAQUINA
+            from Clases.Jugador import Jugador
+            from Clases.Maquina import Maquina
+            usuario = Jugador()
+            maquina = Maquina()
 
         puntos_jugador = 0
         puntos_maquina = 0
@@ -128,7 +139,8 @@ def start_game(nivel):
             #TURNO DE LA MAQUINA        
             else:
                 window_game["-TURNO-"].update("Turno del oponente")
-                window_game.read(timeout=4000) 
+                window_game.read(timeout=4000)
+                maquina.armarPalabra(fila_fichasM,bolsa_fichas) 
                 #falta hacer
                 turno = 0           
                  

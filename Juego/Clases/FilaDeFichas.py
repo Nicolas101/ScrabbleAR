@@ -78,6 +78,12 @@ class FilaFichas():
                 ficha=fichas.pop()
                 casilla.setContenido(ficha)
                 pantalla_juego[casilla.getKey()].Update(ficha, disabled=False, button_color=('black','white'))
+    
+    def getLetras(self):
+        lis = []
+        for letra in self._letras:
+            lis.append(letra)
+        return lis
                 
 def crearFilaFichas(bolsa_fichas, genero):
     fila_fichas = FilaFichas(key_add= genero, letras=bolsa_fichas.letras_random(7))

@@ -6,8 +6,7 @@ import random
 # {---------------------------------------------------------------------------------}
 
 class Casilla():
-    """ Esta clase se utiliza para crear todos los botones de la matriz del 
-    tablero y de la fila de fichas\n
+    """Se utiliza para crear todos los botones de la matriz del tablero y de la fila de fichas\n
     Parámetros:\n
     tamaño: tamaño del boton\n
     clave: key para acceder al elemento\n

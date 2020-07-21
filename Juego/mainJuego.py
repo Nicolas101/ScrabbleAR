@@ -28,7 +28,7 @@ def seleccionar_nivel():
 def start_game(nivel): 
     if nivel != "":
         try:
-            from Juego.validarPalabra import esValida, clasificar
+            from Juego.validarPalabra import es_valida, clasificar
 
             #BOLSA DE FICHAS
             from Juego.Clases.BolsaFichas import crearBolsa
@@ -53,7 +53,7 @@ def start_game(nivel):
             usuario = Jugador()
             maquina = Maquina()
         except ModuleNotFoundError:
-            from validarPalabra import esValida,clasificar
+            from validarPalabra import es_valida, clasificar
 
             #BOLSA DE FICHAS
             from Clases.BolsaFichas import crearBolsa
@@ -110,8 +110,8 @@ def start_game(nivel):
                     tablero.deshabilitar(window_game)
 
                 elif(event == "Confirmar Jugada"):
-                    palabra = tablero.getPalabra()
-                    if (esValida(palabra,nivel)):
+                    palabra = tablero.verificarPalabra()
+                    if (es_valida(palabra,nivel)):
                         window_game['text-confirmar'].update('Palabra correcta',visible=True)
                         puntos_jugador += bolsa_fichas.devolverPuntaje(palabra)
                         window_game["-PuntosJ-"].update(str(puntos_jugador))
@@ -140,7 +140,7 @@ def start_game(nivel):
             else:
                 window_game["-TURNO-"].update("Turno del oponente")
                 window_game.read(timeout=4000)
-                maquina.armarPalabra(fila_fichasM,bolsa_fichas) 
+                palabra_maquina = maquina.armarPalabra(fila_fichasM,bolsa_fichas,tablero)
                 #falta hacer
                 turno = 0           
                  

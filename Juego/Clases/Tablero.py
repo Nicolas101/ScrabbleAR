@@ -5,6 +5,10 @@ try:
 except ModuleNotFoundError:
     from Clases.Casilla import Casilla
 
+# {---------------------------------------------------------------------------------}
+# {------------------------------ CLASE TABLERO ------------------------------------}
+# {---------------------------------------------------------------------------------}
+
 class Tablero:
     """ Esta clase crea un objeto Tablero que es una matriz de objetos "Casilla".\n
     Parámetros:\n
@@ -17,15 +21,16 @@ class Tablero:
         self._casillas_especiales = casilas_especiales 
         self._inicio = inicio 
         self._casillas = [] # matriz que contiene todos los objetos "casilla" del tablero
-        self._palabra = [inicio[0]] # letras de la palabra a formar
+        self._palabra = [inicio[0]] # lista de keys de las fichas que estan formando la palabra
         self._layout = self._armar() # layout para PySimpleGUI
     
     def getLayout(self):
+        """Retorna el layout para la GUI
+        """
         return self._layout
 
     def _armar(self):
-        """Este método arma una lista para la interfaz gráfica que contiene una matriz de objetos "Casilla"\n
-        y guarda los objetos casilla en la propiedad _casillas.
+        """Retorna una lista para la GUI que contiene una matriz de objetos Casilla
         """
         layout = [] 
         for i in range(1, self._tamaño + 1):
@@ -53,7 +58,7 @@ class Tablero:
         return layout
 
     def click(self, event):
-        """Este método retorna True si el evento fue en una de las casillas del tablero, False en caso contrario
+        """Retorna True si el evento fue en una de las casillas del tablero, False en caso contrario
         """
         for fila in self._casillas:
             for casilla in fila:
@@ -61,8 +66,8 @@ class Tablero:
                     return True
         return False        
 
-    def habilitar(self, pantalla):
-        """Este método habilita todas las casillas del tablero que esten desocupadas.
+    def habilitar(self, window):
+        """Habilita todas las casillas del tablero que esten desocupadas (que no haya una ficha)
         """
         for fila in self._casillas:
             for casilla in fila:
@@ -70,10 +75,10 @@ class Tablero:
                     continue
                 else:
                     casilla.habilitar()
-                    pantalla[casilla.getKey()].update(disabled=False)
+                    window[casilla.getKey()].update(disabled=False)
 
-    def deshabilitar(self, pantalla):
-        """Este método deshabilita todas las casillas del tablero que esten desocupadas.
+    def deshabilitar(self, window):
+        """Deshabilita todas las casillas del tablero que esten desocupadas (que no haya una ficha)
         """
         for fila in self._casillas:
             for casilla in fila:
@@ -81,79 +86,112 @@ class Tablero:
                     continue
                 else:
                     casilla.deshabilitar()
-                    pantalla[casilla.getKey()].update(disabled=True)
+                window[casilla.getKey()].update(disabled=True)
     
-    def insertarFicha(self,key,pantalla,valor):
-        """Este método coloca una ficha en el tablero
+    def insertarFicha(self,key,window,letra):
+        """Setea los parámetros necesarios para indicar que se inserto una ficha en una casilla determinada
         """
         self._palabra.append(key)
         aux = key.split("-")
         self._casillas[int(aux[0])-1][int(aux[1])-1].ocupar()
         self._casillas[int(aux[0])-1][int(aux[1])-1].deshabilitar()
-        self._casillas[int(aux[0])-1][int(aux[1])-1].setContenido(valor)
+        self._casillas[int(aux[0])-1][int(aux[1])-1].setContenido(letra)
         self._casillas[int(aux[0])-1][int(aux[1])-1].setColor(('white','#684225'))
-        pantalla[key].update(valor, button_color=('white','#684225'), disabled_button_color=('white','#684225'), disabled=True)
+        window[key].update(letra, button_color=('white','#684225'), disabled_button_color=('white','#684225'), disabled=True)
 
     def reiniciarPalabra(self):
+        """Setea la palabra a vacío
+        """
         self._palabra=[]
 
-    def _reiniciarPalabraInicio(self):
+    def reiniciarPalabraInicio(self):
+        """Borra todas las letras de la palabra menos la de inicio
+        """
         if (self._inicio[0] in self._palabra):
             self._palabra=[self._inicio[0]]
         else:
             self._palabra=[]
 
-    def devolverFichas(self,pantalla_juego):
-        lis_letras = []
+    def devolverFichas(self,window):
+        """Setea los parámetros necesarios para indicar que las casillas ocupadas por fichas ahora estan desocupadas.\n
+        Retorna una lista que contiene las letras de las fichas que se sacaron
+        """
+        letras_devolver = []
         for key in self._palabra:
-            if (key!=self._inicio[0]):
+            if (key != self._inicio[0]):
                 aux = key.split('-')
                 self._casillas[int(aux[0])-1][int(aux[1])-1].desocupar()
-                lis_letras.append(pantalla_juego[key].GetText())
+                letras_devolver.append(window[key].GetText())
                 especial = False
                 for clave in self._casillas_especiales:
                     if key in self._casillas_especiales[clave][0]:
-                        pantalla_juego[key].Update(clave, button_color=('black',self._casillas_especiales[clave][1]),disabled_button_color=('black',self._casillas_especiales[clave][1]))
+                        window[key].Update(clave, button_color=('black',self._casillas_especiales[clave][1]),disabled_button_color=('black',self._casillas_especiales[clave][1]))
                         especial = True
                 if not especial:
-                    pantalla_juego[key].Update('', button_color=('black','white'),disabled_button_color=('black','white'))
-        self._reiniciarPalabraInicio()
-        return lis_letras
+                    window[key].Update('', button_color=('black','white'),disabled_button_color=('black','white'))
+        self.reiniciarPalabraInicio()
+        return letras_devolver
 
-    def getPalabra(self):
+    def verificarPalabra(self):
+        """Verifica que la palabra formada este bien formada y posicionada.\n
+        Si esta bien formada retorna la palabra y, en caso contrario, retorna "xxxxx"
+        """
         lis_aux=[]
-        if (len(self._palabra)>1):
+        if (len(self._palabra)>1): # La palabra tiene que tener mas de una letra
             for x in self._palabra:
-                elems=x.split('-')
+                elems = x.split('-') # elems[0]: num de fila // elems[1]: num de columna
                 for i in range(0,2):
-                    elems[i]=int(elems[i])
+                    elems[i] = int(elems[i])
                 lis_aux.append(elems)
-            lis_ord=sorted(lis_aux, key=lambda valor: valor[1])
-            a_comparar1=lis_ord[0][0]
-            a_comparar2 = lis_ord[0][1]
-            horizontal=True
-            vertical=True
+            # lis_aux contiene listas de dos elementos que son la key de la letra de la palabra
+            lis_ord = sorted(lis_aux, key=lambda valor: valor[1]) # ordena de menor a mayor las keys segun la columna
+            a_comparar1 = lis_ord[0][0]
+            a_comparar2 = lis_ord[0][1] # guardo el num de columna mas chico
+            horizontal = True
+            vertical = True
             for e in lis_ord:
-                if(e[0]!=a_comparar1)or(e[1] != a_comparar2):
-                    horizontal=False
+                if(e[0] != a_comparar1)or(e[1] != a_comparar2): 
+                    horizontal = False
                 a_comparar2 += 1
-            if (horizontal==False):
-                lis_ord=sorted(lis_aux, key=lambda valor: valor[0])
-                a_comparar1=lis_ord[0][1]
-                a_comparar2 = lis_ord[0][0]
+            if (not horizontal):
+                lis_ord = sorted(lis_aux, key=lambda valor: valor[0]) # ordena de menor a mayor las keys segun la fila
+                a_comparar1 = lis_ord[0][1] 
+                a_comparar2 = lis_ord[0][0] # guardo el num de fila mas chico
                 for e in lis_ord:
-                    if(e[1]!=a_comparar1)or(e[0] != a_comparar2):
+                    if(e[1] != a_comparar1)or(e[0] != a_comparar2):
                         vertical=False
                     a_comparar2 += 1
-            if (horizontal==True)or(vertical==True):
+            if (horizontal)or(vertical):
                 pal=''
                 for key in lis_ord:
-                    pal+= self._casillas[key[0]-1][key[1]-1].getContenido()
+                    pal += self._casillas[key[0]-1][key[1]-1].getContenido() # Armo la palabra a devolver
                 return pal
             else:
                 return 'xxxxxx'
         else:
             return 'xxxxxx'
+
+    def copiaPalabra(self):
+        """Retorna una copia de la palabra (lista de keys)
+        """
+        return self._palabra[:]
+
+    def getLetraInicio(self):
+        """Retorna la letra de la ficha de inicio
+        """
+        return self._inicio[1]
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

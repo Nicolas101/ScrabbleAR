@@ -26,14 +26,11 @@ class Maquina(Jugador):
         """
         """
         lis_letras = fila_fichas.getLetras()
-        print(tablero.copiaPalabra())
         if (tablero.copiaPalabra() != []): 
             letra_inicio = tablero.getLetraInicio()
             lis_letras.append(letra_inicio)
         else:
-            letra_inicio = ''
-        print(lis_letras)
-        print(fila_fichas.getLetras())
+            letra_inicio = '0'
         lis_letras_aux = lis_letras[:] #genera una copia
         encontro = False
         palabra_encontrada = ''
@@ -48,8 +45,9 @@ class Maquina(Jugador):
                         lis_letras_aux = lis_letras[:]
                         break
                 if (encontro):
-                    if (letra_inicio in palabra_encontrada):
+                    if ((letra_inicio != '0')and(letra_inicio in palabra))or(letra_inicio == '0'):
                         palabra_encontrada = palabra
+                        print('1')
                         break
                     else:
                         encontro = False
@@ -65,8 +63,9 @@ class Maquina(Jugador):
                             lis_letras_aux = lis_letras[:]
                             break
                     if (encontro):
-                        if (letra_inicio in palabra_encontrada):
+                        if ((letra_inicio != '0')and(letra_inicio in palabra))or(letra_inicio == '0'):
                             palabra_encontrada = palabra
+                            print('2')
                             break
                         else:
                             encontro = False
@@ -82,27 +81,29 @@ class Maquina(Jugador):
                                 lis_letras_aux = lis_letras[:]
                                 break
                         if (encontro):
-                            if (letra_inicio in palabra_encontrada):
+                            if ((letra_inicio != '0')and(letra_inicio in palabra))or(letra_inicio == '0'):
                                 palabra_encontrada = palabra
+                                print('3')
                                 break
                             else:
                                 encontro = False
         if (encontro):
-            aux = palabra_encontrada.split()
-            if (letra_inicio != ''):
+            print(palabra_encontrada)
+            aux = []
+            for letra in palabra_encontrada:
+                aux.append(letra)
+            if (letra_inicio != '0'):
                 aux.remove(letra_inicio)
             nuevo_string = ''
             for x in aux:
                 nuevo_string += x 
-            print(nuevo_string)
-            print(palabra_encontrada)
             #fila_fichas.eliminarLetras(nuevo_string)
             #fila_fichas.agregarLetras(bolsa_fichas.letras_random(len(nuevo_string)))
             tablero.reiniciarPalabra()
             return palabra_encontrada
         else:
             print('xxxxx')
-            if tablero.copiaPalabra() != []:
+            if letra_inicio != '0':
                 tablero.reiniciarPalabraInicio()    
             else:
                 tablero.reiniciarPalabra()

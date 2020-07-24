@@ -1,4 +1,4 @@
-def hacer_vetnana(window_size):
+def hacer_ventana(window_size):
     import PySimpleGUI as sg
 
     layout_selec_nivel = [

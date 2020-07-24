@@ -10,7 +10,7 @@ except ModuleNotFoundError:
 # {---------------------------------------------------------------------------------}
 
 class Tablero:
-    """ Esta clase crea un objeto Tablero que es una matriz de objetos "Casilla".\n
+    """Esta clase crea un objeto Tablero que es una matriz de objetos "Casilla".\n
     Parámetros:\n
     tamaño: es la dimensión de la matriz (TxT).\n
     casillas_especiales: es un diccionario que contiene las keys de las casillas que son "especiales".\n
@@ -28,6 +28,16 @@ class Tablero:
         """Retorna el layout para la GUI
         """
         return self._layout
+
+    def getLetraInicio(self):
+        """Retorna la letra de la ficha de inicio
+        """
+        return self._inicio[1]
+
+    def getCasillasEspeciales(self):
+        """Retorna el diccionario de casillas especiales
+        """
+        return self._casillas_especiales
 
     def _armar(self):
         """Retorna una lista para la GUI que contiene una matriz de objetos Casilla
@@ -134,10 +144,10 @@ class Tablero:
 
     def verificarPalabra(self):
         """Verifica que la palabra formada este bien formada y posicionada.\n
-        Si esta bien formada retorna la palabra y, en caso contrario, retorna "xxxxx"
+        Si esta bien formada retorna la palabra y, en caso contrario, retorna "xxxxxx"
         """
         lis_aux=[]
-        if (len(self._palabra)>1): # La palabra tiene que tener mas de una letra
+        if (len(self._palabra)>0): # La palabra tiene que tener mas de una letra
             for x in self._palabra:
                 elems = x.split('-') # elems[0]: num de fila // elems[1]: num de columna
                 for i in range(0,2):
@@ -162,6 +172,7 @@ class Tablero:
                         vertical=False
                     a_comparar2 += 1
             if (horizontal)or(vertical):
+                self._ordenarPalabra(lis_ord)
                 pal=''
                 for key in lis_ord:
                     pal += self._casillas[key[0]-1][key[1]-1].getContenido() # Armo la palabra a devolver
@@ -170,32 +181,24 @@ class Tablero:
                 return 'xxxxxx'
         else:
             return 'xxxxxx'
+        
+    def _ordenarPalabra(self, lis_keys_ordenada):
+        """Ordena los elementos de la palabra en su orden correcto
+        """
+        self._palabra = []
+        for key in lis_keys_ordenada:
+            self._palabra.append((str(key[0])+'-'+str(key[1])))
 
     def copiaPalabra(self):
         """Retorna una copia de la palabra (lista de keys)
         """
         return self._palabra[:]
 
-    def getLetraInicio(self):
-        """Retorna la letra de la ficha de inicio
-        """
-        return self._inicio[1]
+# {---------------------------------------------------------------------------------}
+# {--------------------------- CREACIÓN DEL OBJETO ---------------------------------}
+# {---------------------------------------------------------------------------------}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def crearTablero(bolsa_fichas):
+def crear_tablero(bolsa_fichas):
     casillas_especiales1 = {
     "x2":(("2-6","2-10","6-2","6-14","7-7","7-9","9-7","9-9","10-2","10-14","14-6","14-10",), "#2283BB"),
     "x3":(("1-4","1-12","3-7","3-9","4-1","4-8","4-15","7-3","7-13","8-4","8-12","9-3","9-13","12-1","12-15","12-8","13-7","13-9","15-4","15-12"), "#45BB22"),

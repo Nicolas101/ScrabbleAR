@@ -1,6 +1,6 @@
 class Jugador():
 
-    def _init_(self):
+    def __init__(self):
         self._puntaje = 0
     
     def getPuntaje(self):

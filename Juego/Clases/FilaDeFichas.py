@@ -10,7 +10,7 @@ except ModuleNotFoundError:
 # {---------------------------------------------------------------------------------}
 
 class FilaFichas():
-    """ Esta clase se utiliza para crear el "atril" de fichas para el jugador y para la computadora.\n
+    """Esta clase se utiliza para crear el "atril" de fichas para el jugador y para la computadora.\n
     Parámetros:\n
     key_add: es un string adicional que se le agrega a la key de cada ficha, con el fin de diferenciar distintas filas de fichas.\n
     letras: es una lista que contiene las letras iniciales a colocar en las fichas.\n
@@ -21,6 +21,7 @@ class FilaFichas():
         self._ficha_selected = [False,None] # [True/False,key de la ficha seleccionada]
         self._casillas = [] # lista de objetos casilla de la fila
         self._layout = self._armar() # layout para PySimpleGUI
+        self._fichas_a_cambiar = [] # lista de keys de las fichas a cambiar
         
     def getLayout(self):
         """Retorna el layout para la GUI
@@ -103,13 +104,52 @@ class FilaFichas():
         """
         return self._letras[:]
 
+    def agregarFichaACambiar (self, key, window):
+        """
+        """
+        if (key not in self._fichas_a_cambiar):
+            self._fichas_a_cambiar.append(key)
+            aux = key.split("-")
+            self._casillas[int(aux[1])-1].setColor(('black',"#5fefaa"))   
+            window[key].update(button_color=('black',"#5fefaa"))
+        else:
+            self._fichas_a_cambiar.remove(key)
+            aux = key.split("-")
+            self._casillas[int(aux[1])-1].setColor(('black',"white"))   
+            window[key].update(button_color=('black',"white"))
+    
+    def cambiarFichas(self, window, bolsa_fichas):
+        """Cambia las fichas seleccionadas por otras, elegidas por la bolsa de fichas.\n
+        Retorna True si se realizo correctamente, False en caso contrario
+        """
+        if (self._fichas_a_cambiar != []): #si hay fichas seleccionadas para cambiar
+            letras_viejas = []
+            
+            #pongo las casillas que voy a cambiar en blanco y guardo su contenido anterior
+            for key in self._fichas_a_cambiar:  
+                aux = key.split("-")
+                letras_viejas.append(self._casillas[int(aux[1])-1].getContenido())
+                self._casillas[int(aux[1])-1].setColor(('black',"#5fefaa"))
+                self._casillas[int(aux[1])-1].setContenido('')  
+                window[key].Update('')
+            cant_letras_a_cambiar = len(self._fichas_a_cambiar)
 
+            #traigo nuevas letras de la bolsa de fichas (si no hay mas letras devuelve lista vacia)
+            lis_nuevas_letras = bolsa_fichas.letras_random(cant_letras_a_cambiar) 
+            if (lis_nuevas_letras == []):
+                return False
+            else:
+                bolsa_fichas.devolverLetras(letras_viejas) #devuelvo las letras viejas a la bolsa
+                self.insertarFichas(window, lis_nuevas_letras) #inserto las nuevas en la fila de fichas
+                self._fichas_a_cambiar = []
+                return True
+        else: 
+            return True
 
+# {---------------------------------------------------------------------------------}
+# {--------------------------- CREACIÓN DEL OBJETO ---------------------------------}
+# {---------------------------------------------------------------------------------}
 
-
-
-
-
-def crearFilaFichas(bolsa_fichas, genero):
+def crear_fila_fichas(bolsa_fichas, genero):
     fila_fichas = FilaFichas(key_add= genero, letras=bolsa_fichas.letras_random(7))
     return fila_fichas

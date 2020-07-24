@@ -25,7 +25,7 @@ def es_valida(palabra,dificultad):
     else:
         ok=True
     if (ok==True):
-        if (dificultad == 'facil'):
+        if (dificultad == '-FACIL-'):
             return True
         else:
             return clasificar(palabra,clases_validas)

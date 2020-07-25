@@ -61,8 +61,6 @@ class BolsaFichas():
         """
         puntos = 0
         indice = 0
-        print(lis_keys)
-        print(palabra)
         for letra in palabra:
             if (lis_keys[indice] in casillas_especiales['x2'][0]):
                 puntos += (self._bolsa_fichas[letra]['puntuacion']*2)

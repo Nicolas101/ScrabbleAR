@@ -22,7 +22,9 @@ class Maquina(Jugador):
     
     
     def armarPalabra(self,fila_fichas,bolsa_fichas,tablero):
-        """
+        """Intenta armar una palabra con las letras de la fila de fichas de la maquina
+        si no puede devuelve 'xxxxxx'
+        este proceso esta hecho asi nomas, martin lo va a optimizar entre hoy y mañana
         """
         lis_letras = fila_fichas.getLetras()
         cont = 0
@@ -37,7 +39,6 @@ class Maquina(Jugador):
         lis_letras_aux = lis_letras[:] #genera una copia
         encontro = False
         palabra_encontrada = ''
-        print(lis_letras)
         for palabra in verbs.keys():
             if (len(palabra)>2):
                 encontro = True
@@ -51,7 +52,6 @@ class Maquina(Jugador):
                 if (encontro):
                     if ((letra_inicio != '0')and(letra_inicio in palabra))or(letra_inicio == '0'):
                         palabra_encontrada = palabra
-                        print('1')
                         break
                     else:
                         encontro = False
@@ -69,7 +69,6 @@ class Maquina(Jugador):
                     if (encontro):
                         if ((letra_inicio != '0')and(letra_inicio in palabra))or(letra_inicio == '0'):
                             palabra_encontrada = palabra
-                            print('2')
                             break
                         else:
                             encontro = False
@@ -87,7 +86,6 @@ class Maquina(Jugador):
                         if (encontro):
                             if ((letra_inicio != '0')and(letra_inicio in palabra))or(letra_inicio == '0'):
                                 palabra_encontrada = palabra
-                                print('3')
                                 break
                             else:
                                 encontro = False
@@ -131,7 +129,7 @@ class Maquina(Jugador):
         key_primera_int = []
         for elem in key_inicio.split('-'):
             key_primera_int.append(int(elem))
-        ingreso = random.randint(0,1) #0: ingresa la palabra horizontalmente/ 1: ingresa la palabra verticalmente
+        ingreso = random.randint(0,1) #0: ingresa la palabra VERTICALMENTE/ 1: ingresa la palabra HORIZONTALMENTE
         key_primera_int[ingreso] -= pos_de_inicio #le resto a uno de los dos elemtos de key_primera_int(dependiendo si voy a ingresar vertical u horizontal) pos_de_inicio y asi obtengo la primer key donde voy a insertar
         #voy insertando las letras en el tablero siempre y cuando no sean la de inicio que ya viene insertada
         pase_la_de_inicio = False
@@ -143,7 +141,17 @@ class Maquina(Jugador):
             else:
                 pase_la_de_inicio = True
             key_primera_int[ingreso] += 1
-        print(tablero.copiaPalabra())
+
+        #ordeno las keys para que quede cada key con la letra que le corresponde y asi poder sumar bien los puntos
+        lis_aux_int = []
+        for key in tablero.copiaPalabra():
+            key_split = key.split('-')
+            lis_aux_int.append([(int(key_split[0])),(int(key_split[1]))])#lis_aux_int almacena las keys pero en int en vez de string
+        if (ingreso == 1):
+            lis_ord = sorted(lis_aux_int, key=lambda valor: valor[1]) # ordena de menor a mayor las keys segun la columna
+        else:
+            lis_ord = sorted(lis_aux_int, key=lambda valor: valor[0]) # ordena de menor a mayor las keys segun la fila
+        tablero.ordenarPalabra(lis_ord)
 
     def _insertarSinInicio(self, palabra, tablero, window, tamaño):
         """Inserta la palabra en un lugar al azar que sea válido
@@ -153,20 +161,19 @@ class Maquina(Jugador):
         while (not ingresada):
             fila_columna = [random.randint(1,tamaño), random.randint(1,tamaño)] #posicion al azar
             fila_columna_aux = fila_columna[:]
-            como_insertar = random.randint(0,1) #0: inserta horizontal / 1: inserta vertical
+            como_insertar = random.randint(0,1) #0: inserta VERTICAL / 1: inserta HORIZONTAL
             lugar_valido = True #esta variable permanecera en true si el lugar seleccionado es valido
             for letra in palabra:
                 #este loop verifica que haya el espacio libre necesario para insertar la palabra
                 #si hay una casilla ocupada o se "cae" del tablero, se pone la variable lugar valido en false
-                if (fila_columna_aux[como_insertar]<=tamaño):
-                    key = str(fila_columna_aux[0])+'-'+str(fila_columna_aux[1])
-                    if (tablero.casillaOcupada(key)):
-                        lugar_valido = False
-                        break
-                    fila_columna_aux[como_insertar] += 1
-                else:
+                if (fila_columna_aux[como_insertar]>tamaño):
                     lugar_valido = False
                     break
+                key = str(fila_columna_aux[0])+'-'+str(fila_columna_aux[1])
+                if (tablero.casillaOcupada(key)):
+                    lugar_valido = False
+                    break
+                fila_columna_aux[como_insertar] += 1
             if (lugar_valido):
                 #si el lugar era valido se inserta la palabra en el tablero
                 for letra in palabra:

@@ -144,7 +144,8 @@ def start_game(nivel):
                     if (palabra_maquina != 'xxxxxx'): 
                         palabra_armada = True
                         maquina.insertarPalabra(palabra_maquina, tablero, window_game, tamaño_tablero)
-                        #calculo el puntaje
+                        maquina.sumarPuntos(bolsa_fichas.devolverPuntaje(palabra_maquina,tablero.copiaPalabra(),tablero.getCasillasEspeciales()))
+                        window_game["-PuntosM-"].update(str(maquina.getPuntaje()))
                         pass
                     else:
                         #aviso en pantalla que la maquina no pudo ingresar una palabra, por lo que cambia todas las fichas(falta implementar)
@@ -153,7 +154,7 @@ def start_game(nivel):
                     nuevas_letras = bolsa_fichas.letras_random(cant_letras_a_cambiar)
                     if nuevas_letras != []:
                         #si habia suficientes letras en la bolsa de ficha las agrega a la fila      
-                        maquina.nuevasLetras(fila_fichasM, nuevas_letras, tablero, palabra_armada) #ver que onda con esto
+                        maquina.nuevasLetras(fila_fichasM, nuevas_letras, tablero, palabra_armada) 
                         pass
                     else:
                         #termina el juego porq no hay mas fichas

@@ -172,7 +172,7 @@ class Tablero:
                         vertical=False
                     a_comparar2 += 1
             if (horizontal)or(vertical):
-                self._ordenarPalabra(lis_ord)
+                self.ordenarPalabra(lis_ord)
                 pal=''
                 for key in lis_ord:
                     pal += self._casillas[key[0]-1][key[1]-1].getContenido() # Armo la palabra a devolver
@@ -182,7 +182,7 @@ class Tablero:
         else:
             return 'xxxxxx'
         
-    def _ordenarPalabra(self, lis_keys_ordenada):
+    def ordenarPalabra(self, lis_keys_ordenada):
         """Ordena los elementos de la palabra en su orden correcto
         """
         self._palabra = []
@@ -198,7 +198,7 @@ class Tablero:
         """Devuelve si la casilla pasada por parametro se encuentra ocupada
         """
         aux = key.split("-")
-        self._casillas[int(aux[0])-1][int(aux[1])-1].estaOcupada()
+        return self._casillas[int(aux[0])-1][int(aux[1])-1].estaOcupada()
 
 # {---------------------------------------------------------------------------------}
 # {--------------------------- CREACIÓN DEL OBJETO ---------------------------------}

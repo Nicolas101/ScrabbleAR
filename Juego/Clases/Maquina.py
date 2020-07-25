@@ -9,6 +9,7 @@ except ModuleNotFoundError:
     from Clases.BolsaFichas import BolsaFichas
     from Clases.Tablero import Tablero
 from pattern.text.es import verbs, tag, spelling, lexicon, parse, split
+import random
 
 # {---------------------------------------------------------------------------------}
 # {------------------------------ CLASE MAQUINA ------------------------------------}
@@ -18,28 +19,31 @@ class Maquina(Jugador):
     """Es una subclase de la clase Jugador que contiene todo el comportamiento del oponente
     """
 
-    def cambiarFichas(self,fila_fichas,bolsa_fichas):
-        #a implentar
-        pass
+    
     
     def armarPalabra(self,fila_fichas,bolsa_fichas,tablero):
         """
         """
         lis_letras = fila_fichas.getLetras()
+        cont = 0
+        for letra in lis_letras:
+            lis_letras[cont] = letra.lower()
+            cont += 1    
         if (tablero.copiaPalabra() != []): 
-            letra_inicio = tablero.getLetraInicio()
+            letra_inicio = tablero.getLetraInicio().lower()
             lis_letras.append(letra_inicio)
         else:
             letra_inicio = '0'
         lis_letras_aux = lis_letras[:] #genera una copia
         encontro = False
         palabra_encontrada = ''
+        print(lis_letras)
         for palabra in verbs.keys():
             if (len(palabra)>2):
                 encontro = True
                 for letra in palabra:
-                    if letra.upper() in lis_letras_aux:
-                        lis_letras_aux.remove(letra.upper())
+                    if letra in lis_letras_aux:
+                        lis_letras_aux.remove(letra.lower())
                     else:
                         encontro = False
                         lis_letras_aux = lis_letras[:]
@@ -56,8 +60,8 @@ class Maquina(Jugador):
                 if (len(palabra)>2):
                     encontro = True
                     for letra in palabra:
-                        if letra.upper() in lis_letras_aux:
-                            lis_letras_aux.remove(letra.upper())
+                        if letra in lis_letras_aux:
+                            lis_letras_aux.remove(letra.lower())
                         else:
                             encontro = False
                             lis_letras_aux = lis_letras[:]
@@ -74,8 +78,8 @@ class Maquina(Jugador):
                     if (len(palabra)>2):
                         encontro = True
                         for letra in palabra:
-                            if letra.upper() in lis_letras_aux:
-                                lis_letras_aux.remove(letra.upper())
+                            if letra in lis_letras_aux:
+                                lis_letras_aux.remove(letra.lower())
                             else:
                                 encontro = False
                                 lis_letras_aux = lis_letras[:]
@@ -97,18 +101,99 @@ class Maquina(Jugador):
             nuevo_string = ''
             for x in aux:
                 nuevo_string += x 
-            #fila_fichas.eliminarLetras(nuevo_string)
-            #fila_fichas.agregarLetras(bolsa_fichas.letras_random(len(nuevo_string)))
-            tablero.reiniciarPalabra()
-            return palabra_encontrada
+            fila_fichas.eliminarLetras(nuevo_string.upper())
+            cant_letras_a_cambiar = len(nuevo_string) #si la palabra es correcta, este es el numero de nuevas letras que necesita la fila de fichas
+            return [palabra_encontrada.upper(), cant_letras_a_cambiar]
         else:
             print('xxxxx')
-            if letra_inicio != '0':
-                tablero.reiniciarPalabraInicio()    
+            cant_letras_a_cambiar = 7
+            fila_fichas.eliminarTodasLasLetras()
+            return ['xxxxxx', cant_letras_a_cambiar]
+
+    def insertarPalabra(self, palabra, tablero, window, tamaño):
+        """Inserta la palabra generada por la maquina en el tablero
+        """
+        if tablero.copiaPalabra() != []:
+            self._insertarConInicio(palabra, tablero, window) #si la palabra utiliza la letra de inicio se usa este metodo
+        else:
+            self._insertarSinInicio(palabra, tablero, window,tamaño)
+        
+    def _insertarConInicio(self, palabra, tablero, window):
+        """Inserta la palabra en el tablero teniendo en cuenta que se debe utilizar la letra de inicio de juego
+        """
+        key_inicio = tablero.copiaPalabra()[0] #consigo la key de la letra de inicio
+        #pos de inicio toma el valor de lo que hay que restarle a la key de incio para conseguir la key donde ira la primer letra de la palabra
+        pos_de_inicio = 0
+        for letra in palabra:
+            if letra == tablero.getLetraInicio():
+                break
+            pos_de_inicio += 1
+        key_primera_int = []
+        for elem in key_inicio.split('-'):
+            key_primera_int.append(int(elem))
+        ingreso = random.randint(0,1) #0: ingresa la palabra horizontalmente/ 1: ingresa la palabra verticalmente
+        key_primera_int[ingreso] -= pos_de_inicio #le resto a uno de los dos elemtos de key_primera_int(dependiendo si voy a ingresar vertical u horizontal) pos_de_inicio y asi obtengo la primer key donde voy a insertar
+        #voy insertando las letras en el tablero siempre y cuando no sean la de inicio que ya viene insertada
+        pase_la_de_inicio = False
+        #voy insertando las letras en el tablero siempre y cuando no sean la de inicio que ya viene insertada
+        for letra in palabra:
+            if (letra != tablero.getLetraInicio())or(pase_la_de_inicio):
+                key = str(key_primera_int[0])+'-'+str(key_primera_int[1])
+                tablero.insertarFicha(key, window, letra)
             else:
+                pase_la_de_inicio = True
+            key_primera_int[ingreso] += 1
+        print(tablero.copiaPalabra())
+
+    def _insertarSinInicio(self, palabra, tablero, window, tamaño):
+        """Inserta la palabra en un lugar al azar que sea válido
+        """
+        ingresada = False
+        #se repite el loop hasta que se pueda ingresar la palabra
+        while (not ingresada):
+            fila_columna = [random.randint(1,tamaño), random.randint(1,tamaño)] #posicion al azar
+            fila_columna_aux = fila_columna[:]
+            como_insertar = random.randint(0,1) #0: inserta horizontal / 1: inserta vertical
+            lugar_valido = True #esta variable permanecera en true si el lugar seleccionado es valido
+            for letra in palabra:
+                #este loop verifica que haya el espacio libre necesario para insertar la palabra
+                #si hay una casilla ocupada o se "cae" del tablero, se pone la variable lugar valido en false
+                if (fila_columna_aux[como_insertar]<=tamaño):
+                    key = str(fila_columna_aux[0])+'-'+str(fila_columna_aux[1])
+                    if (tablero.casillaOcupada(key)):
+                        lugar_valido = False
+                        break
+                    fila_columna_aux[como_insertar] += 1
+                else:
+                    lugar_valido = False
+                    break
+            if (lugar_valido):
+                #si el lugar era valido se inserta la palabra en el tablero
+                for letra in palabra:
+                    key = str(fila_columna[0])+'-'+str(fila_columna[1])
+                    tablero.insertarFicha(key, window, letra)
+                    fila_columna[como_insertar] += 1
+                ingresada = True
+
+    def nuevasLetras(self, fila_fichas, nuevas_letras, tablero, palabra_armada):
+        """Agrega las nuevas letras pasadas por parametro a la variable _letras de la fila de fichas de la maquina
+        ademas reinicia la variable _palabra del tablero ya que esta palabra ya fue insertada
+        """
+        #si la maquina pudo armar la palabra se pone vacia la variable _palabra
+        #en caso contrario primero se debe verificar primero si la key de inicio esta en la variable ya que esta no se debe borrar
+        if palabra_armada:
+            tablero.reiniciarPalabra()
+        else:
+            if tablero.copiaPalabra() == []:
                 tablero.reiniciarPalabra()
-            #cambiarFichas(fila_fichas, bolsa_fichas)
-            return 'xxxxx'
+            else:
+                tablero.reiniciarPalabraInicio()
+        #se agregan las nuevas letras a la fila de fichas de la maquina
+        for letra in nuevas_letras:
+            fila_fichas.agregarLetra(letra)
+            
+        
+        
 
 
 

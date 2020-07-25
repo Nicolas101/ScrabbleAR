@@ -194,6 +194,12 @@ class Tablero:
         """
         return self._palabra[:]
 
+    def casillaOcupada(self,key):
+        """Devuelve si la casilla pasada por parametro se encuentra ocupada
+        """
+        aux = key.split("-")
+        self._casillas[int(aux[0])-1][int(aux[1])-1].estaOcupada()
+
 # {---------------------------------------------------------------------------------}
 # {--------------------------- CREACIÓN DEL OBJETO ---------------------------------}
 # {---------------------------------------------------------------------------------}
@@ -218,11 +224,14 @@ def crear_tablero(bolsa_fichas):
     num_random = random.randint(1,3)
 
     if num_random == 1:
-        tablero = Tablero(15,casillas_especiales1,inicio=("8-8",bolsa_fichas.letras_random(1)[0]))
+        tamaño = 15
+        tablero = Tablero(tamaño,casillas_especiales1,inicio=("8-8",bolsa_fichas.letras_random(1)[0]))
     elif num_random == 2:
-        tablero = Tablero(19,casillas_especiales2,inicio=("10-10",bolsa_fichas.letras_random(1)[0]))
+        tamaño = 19
+        tablero = Tablero(tamaño,casillas_especiales2,inicio=("10-10",bolsa_fichas.letras_random(1)[0]))
     else:
-        tablero = Tablero(20,casillas_especiales2,inicio=("10-10",bolsa_fichas.letras_random(1)[0]))#3
+        tamaño = 20
+        tablero = Tablero(tamaño,casillas_especiales2,inicio=("10-10",bolsa_fichas.letras_random(1)[0]))#3
 
     pad_tablero = {
         1:{"pad-izq":126,"pad-der":146,"pad-top":70,"pad-bot":70}, # medidas para tablero 1
@@ -230,4 +239,4 @@ def crear_tablero(bolsa_fichas):
         3:{"pad-izq":61,"pad-der":61,"pad-top":10,"pad-bot":10}, # medidas para tablero 3
     }
 
-    return [tablero,pad_tablero,num_random]
+    return [tablero,pad_tablero,num_random,tamaño]

@@ -7,7 +7,7 @@ def seleccionar_nivel():
     event = window_nivel.read()
 
     window_nivel.close()
-    return event
+    return event[0]
 
 def start_game(nivel):
     """Muestra la ventana de juego y el desarrollo de la partida
@@ -36,7 +36,7 @@ def start_game(nivel):
         bolsa_fichas = crear_bolsa()
 
         #TABLERO
-        tablero,pad_tablero,num_random = crear_tablero(bolsa_fichas)
+        tablero,pad_tablero,num_random,tamaño_tablero = crear_tablero(bolsa_fichas)
 
         #FILA DE FICHAS
         fila_fichasJ = crear_fila_fichas(bolsa_fichas, 'FJ')
@@ -90,25 +90,25 @@ def start_game(nivel):
                     elif(event == "Confirmar Jugada"):
                         window_game['Cambiar fichas'].update(disabled=False)
                         palabra = tablero.verificarPalabra()
-                        if (palabra != 'xxxxxx'):
-                            if (es_valida(palabra,nivel)):
-                                window_game['text-confirmar'].update('Palabra correcta',visible=True)
-                                usuario.sumarPuntos(bolsa_fichas.devolverPuntaje(palabra,tablero.copiaPalabra(),tablero.getCasillasEspeciales()))
-                                window_game["-PuntosJ-"].update(str(usuario.getPuntaje()))
-                                tablero.reiniciarPalabra()
-                                nuevas_fichas = bolsa_fichas.letras_random(len(palabra))
-                                if (nuevas_fichas == []):
-                                    game_over = True
-                                    game_over_text = "Se acabaron las fichas, juego terminado"
-                                    break
-                                    #se termina el juego porq no hay fichas suficientes
-                                else:
-                                    fila_fichasJ.insertarFichas(window_game,nuevas_fichas)
-                                    turno = 1
+                        if (es_valida(palabra,nivel)):
+                            window_game['text-confirmar'].update('Palabra correcta',visible=True)
+                            usuario.sumarPuntos(bolsa_fichas.devolverPuntaje(palabra,tablero.copiaPalabra(),tablero.getCasillasEspeciales()))
+                            window_game["-PuntosJ-"].update(str(usuario.getPuntaje()))
+                            tablero.reiniciarPalabra()
+                            nuevas_fichas = bolsa_fichas.letras_random(len(palabra))
+                            if (nuevas_fichas == []):
+                                game_over = True
+                                game_over_text = "Se acabaron las fichas, juego terminado"
+                                print('fin')
+                                break
+                                #se termina el juego porq no hay fichas suficientes
                             else:
-                                fichas_a_devolver = tablero.devolverFichas(window_game)
-                                fila_fichasJ.insertarFichas(window_game,fichas_a_devolver)
-                                window_game['text-confirmar'].update('Palabra incorrecta',visible=True)
+                                fila_fichasJ.insertarFichas(window_game,nuevas_fichas)
+                                turno = 1
+                        else:
+                            fichas_a_devolver = tablero.devolverFichas(window_game)
+                            fila_fichasJ.insertarFichas(window_game,fichas_a_devolver)
+                            window_game['text-confirmar'].update('Palabra incorrecta',visible=True)
 
                     #*********** CLICK EN CAMBIAR FICHAS **********
                     elif(event == 'Cambiar fichas'):
@@ -129,6 +129,7 @@ def start_game(nivel):
                         else:
                             game_over = True
                             game_over_text = "Se acabaron las fichas, juego terminado"
+                            print('fin')
                             break
                             #se termina el juego porq no hay fichas suficientes
 
@@ -136,9 +137,30 @@ def start_game(nivel):
                 # *************************************** TURNO DE LA MAQUINA **********************************************       
                 else:
                     window_game["-TURNO-"].update("Turno del oponente")
-                    window_game.read(timeout=4000)
-                    palabra_maquina = maquina.armarPalabra(fila_fichasM,bolsa_fichas,tablero)
-                    #falta hacer
+                    window_game.read(timeout=2000)
+                    #la maquina intenta armar una palabra con las letras que tiene en su fila
+                    palabra_maquina, cant_letras_a_cambiar = maquina.armarPalabra(fila_fichasM,bolsa_fichas,tablero)
+                    #si pudo formar la palabra la inserta en el tablero y trae nuevas letras de la bolsa
+                    if (palabra_maquina != 'xxxxxx'): 
+                        palabra_armada = True
+                        maquina.insertarPalabra(palabra_maquina, tablero, window_game, tamaño_tablero)
+                        #calculo el puntaje
+                        pass
+                    else:
+                        #aviso en pantalla que la maquina no pudo ingresar una palabra, por lo que cambia todas las fichas(falta implementar)
+                        palabra_armada = False
+                        pass
+                    nuevas_letras = bolsa_fichas.letras_random(cant_letras_a_cambiar)
+                    if nuevas_letras != []:
+                        #si habia suficientes letras en la bolsa de ficha las agrega a la fila      
+                        maquina.nuevasLetras(fila_fichasM, nuevas_letras, tablero, palabra_armada) #ver que onda con esto
+                        pass
+                    else:
+                        #termina el juego porq no hay mas fichas
+                        game_over = True
+                        game_over_text = "Se acabaron las fichas, juego terminado"
+                        print('fin')
+                        break
                     turno = 0           
             else:
                 sg.popup(game_over_text)

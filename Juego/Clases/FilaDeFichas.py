@@ -105,7 +105,8 @@ class FilaFichas():
         return self._letras[:]
 
     def agregarFichaACambiar (self, key, window):
-        """
+        """Cuando esta seleccionado el boton cambiar fichas,
+        si se toca una ficha la agrega a fichas a cambiar y si ya esta agregada la quita
         """
         if (key not in self._fichas_a_cambiar):
             self._fichas_a_cambiar.append(key)
@@ -145,6 +146,23 @@ class FilaFichas():
                 return True
         else: 
             return True
+    
+    def eliminarLetras(self, palabra):
+        """
+        Elimina de la variable _letras las letras del string pasado por parametro
+        """
+        for letra in palabra:
+            self._letras.remove(letra)
+        
+    def eliminarTodasLasLetras(self):
+        """Deja la variable _letras vacia(se usa cuando la maquina tiene que cambiar letras)
+        """
+        self._letras = []
+
+    def agregarLetra(self,letra):
+        """Agrega una letra a la variable _letras
+        """
+        self._letras.append(letra)
 
 # {---------------------------------------------------------------------------------}
 # {--------------------------- CREACIÓN DEL OBJETO ---------------------------------}

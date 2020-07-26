@@ -19,27 +19,52 @@ class Maquina(Jugador):
     """Es una subclase de la clase Jugador que contiene todo el comportamiento del oponente
     """
 
-    
-    
-    def armarPalabra(self,fila_fichas,bolsa_fichas,tablero):
+    def armarPalabra(self, fila_fichas, bolsa_fichas, tablero, dificultad):
         """Intenta armar una palabra con las letras de la fila de fichas de la maquina
         si no puede devuelve 'xxxxxx'
-        este proceso esta hecho asi nomas, martin lo va a optimizar entre hoy y mañana
         """
-        lis_letras = fila_fichas.getLetras()
-        cont = 0
-        for letra in lis_letras:
-            lis_letras[cont] = letra.lower()
-            cont += 1    
+        lis_letras = list(map(lambda l: l.lower(), fila_fichas.getLetras())) #lis_letras contiene las letras de la maquina en minuscula  
+        #si se debe usar la letra de inicio se la agrega a lis letras 
         if (tablero.copiaPalabra() != []): 
             letra_inicio = tablero.getLetraInicio().lower()
             lis_letras.append(letra_inicio)
         else:
             letra_inicio = '0'
-        lis_letras_aux = lis_letras[:] #genera una copia
-        encontro = False
         palabra_encontrada = ''
-        for palabra in verbs.keys():
+        #se llama al metodo _intentarArmar para buscar una palabra que se pueda armar con las letras que se tiene
+        palabra_encontrada = self._intentarArmar(verbs.keys(),dificultad,lis_letras,letra_inicio)
+        if (palabra_encontrada == 'xxxxxx'):
+            palabra_encontrada = self._intentarArmar(lexicon.keys(),dificultad,lis_letras, letra_inicio)
+            if (palabra_encontrada == 'xxxxxx'):
+                palabra_encontrada = self._intentarArmar(lexicon.keys(),dificultad,lis_letras,letra_inicio)
+        if (palabra_encontrada != 'xxxxxx'):
+            #si se encontró una palabra la devuelve a esta junto con la cantidad de letras nuevas que necesita la maquina
+            print(palabra_encontrada)
+            aux = list(map(lambda letra: letra,palabra_encontrada))
+            if (letra_inicio != '0'):
+                aux.remove(letra_inicio)
+            nuevo_string = ''
+            for x in aux:
+                nuevo_string += x
+            fila_fichas.eliminarLetras(nuevo_string.upper())
+            cant_letras_a_cambiar = len(nuevo_string) #si la palabra es correcta, este es el numero de nuevas letras que necesita la fila de fichas
+            return [palabra_encontrada.upper(), cant_letras_a_cambiar]
+        else:
+            #si no encontró una palabra se devuelve 'xxxxxx' y se especifica que se deben cambiar todas las letras
+            print('xxxxx')
+            cant_letras_a_cambiar = 7
+            fila_fichas.eliminarTodasLasLetras()
+            return ['xxxxxx', cant_letras_a_cambiar]
+
+    def _intentarArmar(self, diccionario, dificultad, lis_letras, letra_inicio):
+        """Busca una palabra que pueda armarse con las letras que tiene la maquina en el diccionario
+        pasado por parametro(verbs, lexicon o spelling)
+        """
+        lis_letras_aux = lis_letras[:]
+        for palabra in diccionario:
+            #se pasa por cada palabra del diccionario hasta encontrar una que se pueda armar
+            #utilizando las letras que se tienen y que, si se esta en nivel medio o dificil, sea un adjetivo o verbo
+            valida = True
             if (len(palabra)>2):
                 encontro = True
                 for letra in palabra:
@@ -51,62 +76,29 @@ class Maquina(Jugador):
                         break
                 if (encontro):
                     if ((letra_inicio != '0')and(letra_inicio in palabra))or(letra_inicio == '0'):
-                        palabra_encontrada = palabra
-                        break
-                    else:
-                        encontro = False
-        if (not encontro):
-            for palabra in lexicon.keys():
-                if (len(palabra)>2):
-                    encontro = True
-                    for letra in palabra:
-                        if letra in lis_letras_aux:
-                            lis_letras_aux.remove(letra.lower())
-                        else:
-                            encontro = False
-                            lis_letras_aux = lis_letras[:]
-                            break
-                    if (encontro):
-                        if ((letra_inicio != '0')and(letra_inicio in palabra))or(letra_inicio == '0'):
+                        if (dificultad != '-FACIL-'):
+                            valida = self._verificarPalabra(palabra)
+                        if(valida):
                             palabra_encontrada = palabra
                             break
                         else:
                             encontro = False
-            if (not encontro):
-                for palabra in spelling.keys():
-                    if (len(palabra)>2):
-                        encontro = True
-                        for letra in palabra:
-                            if letra in lis_letras_aux:
-                                lis_letras_aux.remove(letra.lower())
-                            else:
-                                encontro = False
-                                lis_letras_aux = lis_letras[:]
-                                break
-                        if (encontro):
-                            if ((letra_inicio != '0')and(letra_inicio in palabra))or(letra_inicio == '0'):
-                                palabra_encontrada = palabra
-                                break
-                            else:
-                                encontro = False
-        if (encontro):
-            print(palabra_encontrada)
-            aux = []
-            for letra in palabra_encontrada:
-                aux.append(letra)
-            if (letra_inicio != '0'):
-                aux.remove(letra_inicio)
-            nuevo_string = ''
-            for x in aux:
-                nuevo_string += x 
-            fila_fichas.eliminarLetras(nuevo_string.upper())
-            cant_letras_a_cambiar = len(nuevo_string) #si la palabra es correcta, este es el numero de nuevas letras que necesita la fila de fichas
-            return [palabra_encontrada.upper(), cant_letras_a_cambiar]
+                    else:
+                        encontro = False
+        if encontro:
+            return palabra_encontrada
         else:
-            print('xxxxx')
-            cant_letras_a_cambiar = 7
-            fila_fichas.eliminarTodasLasLetras()
-            return ['xxxxxx', cant_letras_a_cambiar]
+            return 'xxxxxx'
+            
+    def _verificarPalabra(self, palabra):
+        """Verifica que la palabra sea correcta para la especificacion
+        de la dificultad en la que se esta jugando
+        """
+        aux = parse(palabra).split()[0][0][2]
+        if aux in ['B-ADJP','B-VP']:
+            return True
+        else:
+            return False
 
     def insertarPalabra(self, palabra, tablero, window, tamaño):
         """Inserta la palabra generada por la maquina en el tablero

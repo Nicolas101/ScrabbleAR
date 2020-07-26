@@ -100,7 +100,6 @@ def start_game(nivel):
                                 game_over = True
                                 game_over_text = "Se acabaron las fichas, juego terminado"
                                 print('fin')
-                                break
                                 #se termina el juego porq no hay fichas suficientes
                             else:
                                 fila_fichasJ.insertarFichas(window_game,nuevas_fichas)
@@ -130,7 +129,6 @@ def start_game(nivel):
                             game_over = True
                             game_over_text = "Se acabaron las fichas, juego terminado"
                             print('fin')
-                            break
                             #se termina el juego porq no hay fichas suficientes
 
         
@@ -139,7 +137,7 @@ def start_game(nivel):
                     window_game["-TURNO-"].update("Turno del oponente")
                     window_game.read(timeout=2000)
                     #la maquina intenta armar una palabra con las letras que tiene en su fila
-                    palabra_maquina, cant_letras_a_cambiar = maquina.armarPalabra(fila_fichasM,bolsa_fichas,tablero)
+                    palabra_maquina, cant_letras_a_cambiar = maquina.armarPalabra(fila_fichasM,bolsa_fichas,tablero,nivel)
                     #si pudo formar la palabra la inserta en el tablero y trae nuevas letras de la bolsa
                     if (palabra_maquina != 'xxxxxx'): 
                         palabra_armada = True
@@ -161,10 +159,10 @@ def start_game(nivel):
                         game_over = True
                         game_over_text = "Se acabaron las fichas, juego terminado"
                         print('fin')
-                        break
                     turno = 0           
             else:
                 sg.popup(game_over_text)
+                break
 
         window_game.close() 
 

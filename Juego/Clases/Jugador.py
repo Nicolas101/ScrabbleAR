@@ -1,39 +1,52 @@
 class Jugador():
+    """Esta clase permite definir un Jugador con:\n
+    -Puntaje\n
+    -Cantidad de cambios de fichas permitido\n
+    -Contar de turnos pasados
+    """
 
     def __init__(self):
-        self._puntaje = 0
-        self._cambios_fichas = 3
-        self._turnos_pasados = 0
+        self._puntaje = 0 #Puntos del jugador
+        self._cambios_fichas = 3 #cantidad de cambio de fichas máximo para el jugador
+        self._turnos_pasados = 0 #Cantidad de turnos pasados
     
     def getPuntaje(self):
+        """Retorna el puntaje del jugador
+        """
         return self._puntaje
 
-    def setPuntaje(self,puntos):
-        self._puntaje = puntos
-
     def getCambiosFichas(self):
+        """Retorna la cantidad de cambios de fichas que posee actualmente el jugador
+        """
         return self._cambios_fichas
 
+    def getTurnosPasados(self):
+        """Retorna la cantidad de turnos que paso el jugador hasta el momento
+        """
+        return self._turnos_pasados
+
+    def setPuntaje(self,puntos):
+        """Setea el puntaje del jugador con el valor pasador por parámetro
+        """
+        self._puntaje = puntos
+
     def sumarPuntos(self,puntos_nuevos):
-        """suma al puntaje del jugador la cantidad pasada por parametro
+        """Suma al puntaje del jugador la cantidad pasada por parámetro
         """
         self._puntaje += puntos_nuevos
 
-    def restarCambio(self, window_game):
-        """resta un cambio del usuario, si se llega a 0 cambia el boton de cambiar
-        por el de pasar turno
+    def restarCambio(self):
+        """Resta un cambio de fichas al jugador
         """
         self._cambios_fichas -= 1
-        if self._cambios_fichas == 0:
-            window_game['Cambiar fichas'].Update('Pasar turno')
 
-    def pasarTurno(self, window_game):
-        """pasa el turno, si se llega a 3 pasadas de turno se suma un cambio de fichas
+    def pasarTurno(self):
+        """Aumenta en 1 la cantidad de turnos pasados del jugador.\n
+        Si llega a 3, se le agrega un cambio de fichas al jugador
         """
         self._turnos_pasados += 1
         if self._turnos_pasados == 3:
             self._cambios_fichas += 1
             self._turnos_pasados = 0
-            window_game['Cambiar fichas'].Update('Cambiar fichas')
         
         

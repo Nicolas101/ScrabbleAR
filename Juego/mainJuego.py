@@ -4,10 +4,10 @@ def seleccionar_nivel():
     from Juego.Windows import windowNivel
     window_nivel = windowNivel.hacer_ventana((1000,600))
 
-    event = window_nivel.read()
+    event, values= window_nivel.read()
 
     window_nivel.close()
-    return event[0]
+    return event
 
 def start_game(nivel):
     """Muestra la ventana de juego y el desarrollo de la partida
@@ -81,14 +81,14 @@ def start_game(nivel):
 
                     #*********** CLICK EN EL TABLERO **********    
                     elif tablero.click(event):
-                        window_game['Cambiar fichas'].update(disabled=True)
+                        window_game['-B_CAMBIAR_PASAR-'].update(disabled=True)
                         tablero.insertarFicha(event,window_game,window_game[fila_fichasJ.getFichaSelected()].GetText()) 
                         fila_fichasJ.sacarFicha(window_game)            
                         tablero.deshabilitar(window_game)
 
                     #*********** CLICK EN CONFIRMAR JUGADA **********
                     elif(event == "Confirmar Jugada"):
-                        window_game['Cambiar fichas'].update(disabled=False)
+                        window_game['-B_CAMBIAR_PASAR-'].update(disabled=False)
                         palabra = tablero.verificarPalabra()
                         if (es_valida(palabra,nivel)):
                             window_game['text-confirmar'].update('Palabra correcta',visible=True)
@@ -110,7 +110,7 @@ def start_game(nivel):
                             window_game['text-confirmar'].update('Palabra incorrecta',visible=True)
 
                     #*********** CLICK EN CAMBIAR FICHAS **********
-                    elif(event == 'Cambiar fichas'):
+                    elif(event == '-B_CAMBIAR_PASAR-'):
                         if (usuario.getCambiosFichas() != 0):
                             if fila_fichasJ.hayFichaSelected():
                                 fila_fichasJ.desmarcarFichaSelected(window_game)
@@ -118,23 +118,39 @@ def start_game(nivel):
                             tablero.deshabilitar(window_game)
                             window_game['cambiar_fichas_text'].Update(visible=True)
                             window_game['Aceptar'].Update(visible=True)
+                            window_game["Cancelar"].Update(visible=True)
                         else:
-                            usuario.pasarTurno(window_game)
+                            usuario.pasarTurno()
+                            if (usuario.getTurnosPasados() == 3):
+                                window_game['-B_CAMBIAR_PASAR-'].Update('Cambiar fichas')
                             turno = 1
 
                     #*********** CLICK EN ACEPTAR (CAMBIAR FICHAS) **********    
                     elif(event == 'Aceptar'):
-                        usuario.restarCambio(window_game)
+                        usuario.restarCambio()
+                        if (usuario.getCambiosFichas() == 0):
+                            window_game['-B_CAMBIAR_PASAR-'].Update('Pasar turno')
                         if fila_fichasJ.cambiarFichas(window_game,bolsa_fichas):
                             bolsa_fichas.deshabilitar()
                             window_game['cambiar_fichas_text'].Update(visible=False)
                             window_game['Aceptar'].Update(visible=False)
+                            window_game['Cancelar'].Update(visible=False)
                             turno = 1
                         else:
                             game_over = True
                             game_over_text = "Se acabaron las fichas, juego terminado"
                             print('fin')
                             #se termina el juego porq no hay fichas suficientes
+                    
+                    #*********** CLICK EN CANCELAR (CAMBIAR FICHAS) **********    
+                    elif(event == 'Cancelar'):
+                        fila_fichasJ.cancelarCambioDeFichas(window_game) 
+                        window_game['Aceptar'].Update(visible=False)
+                        window_game['Cancelar'].Update(visible=False)
+                        window_game['cambiar_fichas_text'].Update(visible=False)
+
+                    #*********** CLICK EN TERMINAR PARTIDA **********
+                    #a implementar
         
                 # *************************************** TURNO DE LA MAQUINA **********************************************       
                 else:

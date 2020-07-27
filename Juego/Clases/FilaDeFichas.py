@@ -148,8 +148,7 @@ class FilaFichas():
             return True
     
     def eliminarLetras(self, palabra):
-        """
-        Elimina de la variable _letras las letras del string pasado por parametro
+        """Elimina de la variable _letras las letras del string pasado por parametro
         """
         for letra in palabra:
             self._letras.remove(letra)
@@ -163,6 +162,17 @@ class FilaFichas():
         """Agrega una letra a la variable _letras
         """
         self._letras.append(letra)
+
+    def cancelarCambioDeFichas(self, window):
+        """Setea los parámetros necesarios para desmarcar las fichas seleccionadas a cambiar
+        """
+        if self._fichas_a_cambiar != []:
+            for key in self._fichas_a_cambiar:
+                aux = key.split("-")
+                self._casillas[int(aux[1])-1].setColor(('black',"white"))   
+                window[key].update(button_color=('black',"white"))
+            self._fichas_a_cambiar = []
+
 
 # {---------------------------------------------------------------------------------}
 # {--------------------------- CREACIÓN DEL OBJETO ---------------------------------}

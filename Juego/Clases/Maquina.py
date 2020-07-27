@@ -16,7 +16,7 @@ import random
 # {---------------------------------------------------------------------------------}
 
 class Maquina(Jugador):
-    """Es una subclase de la clase Jugador que contiene todo el comportamiento del oponente
+    """Es una subclase de la clase Jugador que contiene todo el comportamiento del oponente 
     """
 
     def armarPalabra(self, fila_fichas, bolsa_fichas, tablero, dificultad):
@@ -190,19 +190,7 @@ class Maquina(Jugador):
         #se agregan las nuevas letras a la fila de fichas de la maquina
         for letra in nuevas_letras:
             fila_fichas.agregarLetra(letra)
-    
-    def restarCambio(self):
-        """resta a la maquina un cambio de fichas
-        """
-        self._cambios_fichas -= 1
 
-    def pasarTurno(self):
-        """la maquina pasa un turno, si pasa 3 se le da un cambiar fichas
-        """
-        self._turnos_pasados += 1
-        if self._turnos_pasados == 3:
-            self._turnos_pasados = 0
-            self._cambios_fichas += 1
             
         
         

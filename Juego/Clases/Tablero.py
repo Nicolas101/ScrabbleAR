@@ -147,7 +147,7 @@ class Tablero:
         Si esta bien formada retorna la palabra y, en caso contrario, retorna "xxxxxx"
         """
         lis_aux=[]
-        if (len(self._palabra)>0): # La palabra tiene que tener mas de una letra
+        if (len(self._palabra)>1): # La palabra tiene que tener mas de una letra
             for x in self._palabra:
                 elems = x.split('-') # elems[0]: num de fila // elems[1]: num de columna
                 for i in range(0,2):

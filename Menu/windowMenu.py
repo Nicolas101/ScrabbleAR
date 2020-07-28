@@ -2,12 +2,13 @@ def hacer_ventana(window_size):
     import PySimpleGUI as sg
 
     layout = [
-        [sg.Text("ScrabbleAR - Game",background_color="#71B3BD",font=("Fixedsys",40),pad=((0,0),(100,0)))],
-        [sg.Text('_'*60,background_color="#71B3BD", pad=((0,0),(0,68)))],
-        [sg.Button("Cómo jugar",size=(18,1),pad=((0,0),(0,20)),font=("Fixedsys",18),auto_size_button=False)],
-        [sg.Button("Jugar",key="-PLAY-",size=(24,2),pad=((0,0),(0,20)),font=("Fixedsys",18),auto_size_button=False)],
-        [sg.Button("Configuración",key="-CONFIG-",size=(18,1),pad=((0,0),(0,20)),font=("Fixedsys",18),auto_size_button=False)],
-        [sg.Button("TOP 10",size=(18,2),pad=((0,325),(40,0))),sg.Button("SALIR",key="-SALIR-",size=(18,2),pad=((325,0),(40,0)))]
+        [sg.Image(filename=r"Menu\Data\TítuloMenu.png",background_color='#40B7C9',pad=((70,70),(10,27)))],
+        [sg.Button("",image_filename=r"Menu\Data\BotónComojugar.png",key="-HOWTOPLAY-",button_color=('#40B7C9','#40B7C9'),border_width=0,pad=((305,305),(0,0)))],
+        [sg.Button("",image_filename=r"Menu\Data\BotónJugar.png",key="-PLAY-",button_color=('#40B7C9','#40B7C9'),border_width=0,pad=((250,250),(0,10)))],
+        [sg.Button("",image_filename=r"Menu\Data\BotónConfiguración.png",key="-CONFIG-",button_color=('#40B7C9','#40B7C9'),border_width=0,pad=((305,305),(0,0)))],
+        [sg.Button("",image_filename=r"Menu\Data\BotónTop10.png",key="-TOP10-",button_color=('#40B7C9','#40B7C9'),border_width=0,pad=((15,300),(0,0))),
+        sg.Button("",image_filename=r"Menu\Data\BotónSalir.png",key="-SALIR-",button_color=('#40B7C9','#40B7C9'),border_width=0,pad=((300,15),(0,0)))]
     ]
+    window = sg.Window("ScrabbleAR - Menú",layout,size=window_size,background_color='#40B7C9')
 
-    return sg.Window("ScrabbleAR - Menú",layout,element_justification="center",size=window_size,background_color="#71B3BD")
+    return window

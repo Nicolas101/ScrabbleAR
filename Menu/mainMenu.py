@@ -3,7 +3,7 @@ def mostrar_menu():
     from Menu import windowMenu
     window_menu = windowMenu.hacer_ventana((1000,600))
 
-    from Juego import mainJuego
+    from Juego import mainJuego,selecNivel
     from Configuracion import mainConfig
 
     while True:
@@ -13,7 +13,7 @@ def mostrar_menu():
 
         elif event == "-PLAY-":
             window_menu.Hide()
-            mainJuego.start_game(mainJuego.seleccionar_nivel())
+            mainJuego.start_game(selecNivel.seleccionar_nivel())
             window_menu.UnHide()
 
         elif event == "-CONFIG-":

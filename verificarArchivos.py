@@ -1,8 +1,12 @@
 def verificar():
+    """Verifica que existan los archivos necesarios para que el programa funcione
+    """
     import os
     import json
 
     def crear_archivo_facil(ubicacion_archivo):
+        """Crea el archivo facil.json
+        """
         import json
         
         archivo = open(ubicacion_archivo,'w')
@@ -27,6 +31,8 @@ def verificar():
         archivo.close()
 
     def crear_archivo_medio(ubicacion_archivo):
+        """Crea el archivo medio.json
+        """
         import json
         
         archivo = open(ubicacion_archivo,'w')
@@ -51,6 +57,8 @@ def verificar():
         archivo.close()
 
     def crear_archivo_dificil(ubicacion_archivo):
+        """Crea el archivo dificil.json
+        """
         import json
         
         archivo = open(ubicacion_archivo,'w')
@@ -77,8 +85,9 @@ def verificar():
     lis_archivos = ['Facil.json','Medio.json','Dificil.json']
     dir_actual = os.getcwd()
     for archivo in lis_archivos:
+        #intenta leer los archivos de lis_archivos, si alguno no existe lo crea
         try:
-            ubicacion_archivo = (dir_actual+'\\Data\\'+archivo)
+            ubicacion_archivo = (dir_actual+'\\Data\\Files\\'+archivo)
             f = open(ubicacion_archivo,'r')
             f.close()
         except FileNotFoundError:

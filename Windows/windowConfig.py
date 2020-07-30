@@ -5,7 +5,7 @@ def hacer_ventana(window_size):
         [sg.Text("FÁCIL",background_color="#71B3BD",font=("Courier",26),pad=((0,0),(0,20)))],
         [sg.Button("Tiempo",key='-TIEMPO_F-',tooltip="Limite de tiempo máximo de juego en este nivel.  \nHaga click para modificar",size=(10,2),pad=((0,0),(0,10)))],
         [sg.Button("Puntaje",key='-PUNTOS_F-',tooltip="Puntaje por letra en este nivel.  \nHaga click para modificar",size=(10,2),pad=((0,0),(0,10)))],
-        [sg.Button("Fichas",tooltip="Cantidad de fichas por letra en este nivel.  \nHaga click para modificar",size=(10,2),pad=((0,0),(0,10)))],
+        [sg.Button("Fichas",key='-FICHAS_F-',tooltip="Cantidad de fichas por letra en este nivel.  \nHaga click para modificar",size=(10,2),pad=((0,0),(0,10)))],
         [sg.Text("*Predeterminado*",background_color="#71B3BD",text_color="#767676")]
     ]
 
@@ -13,7 +13,7 @@ def hacer_ventana(window_size):
         [sg.Text("MEDIO",background_color="#71B3BD",font=("Courier",26),pad=((0,0),(0,20)))],
         [sg.Button("Tiempo",key='-TIEMPO_M-',tooltip="Limite de tiempo máximo de juego en este nivel.  \nHaga click para modificar",size=(10,2),pad=((0,0),(0,10)))],
         [sg.Button("Puntaje",key='-PUNTOS_M-',tooltip="Puntaje por letra en este nivel.  \nHaga click para modificar",size=(10,2),pad=((0,0),(0,10)))],
-        [sg.Button("Fichas",tooltip="Cantidad de fichas por letra en este nivel.  \nHaga click para modificar",size=(10,2),pad=((0,0),(0,10)))],
+        [sg.Button("Fichas",key='-FICHAS_M-',tooltip="Cantidad de fichas por letra en este nivel.  \nHaga click para modificar",size=(10,2),pad=((0,0),(0,10)))],
         [sg.Text("*Predeterminado*",background_color="#71B3BD",text_color="#767676")]
     ]
 
@@ -21,7 +21,7 @@ def hacer_ventana(window_size):
         [sg.Text("DIFÍCIL",background_color="#71B3BD",font=("Courier",26),pad=((0,0),(0,20)))],
         [sg.Button("Tiempo",key='-TIEMPO_D-',tooltip="Limite de tiempo máximo de juego en este nivel.  \nHaga click para modificar",size=(10,2),pad=((0,0),(0,10)))],
         [sg.Button("Puntaje",key='-PUNTOS_D-',tooltip="Puntaje por letra en este nivel.  \nHaga click para modificar",size=(10,2),pad=((0,0),(0,10)))],
-        [sg.Button("Fichas",tooltip="Cantidad de fichas por letra en este nivel.  \nHaga click para modificar",size=(10,2),pad=((0,0),(0,10)))],
+        [sg.Button("Fichas",key='-FICHAS_D-',tooltip="Cantidad de fichas por letra en este nivel.  \nHaga click para modificar",size=(10,2),pad=((0,0),(0,10)))],
         [sg.Text("*Predeterminado*",background_color="#71B3BD",text_color="#767676")]
     ]
 

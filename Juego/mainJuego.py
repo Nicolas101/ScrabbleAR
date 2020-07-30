@@ -180,16 +180,24 @@ def start_game(nivel,datos):
                     #*********** CLICK EN PAUSA **********
                     elif event == "-PAUSA-":
                         
-
+                        tiempo_cuando_pauso = time.time()
                         window_game.Disable()
                         window_pausa.UnHide()
                         event, values = window_pausa.read()
-                        if event == "Reanudar":
+                        if event == "-REANUDAR-":
                             window_pausa.Hide()
                             window_game.Enable()
                             window_game.Hide()
                             window_game.UnHide()
-                        
+                            time_start += time.time() - tiempo_cuando_pauso
+                        elif event == "-SALIR_SIN_GUARDAR-":
+                            window_pausa.Hide()
+                            game_over=True
+                            break
+                        elif event == "-SALIR_Y_GUARDAR-":
+                            window_pausa.Hide()
+                            game_over=True
+                            #guardar_partida() (a implementar)
 
                     #*********** CLICK EN TERMINAR PARTIDA **********
                     #a implementar
@@ -246,10 +254,18 @@ def start_game(nivel,datos):
                     turno = 0           
             else:
                 window_game.Disable()
+                #terminar_juego() (a implementar)
                 sg.popup(game_over_text)
                 break
 
-        window_game.close() 
+        window_game.close()
+
+def terminar_juego():
+    pass
+
+def guardar_partida():
+    pass
+#(martin va a hacer estos dos procesos entre hoy y mañana,tranca nico ta todo controlado)
 
 if __name__ == "__main__":
     import os

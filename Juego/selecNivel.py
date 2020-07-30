@@ -8,7 +8,7 @@ def seleccionar_nivel():
         import json
         
         dir_actual = os.getcwd()
-        ubicacion_archivo = (dir_actual+'\\Data\\'+nombre_archivo) #armo la direccion donde esta el archivo deseado
+        ubicacion_archivo = (dir_actual+'\\Data\\Files\\'+nombre_archivo) #armo la direccion donde esta el archivo deseado
         archivo = open(ubicacion_archivo,'r') #abro el archivo en modo solo lectura 
         lis_datos = json.load(archivo) #consigo la lista de datos la cual puede tener un solo elemento o dos en caso de que haya una modificacion
         diccionario = lis_datos[len(lis_datos)-1] #saco el diccionario el cual tiene los datos que necesito(letras y tiempo)

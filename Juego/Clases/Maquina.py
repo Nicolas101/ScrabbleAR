@@ -1,13 +1,16 @@
 try:
+    #Si se ejecuta el ScrabbleAR.py:
     from Juego.Clases.Jugador import Jugador
     from Juego.Clases.FilaDeFichas import FilaFichas
     from Juego.Clases.BolsaFichas import BolsaFichas
     from Juego.Clases.Tablero import Tablero
 except ModuleNotFoundError:
+    #Si se ejecuta el mainJuego.py:
     from Clases.Jugador import Jugador
     from Clases.FilaDeFichas import FilaFichas
     from Clases.BolsaFichas import BolsaFichas
     from Clases.Tablero import Tablero
+    
 from pattern.text.es import verbs, tag, spelling, lexicon, parse, split
 import random
 

@@ -1,8 +1,10 @@
 import PySimpleGUI as sg 
 import random
 try:
+    #Si se ejecuta el ScrabbleAR.py:
     from Juego.Clases.Casilla import Casilla
 except ModuleNotFoundError:
+    #Si se ejecuta el mainJuego.py:
     from Clases.Casilla import Casilla
 
 # {---------------------------------------------------------------------------------}

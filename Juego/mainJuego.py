@@ -3,21 +3,23 @@ def start_game(nivel,datos):
     """
     if nivel != None:
         try:
+            #Si se ejecuta el ScrabbleAR.py:
             from Juego.validarPalabra import es_valida, clasificar
             from Juego.Clases.BolsaFichas import crear_bolsa
             from Juego.Clases.Tablero import crear_tablero    
-            from Juego.Clases.FilaDeFichas import crear_fila_fichas          
-            from Juego.Windows import windowJuego,windowPausa
+            from Juego.Clases.FilaDeFichas import crear_fila_fichas                     
             from Juego.Clases.Jugador import Jugador
             from Juego.Clases.Maquina import Maquina
         except ModuleNotFoundError:
+            #Si se ejecuta este archivo:
             from validarPalabra import es_valida, clasificar
             from Clases.BolsaFichas import crear_bolsa
             from Clases.Tablero import crear_tablero
-            from Clases.FilaDeFichas import crear_fila_fichas
-            from Windows import windowJuego,windowPausa
+            from Clases.FilaDeFichas import crear_fila_fichas            
             from Clases.Jugador import Jugador
             from Clases.Maquina import Maquina
+
+        from Windows import windowJuego, windowPausa
         import PySimpleGUI as sg
         import random
         import time

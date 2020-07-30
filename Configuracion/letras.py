@@ -1,5 +1,5 @@
 def ejecutar(diccionario,categoria):
-    from Configuracion.Windows import windowLetras
+    from Windows import windowLetras
 
     if categoria == 'Puntos':
         clave = 'puntuacion'

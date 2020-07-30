@@ -1,7 +1,8 @@
 def ejecutar(valor_por_defecto):
-    from Configuracion.Windows import windowTiempo
-
+    
+    from Windows import windowTiempo
     window = windowTiempo.hacer_ventanta(valor_por_defecto)
+
     while True:
         event,values = window.read()
 

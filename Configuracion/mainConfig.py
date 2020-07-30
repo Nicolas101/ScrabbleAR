@@ -1,5 +1,5 @@
 def mostrar_configuracion():   
-    from Configuracion.Windows import windowConfig  
+    from Windows import windowConfig  
     from Configuracion import tiempo,letras
     import os
     import json

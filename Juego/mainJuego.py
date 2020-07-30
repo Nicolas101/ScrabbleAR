@@ -1,4 +1,4 @@
-def start_game(nivel):
+def start_game(nivel,datos):
     """Muestra la ventana de juego y el desarrollo de la partida
     """
     if nivel != None:
@@ -23,7 +23,7 @@ def start_game(nivel):
         import time
 
         #BOLSA DE FICHAS
-        bolsa_fichas = crear_bolsa()
+        bolsa_fichas = crear_bolsa(datos['letras'])
 
         #TABLERO
         tablero,pad_tablero,num_random,tamaño_tablero = crear_tablero(bolsa_fichas)
@@ -50,7 +50,7 @@ def start_game(nivel):
         seconds = 00
         minutes = 00
         time_start = time.time()
-        tiempo_limite = 5 #esto se tiene que pasar por parametro
+        tiempo_limite = datos['tiempo']
 
         while True:                 
             window_game.read(timeout=0)
@@ -143,7 +143,9 @@ def start_game(nivel):
                         else:
                             usuario.pasarTurno()
                             if (usuario.getTurnosPasados() == 3):
+                                print(usuario.getTurnosPasados())
                                 window_game['-B_CAMBIAR_PASAR-'].Update('Cambiar fichas')
+                            usuario.verificarTurnosPasados()
                             turno = 1
 
                     #*********** CLICK EN ACEPTAR (CAMBIAR FICHAS) **********    
@@ -223,6 +225,7 @@ def start_game(nivel):
                         if (maquina.getCambiosFichas() == 0):
                             #si la maquina no tiene mas cambios de fichas se debe pasar el turno
                             maquina.pasarTurno()
+                            maquina.verificarTurnosPasados()
                             puede_cambiar = False
                         else:
                             #si tiene cambios de fichas se resta uno y se hace el cambio de las 7 fichas
@@ -247,4 +250,12 @@ def start_game(nivel):
         window_game.close() 
 
 if __name__ == "__main__":
-    start_game("-FACIL-")
+    import os
+    import json
+    
+    dir_actual = os.getcwd()
+    ubicacion_archivo = (dir_actual+'\\Data\\Facil.json')
+    archivo = open(ubicacion_archivo,'r')
+    lis_datos = json.load(archivo)
+    diccionario = lis_datos[len(lis_datos)-1]
+    start_game("-FACIL-",diccionario)

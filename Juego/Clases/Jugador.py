@@ -41,10 +41,13 @@ class Jugador():
         self._cambios_fichas -= 1
 
     def pasarTurno(self):
-        """Aumenta en 1 la cantidad de turnos pasados del jugador.\n
-        Si llega a 3, se le agrega un cambio de fichas al jugador
+        """Aumenta en 1 la cantidad de turnos pasados del jugador.
         """
         self._turnos_pasados += 1
+
+    def verificarTurnosPasados(self):
+        """Si llega a 3 turnos pasados, se le agrega un cambio de fichas al jugador
+        """
         if self._turnos_pasados == 3:
             self._cambios_fichas += 1
             self._turnos_pasados = 0

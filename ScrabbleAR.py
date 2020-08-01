@@ -1,6 +1,7 @@
 from Windows import windowMenu
 from Juego import mainJuego, selecNivel
 from Configuracion import mainConfig
+import topDiez
 import verificarArchivos
 
 verificarArchivos.verificar()
@@ -15,7 +16,15 @@ while True:
     elif event == "-PLAY-":
         window_menu.Hide()
         nivel, datos = selecNivel.seleccionar_nivel()
-        mainJuego.start_game(nivel,datos)
+        juego_terminado, datos_de_partida = mainJuego.start_game(nivel,datos)
+        if juego_terminado:
+            topDiez.nuevo_puntaje(datos_de_partida)
+            pass
+        else:
+            if datos_de_partida[0]:#si se debe guardar la partida el primer elemento va a ser true
+                #guardar_partida()
+                pass
+            pass
         window_menu.UnHide()
 
     elif event == "-CONFIG-":

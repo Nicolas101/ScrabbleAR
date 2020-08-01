@@ -85,6 +85,8 @@ def start_game(nivel,datos):
 
                     #*********** CERRAR LA VENTANA **********
                     if(event is None):
+                        game_over = False
+                        datos_partida = [False]#este primer elemento de la lista dice si se debe guardar o no la partida
                         break
                     
                     #*********** CLICK EN LA FILA DE FICHAS **********
@@ -192,12 +194,15 @@ def start_game(nivel,datos):
                             time_start += time.time() - tiempo_cuando_pauso
                         elif event == "-SALIR_SIN_GUARDAR-":
                             window_pausa.Hide()
-                            game_over=True
+                            game_over = False
+                            datos_partida = [False]#este primer elemento de la lista dice si se debe guardar o no la partida
                             break
                         elif event == "-SALIR_Y_GUARDAR-":
                             window_pausa.Hide()
-                            game_over=True
-                            #guardar_partida() (a implementar)
+                            game_over=False
+                            datos_partida = [True]#true dice que la partida se guarda
+                            #guardar_partida(datos_partida) (a implementar) se le agrega a datos_partida todo lo q se tiene q guardar para seguir despues
+                            break
 
                     #*********** CLICK EN TERMINAR PARTIDA **********
                     #a implementar
@@ -218,54 +223,61 @@ def start_game(nivel,datos):
                     if minutes == tiempo_limite:
                         game_over = True
                         game_over_text = "Se acabo el tiempo, fin del juego"
-                        break
-
-                    #la maquina intenta armar una palabra con las letras que tiene en su fila
-                    palabra_maquina, cant_letras_a_cambiar = maquina.armarPalabra(fila_fichasM,bolsa_fichas,tablero,nivel)
-                    #si pudo formar la palabra la inserta en el tablero y trae nuevas letras de la bolsa
-                    if (palabra_maquina != 'xxxxxx'): 
-                        palabra_armada = True
-                        maquina.insertarPalabra(palabra_maquina, tablero, window_game, tamaño_tablero)
-                        maquina.sumarPuntos(bolsa_fichas.devolverPuntaje(palabra_maquina,tablero.copiaPalabra(),tablero.getCasillasEspeciales()))
-                        window_game["-PuntosM-"].update(str(maquina.getPuntaje()))
-                        puede_cambiar = True #variable que avisa que se puede hacer el cambio de fichas
+                        
                     else:
-                        #aviso en pantalla que la maquina no pudo ingresar una palabra, por lo que cambia todas las fichas o pasa el turno(falta implementar)
-                        palabra_armada = False
-                        if (maquina.getCambiosFichas() == 0):
-                            #si la maquina no tiene mas cambios de fichas se debe pasar el turno
-                            maquina.pasarTurno()
-                            maquina.verificarTurnosPasados()
-                            puede_cambiar = False
+                        #la maquina intenta armar una palabra con las letras que tiene en su fila
+                        palabra_maquina, cant_letras_a_cambiar = maquina.armarPalabra(fila_fichasM,bolsa_fichas,tablero,nivel)
+                        #si pudo formar la palabra la inserta en el tablero y trae nuevas letras de la bolsa
+                        if (palabra_maquina != 'xxxxxx'): 
+                            palabra_armada = True
+                            maquina.insertarPalabra(palabra_maquina, tablero, window_game, tamaño_tablero)
+                            maquina.sumarPuntos(bolsa_fichas.devolverPuntaje(palabra_maquina,tablero.copiaPalabra(),tablero.getCasillasEspeciales()))
+                            window_game["-PuntosM-"].update(str(maquina.getPuntaje()))
+                            puede_cambiar = True #variable que avisa que se puede hacer el cambio de fichas
                         else:
-                            #si tiene cambios de fichas se resta uno y se hace el cambio de las 7 fichas
-                            maquina.restarCambio()
-                            puede_cambiar = True  
-                    if (puede_cambiar): #si la palabra fue correcta o la maquina tenia cambios de fichas se realiza el cambio
-                        nuevas_letras = bolsa_fichas.letras_random(cant_letras_a_cambiar)
-                        if nuevas_letras != []:
-                            #si habia suficientes letras en la bolsa de ficha las agrega a la fila      
-                            maquina.nuevasLetras(fila_fichasM, nuevas_letras, tablero, palabra_armada) 
-                        else:
-                            #termina el juego porq no hay mas fichas
-                            game_over = True
-                            game_over_text = "Se acabaron las fichas, juego terminado"
-                            print('fin')
-                    turno = 0           
+                            #aviso en pantalla que la maquina no pudo ingresar una palabra, por lo que cambia todas las fichas o pasa el turno(falta implementar)
+                            palabra_armada = False
+                            if (maquina.getCambiosFichas() == 0):
+                                #si la maquina no tiene mas cambios de fichas se debe pasar el turno
+                                maquina.pasarTurno()
+                                maquina.verificarTurnosPasados()
+                                puede_cambiar = False
+                            else:
+                                #si tiene cambios de fichas se resta uno y se hace el cambio de las 7 fichas
+                                maquina.restarCambio()
+                                puede_cambiar = True  
+                        if (puede_cambiar): #si la palabra fue correcta o la maquina tenia cambios de fichas se realiza el cambio
+                            nuevas_letras = bolsa_fichas.letras_random(cant_letras_a_cambiar)
+                            if nuevas_letras != []:
+                                #si habia suficientes letras en la bolsa de ficha las agrega a la fila      
+                                maquina.nuevasLetras(fila_fichasM, nuevas_letras, tablero, palabra_armada) 
+                            else:
+                                #termina el juego porq no hay mas fichas
+                                game_over = True
+                                game_over_text = "Se acabaron las fichas, juego terminado"
+                                print('fin')
+                        turno = 0           
             else:
                 window_game.Disable()
-                #terminar_juego() (a implementar)
-                sg.popup(game_over_text)
+                if usuario.getPuntaje()>maquina.getPuntaje():
+                    game_over_text_dos = '¡Ganaste!'
+                elif usuario.getPuntaje()<maquina.getPuntaje():
+                    game_over_text_dos = 'Perdiste, lo siento :('
+                else:
+                    game_over_text_dos = '¡Es un empate!'
+                sg.popup(game_over_text,game_over_text_dos,('Tu puntuación: '+str(usuario.getPuntaje())),('Puntos de la maquina: '+str(maquina.getPuntaje())))
+                datos_partida = [usuario.getPuntaje(),'fecha',nivel]
                 break
 
         window_game.close()
+        print(game_over)
+        print(datos_partida)
+        return [game_over,datos_partida]
 
-def terminar_juego():
-    pass
 
 def guardar_partida():
     pass
-#(martin va a hacer estos dos procesos entre hoy y mañana,tranca nico ta todo controlado)
+#(martin va a hacer este proceso entre hoy y mañana,tranca nico ta todo controlado)
 
 if __name__ == "__main__":
     import os

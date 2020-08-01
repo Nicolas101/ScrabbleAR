@@ -2,40 +2,29 @@ def start_game(nivel,datos):
     """Muestra la ventana de juego y el desarrollo de la partida
     """
     if nivel != None:
-        try:
-            #Si se ejecuta el ScrabbleAR.py:
-            from Juego.validarPalabra import es_valida, clasificar
-            from Juego.Clases.BolsaFichas import crear_bolsa
-            from Juego.Clases.Tablero import crear_tablero    
-            from Juego.Clases.FilaDeFichas import crear_fila_fichas                     
-            from Juego.Clases.Jugador import Jugador
-            from Juego.Clases.Maquina import Maquina
-        except ModuleNotFoundError:
-            #Si se ejecuta este archivo:
-            from validarPalabra import es_valida, clasificar
-            from Clases.BolsaFichas import crear_bolsa
-            from Clases.Tablero import crear_tablero
-            from Clases.FilaDeFichas import crear_fila_fichas            
-            from Clases.Jugador import Jugador
-            from Clases.Maquina import Maquina
-
+        from Juego.validarPalabra import es_valida, clasificar
+        from Juego.Clases.BolsaFichas import crear_bolsa
+        from Juego.Clases.Tablero import crear_tablero    
+        from Juego.Clases.FilaDeFichas import crear_fila_fichas                     
+        from Juego.Clases.Jugador import Jugador
+        from Juego.Clases.Maquina import Maquina
+        from Juego.Clases.Timer import Timer
         from Windows import windowJuego, windowPausa
         import PySimpleGUI as sg
         import random
-        import time
-
+          
         #BOLSA DE FICHAS
         bolsa_fichas = crear_bolsa(datos['letras'])
 
         #TABLERO
-        tablero,pad_tablero,num_random,tamaño_tablero = crear_tablero(bolsa_fichas)
+        tablero,tamaño_tablero = crear_tablero(bolsa_fichas)
 
         #FILA DE FICHAS
-        fila_fichasJ = crear_fila_fichas(bolsa_fichas, 'FJ')
-        fila_fichasM = crear_fila_fichas(bolsa_fichas, 'FM')
+        fila_fichasJ = crear_fila_fichas(bolsa_fichas,False)
+        fila_fichasM = crear_fila_fichas(bolsa_fichas,True)
 
         #PANTALLA DE JUEGO
-        window_game = windowJuego.hacer_ventana(tablero.getLayout(),fila_fichasJ.getLayout(),fila_fichasM.getLayout(),num_random,pad_tablero,(1000,600))
+        window_game = windowJuego.hacer_ventana(tablero.getLayout(),fila_fichasJ.getLayout(),fila_fichasM.getLayout(),(1000,600))
 
         #PANTALLA DE PAUSA
         window_pausa = windowPausa.hacer_ventana()
@@ -43,241 +32,251 @@ def start_game(nivel,datos):
         #USUARIO Y MAQUINA
         usuario = Jugador()
         maquina = Maquina()
- 
+
+        #TEMPORIZADOR
+        timer = Timer(datos['tiempo'])
+
         turno = random.randint(0,1) # 0: turno del usuario // 1: turno del oponente
         
         game_over = False
-
-        #TIMER
-        seconds = 00
-        minutes = 00
-        time_start = time.time()
-        tiempo_limite = datos['tiempo']
-
+        if turno == 0 :
+            confirmar_habilitado = True
+            cambiar_habilitado = True
+        else:
+            confirmar_habilitado = False
+            cambiar_habilitado = False
+        
+        timer.iniciarTimer()
         while True:                 
-            window_game.read(timeout=0)
-            
+            window_game.read(timeout=0)            
             if not game_over:
-
-                # *************************************** TURNO DEL USUARIO ********************************************** 
-                if (turno == 0): 
-                    window_game["-TURNO-"].update("Tu turno")
+                if turno == 0: 
+                    # *******************************************************************************************************************
+                    # ************************************************** TURNO DEL USUARIO **********************************************
+                    # *******************************************************************************************************************
+                    window_game["-TEXT_JUGADOR-"].update("TU TURNO!")
+                    fila_fichasJ.habilitar()
 
                     no_event = True
                     while no_event:
-                        event, values = window_game.read(1000)
+                        event,values = window_game.read(1000)
 
-                        #ACTUALIZACION DEL TIMER
-                        seconds = int(time.time() - time_start) - minutes*60
-                        if seconds >= 60:
-                            minutes += 1
-                            seconds = 00
-                        window_game['-RELOJ-'].Update(str(minutes)+":"+str(seconds))
+                        if event != "__TIMEOUT__":
+                            timer.ajustarTiempo()
+                            no_event = False
 
-                        #PREGUNTAR SI SE LLEGO AL TIEMPO LIMITE
-                        if minutes == tiempo_limite:
+                        timer.actualizarTimer()
+                        window_game['-RELOJ-'].Update(timer.tiempoActual())
+
+                        if timer.termino():
                             game_over = True
                             game_over_text = "Se acabo el tiempo, fin del juego"
                             break
 
-                        if event != "__TIMEOUT__":
-                            no_event = False
-
-                    #*********** CERRAR LA VENTANA **********
-                    if(event is None):
-                        game_over = False
-                        datos_partida = [False]#este primer elemento de la lista dice si se debe guardar o no la partida
+                    #********************************* CERRAR LA VENTANA *********************************
+                    if event is None:
+                        #preguntar si desea salir sin guardar
                         break
                     
-                    #*********** CLICK EN LA FILA DE FICHAS **********
-                    elif fila_fichasJ.click(event):
-                        if bolsa_fichas.estaHabilitada():
+                    #********************************* CLICK EN LA FILA DE FICHAS *********************************
+                    elif fila_fichasJ.click(event) and fila_fichasJ.estaHabilitada():
+                        if bolsa_fichas.estaHabilitada(): #Si quiere cambiar fichas:
                             fila_fichasJ.agregarFichaACambiar(event,window_game)
-                        else:
+
+                        else: #Si quiere poner una ficha en el tablero:
                             if not fila_fichasJ.hayFichaSelected():
                                 fila_fichasJ.marcarFichaSelected(window_game,event) 
                             else:
                                 fila_fichasJ.desmarcarFichaSelected(window_game)
                                 fila_fichasJ.marcarFichaSelected(window_game,event)
-                            tablero.habilitar(window_game)
+                            tablero.habilitar()
 
-                    #*********** CLICK EN EL TABLERO **********    
-                    elif tablero.click(event):
-                        window_game['-B_CAMBIAR_PASAR-'].update(disabled=True)
-                        tablero.insertarFicha(event,window_game,window_game[fila_fichasJ.getFichaSelected()].GetText()) 
-                        fila_fichasJ.sacarFicha(window_game)            
-                        tablero.deshabilitar(window_game)
+                    #********************************* CLICK EN EL TABLERO *********************************   
+                    elif tablero.click(event) and tablero.estaHabilitado():
+                        #window_game["-CAMBIAR_PASAR-"].update(disabled=True)
+                        ficha = fila_fichasJ.sacarFicha(window_game) 
+                        tablero.insertarFicha(event,window_game,ficha) 
+                        cambiar_habilitado = False                                 
+                        tablero.deshabilitar()
 
-                    #*********** CLICK EN CONFIRMAR JUGADA **********
-                    elif(event == "-CONFIRMAR-"):
-                        window_game['-B_CAMBIAR_PASAR-'].update(disabled=False)
-                        palabra = tablero.verificarPalabra()
+                    #********************************* CLICK EN CONFIRMAR JUGADA *********************************
+                    elif event == "-CONFIRMAR-" and confirmar_habilitado:
+                        cambiar_habilitado = True
+                        #window_game["-CAMBIAR_PASAR-"].update(disabled=False)
+                        palabra,con_inicio = tablero.verificarPalabra()
+                        print(palabra)
 
-                        if (es_valida(palabra,nivel)):
-                            window_game['text-confirmar'].update('Palabra correcta',visible=True)
+                        if es_valida(palabra,nivel): #Si la palabra es válida:
+                            window_game['-TEXT_JUGADOR-'].update('PALABRA CORRECTA!',visible=True)
                             usuario.sumarPuntos(bolsa_fichas.devolverPuntaje(palabra,tablero.copiaPalabra(),tablero.getCasillasEspeciales()))
-                            window_game["-PuntosJ-"].update(str(usuario.getPuntaje()))
-                            tablero.reiniciarPalabra()
-                            nuevas_fichas = bolsa_fichas.letras_random(len(palabra))
+                            window_game["-PUNTOS_JUGADOR-"].update(str(usuario.getPuntaje()))
+                            cant_letras = len(palabra)
+                            if con_inicio:
+                                cant_letras -= 1
+                            nuevas_fichas = bolsa_fichas.letras_random(cant_letras)
+                            print(nuevas_fichas)
 
-                            if (nuevas_fichas == []):
+                            #Verificar si se pueden reponer las fichas usadas:
+                            if nuevas_fichas == []:
+                                #fin del juego 
                                 game_over = True
                                 game_over_text = "Se acabaron las fichas, juego terminado"
-                                print('fin')
-                                #FIN DEL JUEGO PORQUE NO HAY MAS FICHAS
-                            else:
+                            else:               
                                 fila_fichasJ.insertarFichas(window_game,nuevas_fichas)
+                                tablero.reiniciarPalabra()
                                 turno = 1
-                        else:
-                            fichas_a_devolver = tablero.devolverFichas(window_game)
-                            fila_fichasJ.insertarFichas(window_game,fichas_a_devolver)
-                            window_game['text-confirmar'].update('Palabra incorrecta',visible=True)
 
-                    #*********** CLICK EN CAMBIAR FICHAS **********
-                    elif(event == '-B_CAMBIAR_PASAR-'):
-                        if (usuario.getCambiosFichas() != 0):
+                        else: #Si la palabra no es válida:
+                            window_game['-TEXT_JUGADOR-'].update('PALABRA INCORRECTA!',visible=True)
+                            fichas_a_devolver = tablero.devolverFichas(window_game)
+                            fila_fichasJ.insertarFichas(window_game,fichas_a_devolver)  
+
+                    #********************************** CLICK EN CAMBIAR FICHAS *********************************
+                    elif event == "-CAMBIAR_PASAR-" and cambiar_habilitado:
+                        if usuario.getCambiosFichas() != 0: #Si tiene cambios disponibles:
+
                             if fila_fichasJ.hayFichaSelected():
                                 fila_fichasJ.desmarcarFichaSelected(window_game)
-                            bolsa_fichas.habilitar()
-                            tablero.deshabilitar(window_game)
-                            window_game["-CONFIRMAR-"].Update(disabled=True)
-                            window_game['cambiar_fichas_text'].Update(visible=True)
-                            window_game['Aceptar'].Update(visible=True)
-                            window_game["Cancelar"].Update(visible=True)
-                        else:
+                            tablero.deshabilitar()
+                            confirmar_habilitado = False
+                            #window_game["-CONFIRMAR-"].Update(disabled=True)
+
+                            bolsa_fichas.habilitar() 
+                            window_game['-TEXT_JUGADOR-'].Update("Selecciones las fichas\n para cambiar")
+                            window_game['-ACEPTAR-'].Update(visible=True)
+                            window_game["-CANCELAR-"].Update(visible=True)
+
+                        else: #Si no tiene cambios disponibles
                             usuario.pasarTurno()
-                            if (usuario.getTurnosPasados() == 3):
-                                print(usuario.getTurnosPasados())
-                                window_game['-B_CAMBIAR_PASAR-'].Update('Cambiar fichas')
-                            usuario.verificarTurnosPasados()
                             turno = 1
 
-                    #*********** CLICK EN ACEPTAR (CAMBIAR FICHAS) **********    
-                    elif(event == 'Aceptar'):
+                            if (usuario.getTurnosPasados() == 3):
+                                window_game["-CAMBIAR_PASAR-"].Update(image_filename=r"Data\Images\Juego\Botones\boton-cambiar-fichas.png")
+                                usuario.agregarCambioDeFichas()
+
+                    #********************************* CLICK EN ACEPTAR (CAMBIAR FICHAS) *********************************    
+                    elif event == '-ACEPTAR-':
                         usuario.restarCambio()
-                        window_game['-CONFIRMAR-'].Update(disabled=False)
-                        if (usuario.getCambiosFichas() == 0):
-                            window_game['-B_CAMBIAR_PASAR-'].Update('Pasar turno')
-                        if fila_fichasJ.cambiarFichas(window_game,bolsa_fichas):
+                        confirmar_habilitado = True
+                        #window_game['-CONFIRMAR-'].Update(disabled=False)
+
+                        if fila_fichasJ.cambiarFichas(window_game,bolsa_fichas): #Si se pudo reponer todas las fichas a cambiar:
                             bolsa_fichas.deshabilitar()
-                            window_game['cambiar_fichas_text'].Update(visible=False)
-                            window_game['Aceptar'].Update(visible=False)
-                            window_game['Cancelar'].Update(visible=False)
+                            window_game["-TEXT_JUGADOR-"].Update("")
+                            window_game['-ACEPTAR-'].Update(visible=False)
+                            window_game['-CANCELAR-'].Update(visible=False)
                             turno = 1
-                        else:
+
+                        else: #Si no se pudieron reponer todas las fichas a cambiar:
+                            #Se termina el juego porque no hay fichas suficientes
                             game_over = True
                             game_over_text = "Se acabaron las fichas, juego terminado"
-                            print('fin')
-                            #se termina el juego porq no hay fichas suficientes
-                    
-                    #*********** CLICK EN CANCELAR (CAMBIAR FICHAS) **********    
-                    elif event == 'Cancelar':
-                        fila_fichasJ.cancelarCambioDeFichas(window_game) 
-                        window_game['Aceptar'].Update(visible=False)
-                        window_game['Cancelar'].Update(visible=False)
-                        window_game['cambiar_fichas_text'].Update(visible=False)
-                        bolsa_fichas.deshabilitar()
-                        window_game['-CONFIRMAR-'].Update(disabled=False)
 
-                    #*********** CLICK EN PAUSA **********
+                        if (usuario.getCambiosFichas() == 0): #Si no le quedan mas cambios de ficha:
+                            #Se actualiza el boton de "cambiar fichas" a "pasar turno"
+                            window_game['-CAMBIAR_PASAR-'].Update(image_filename=r"Data\Images\Juego\Botones\boton-pasar-turno.png")   
+                    
+                    #********************************* CLICK EN CANCELAR (CAMBIAR FICHAS) *********************************    
+                    elif event == '-CANCELAR-':
+                        bolsa_fichas.deshabilitar()
+                        window_game['-ACEPTAR-'].Update(visible=False)
+                        window_game['-CANCELAR-'].Update(visible=False)
+                        window_game["-TEXT_JUGADOR-"].Update("")
+                        fila_fichasJ.cancelarCambioDeFichas(window_game) 
+                        confirmar_habilitado = True
+                        #window_game['-CONFIRMAR-'].Update(disabled=False)
+
+                    #********************************* CLICK EN PAUSA *********************************
                     elif event == "-PAUSA-":
-                        
-                        tiempo_cuando_pauso = time.time()
+                        timer.pausar()
                         window_game.Disable()
                         window_pausa.UnHide()
                         event, values = window_pausa.read()
                         if event == "-REANUDAR-":
+                            timer.reanudar()
                             window_pausa.Hide()
                             window_game.Enable()
                             window_game.Hide()
                             window_game.UnHide()
-                            time_start += time.time() - tiempo_cuando_pauso
                         elif event == "-SALIR_SIN_GUARDAR-":
                             window_pausa.Hide()
-                            game_over = False
-                            datos_partida = [False]#este primer elemento de la lista dice si se debe guardar o no la partida
+                            game_over=True
                             break
                         elif event == "-SALIR_Y_GUARDAR-":
                             window_pausa.Hide()
-                            game_over=False
-                            datos_partida = [True]#true dice que la partida se guarda
-                            #guardar_partida(datos_partida) (a implementar) se le agrega a datos_partida todo lo q se tiene q guardar para seguir despues
-                            break
+                            game_over=True
+                            #guardar_partida() (a implementar)
 
-                    #*********** CLICK EN TERMINAR PARTIDA **********
-                    #a implementar
-        
-                # *************************************** TURNO DE LA MAQUINA **********************************************       
-                else:
-                    window_game["-TURNO-"].update("Turno del oponente")
-                    window_game.read(timeout=1000)
+                    #********************************* CLICK EN TERMINAR PARTIDA *********************************
+                    #a implementar    
                     
-                    #ACTUALIZACION DEL TIMER
-                    seconds = int(time.time() - time_start) - minutes*60
-                    if seconds >= 60:
-                        minutes += 1
-                        seconds = 00
-                    window_game['-RELOJ-'].Update(str(minutes)+":"+str(seconds))
+                else:
+                    # *******************************************************************************************************************
+                    # ********************************************* TURNO DE LA MAQUINA *************************************************
+                    # *******************************************************************************************************************
+                    window_game["-TEXT_CPU-"].update("TURNO DEL OPONENTE")
+                    window_game.read(timeout=1000)
+                    timer.actualizarTimer()
+                    window_game['-RELOJ-'].Update(timer.tiempoActual())
 
-                    #PREGUNTAR SI SE LLEGO AL TIEMPO LIMITE
-                    if minutes == tiempo_limite:
+                    #la maquina intenta armar una palabra con sus fichas:
+                    palabra_maquina, cant_letras_a_cambiar = maquina.armarPalabra(fila_fichasM,bolsa_fichas,tablero,nivel)
+
+                    if palabra_maquina != 'xxxxxx': #Si encontro una palabra válida:
+                        window_game["-TEXT_CPU-"].update("PALABRA CORRECTA!")
+                        palabra_armada = True
+                        maquina.insertarPalabra(palabra_maquina, tablero, window_game, tamaño_tablero) #Inserta la palabra en el tablero
+                        maquina.sumarPuntos(bolsa_fichas.devolverPuntaje(palabra_maquina,tablero.copiaPalabra(),tablero.getCasillasEspeciales()))
+                        window_game["-PUNTOS_CPU-"].update(str(maquina.getPuntaje()))
+                        puede_cambiar = True #variable que avisa que se puede hacer el cambio de fichas
+
+                    else: #Si no pudo formar una palabra:
+                        palabra_armada = False
+
+                        if maquina.getCambiosFichas() == 0:  #Si la maquina no tiene más cambios de fichas:
+                            window_game["-TEXT_CPU-"].Update("TURNO PASADO")
+                            maquina.pasarTurno()
+                            maquina.verificarTurnosPasados()
+                            puede_cambiar = False
+
+                        else: #Si la maquina tiene cambios de fichas:
+                            window_game["-TEXT_CPU-"].Update("CAMBIO DE FICHAS")
+                            maquina.restarCambio()
+                            puede_cambiar = True  
+
+                    if puede_cambiar: #Si la palabra fue correcta o la maquina tenia cambios de fichas se realiza el cambio
+                        nuevas_letras = bolsa_fichas.letras_random(cant_letras_a_cambiar)
+
+                        if nuevas_letras != []: #Si se puede hacer el cambio   
+                            maquina.nuevasLetras(fila_fichasM, nuevas_letras, tablero, palabra_armada)  #Agrega las nuevas fichas
+
+                        else:  #Si no se pudo hacer el cambio de fichas:
+                            #Se termina el juego porque no hay mas fichas
+                            game_over = True
+                            game_over_text = "Se acabaron las fichas, juego terminado"
+
+                    cambiar_habilitado = True
+                    confirmar_habilitado = True
+                    turno = 0  
+
+                    if timer.termino():
                         game_over = True
-                        game_over_text = "Se acabo el tiempo, fin del juego"
-                        
-                    else:
-                        #la maquina intenta armar una palabra con las letras que tiene en su fila
-                        palabra_maquina, cant_letras_a_cambiar = maquina.armarPalabra(fila_fichasM,bolsa_fichas,tablero,nivel)
-                        #si pudo formar la palabra la inserta en el tablero y trae nuevas letras de la bolsa
-                        if (palabra_maquina != 'xxxxxx'): 
-                            palabra_armada = True
-                            maquina.insertarPalabra(palabra_maquina, tablero, window_game, tamaño_tablero)
-                            maquina.sumarPuntos(bolsa_fichas.devolverPuntaje(palabra_maquina,tablero.copiaPalabra(),tablero.getCasillasEspeciales()))
-                            window_game["-PuntosM-"].update(str(maquina.getPuntaje()))
-                            puede_cambiar = True #variable que avisa que se puede hacer el cambio de fichas
-                        else:
-                            #aviso en pantalla que la maquina no pudo ingresar una palabra, por lo que cambia todas las fichas o pasa el turno(falta implementar)
-                            palabra_armada = False
-                            if (maquina.getCambiosFichas() == 0):
-                                #si la maquina no tiene mas cambios de fichas se debe pasar el turno
-                                maquina.pasarTurno()
-                                maquina.verificarTurnosPasados()
-                                puede_cambiar = False
-                            else:
-                                #si tiene cambios de fichas se resta uno y se hace el cambio de las 7 fichas
-                                maquina.restarCambio()
-                                puede_cambiar = True  
-                        if (puede_cambiar): #si la palabra fue correcta o la maquina tenia cambios de fichas se realiza el cambio
-                            nuevas_letras = bolsa_fichas.letras_random(cant_letras_a_cambiar)
-                            if nuevas_letras != []:
-                                #si habia suficientes letras en la bolsa de ficha las agrega a la fila      
-                                maquina.nuevasLetras(fila_fichasM, nuevas_letras, tablero, palabra_armada) 
-                            else:
-                                #termina el juego porq no hay mas fichas
-                                game_over = True
-                                game_over_text = "Se acabaron las fichas, juego terminado"
-                                print('fin')
-                        turno = 0           
+                        game_over_text = "Se acabo el tiempo, fin del juego"    
+
             else:
                 window_game.Disable()
-                if usuario.getPuntaje()>maquina.getPuntaje():
-                    game_over_text_dos = '¡Ganaste!'
-                elif usuario.getPuntaje()<maquina.getPuntaje():
-                    game_over_text_dos = 'Perdiste, lo siento :('
-                else:
-                    game_over_text_dos = '¡Es un empate!'
-                sg.popup(game_over_text,game_over_text_dos,('Tu puntuación: '+str(usuario.getPuntaje())),('Puntos de la maquina: '+str(maquina.getPuntaje())))
-                datos_partida = [usuario.getPuntaje(),'fecha',nivel]
+                #terminar_juego() (a implementar)
+                sg.popup(game_over_text)
                 break
 
         window_game.close()
-        print(game_over)
-        print(datos_partida)
-        return [game_over,datos_partida]
 
+def terminar_juego():
+    pass
 
 def guardar_partida():
     pass
-#(martin va a hacer este proceso entre hoy y mañana,tranca nico ta todo controlado)
+#(martin va a hacer estos dos procesos entre hoy y mañana,tranca nico ta todo controlado)
 
 if __name__ == "__main__":
     import os

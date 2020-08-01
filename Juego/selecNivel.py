@@ -1,7 +1,7 @@
 def seleccionar_nivel():
     """Muestra la ventana para seleccionar el nivel del juego, retorna el nivel elegido y los datos del mismo
     """
-    def elegir_nivel(nombre_archivo):
+    def cargar_datos(nombre_archivo):
         """Retorna los datos del archivo de nivel pasado por parámetro
         """
         import os
@@ -19,19 +19,19 @@ def seleccionar_nivel():
     window_nivel = windowNivel.hacer_ventana((1000,600))
 
     event, values= window_nivel.read()
-    datos = []
-    
+    datos = []        
+
     #*********** CLICK EN FACIL **********
     if event == '-FACIL-':
-        datos = elegir_nivel('Facil.json')
+        datos = cargar_datos('Facil.json')
     
     #*********** CLICK EN MEDIO **********
     elif event == '-MEDIO-':
-        datos = elegir_nivel('Medio.json')
+        datos = cargar_datos('Medio.json')
     
     #*********** CLICK EN DIFICIL **********
     elif event == '-DIFICIL':
-        datos = elegir_nivel('Dificil.json')
+        datos = cargar_datos('Dificil.json')
     
     #*********** CLICK EN PERSONALIZADO **********
     elif event == '-PERSONALIZADO-':

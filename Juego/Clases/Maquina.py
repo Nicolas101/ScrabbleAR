@@ -1,16 +1,7 @@
-try:
-    #Si se ejecuta el ScrabbleAR.py:
-    from Juego.Clases.Jugador import Jugador
-    from Juego.Clases.FilaDeFichas import FilaFichas
-    from Juego.Clases.BolsaFichas import BolsaFichas
-    from Juego.Clases.Tablero import Tablero
-except ModuleNotFoundError:
-    #Si se ejecuta el mainJuego.py:
-    from Clases.Jugador import Jugador
-    from Clases.FilaDeFichas import FilaFichas
-    from Clases.BolsaFichas import BolsaFichas
-    from Clases.Tablero import Tablero
-    
+from Juego.Clases.Jugador import Jugador
+from Juego.Clases.FilaDeFichas import FilaFichas
+from Juego.Clases.BolsaFichas import BolsaFichas
+from Juego.Clases.Tablero import Tablero    
 from pattern.text.es import verbs, tag, spelling, lexicon, parse, split
 import random
 
@@ -21,10 +12,10 @@ import random
 class Maquina(Jugador):
     """Es una subclase de la clase Jugador que contiene todo el comportamiento del oponente 
     """
-
     def armarPalabra(self, fila_fichas, bolsa_fichas, tablero, dificultad):
-        """Intenta armar una palabra con las letras de la fila de fichas de la maquina
-        si no puede devuelve 'xxxxxx'
+        """Intenta armar una palabra con sus fichas. \n
+        Si la palabra es correcta retorna: la palabra y la cantidad de fichas a reponer\n
+        Si no pudo formar una palabra retorna: "xxxxxx" y un 7, indicando que se deben cambiar todas las fichas
         """
         lis_letras = list(map(lambda l: l.lower(), fila_fichas.getLetras())) #lis_letras contiene las letras de la maquina en minuscula  
         #si se debe usar la letra de inicio se la agrega a lis letras 

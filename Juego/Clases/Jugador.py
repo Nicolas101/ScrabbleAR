@@ -51,5 +51,5 @@ class Jugador():
         if self._turnos_pasados == 3:
             self._cambios_fichas += 1
             self._turnos_pasados = 0
-        
+            
         

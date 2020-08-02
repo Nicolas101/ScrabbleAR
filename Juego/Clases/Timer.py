@@ -3,19 +3,17 @@ import time
 class Timer():
     """
     """
-    def __init__(self,limite):
+    def __init__(self,limite,segundos=0,minutos=0):
         self._inicio = None 
-        self._segundos = None
-        self._minutos = None
+        self._segundos = segundos
+        self._minutos = minutos
         self._limite = limite
         self._hora_pausada = None
         self._termine = None
         self._ultima_actualizacion = None
 
     def iniciarTimer(self):
-        self._inicio = time.time()
-        self._segundos = 0
-        self._minutos = 0
+        self._inicio = time.time() - self._segundos
         self._termine = False
 
     def actualizarTimer(self):
@@ -39,8 +37,17 @@ class Timer():
         self._hora_pausada = time.time()
 
     def reanudar(self):
-        self._inicio = time.time() - self._hora_pausada
+        self._inicio += time.time() - self._hora_pausada
 
     def ajustarTiempo(self):
         if time.time() - self._ultima_actualizacion != 0.0:
             time.sleep(time.time() - self._ultima_actualizacion)
+
+    def getSegundos(self):
+        return self._segundos
+
+    def getMinutos(self):
+        return self._minutos
+
+    def getTiempoLimite(self):
+        return self._limite

@@ -20,15 +20,16 @@ class Casilla():
         self._deshabilitada = deshabilitada
         self._ocupada = ocupada
         self._ficha = ficha
-        self._especial = especial 
+        self._especial = especial
+        self._background = background
         # layout para PySimpleGUI:
-        self._layout = sg.Button("",image_filename=self._imagen,key=self._key,pad=(0,0),button_color=(background,background),border_width=0) 
+        #self._layout = sg.Button("",image_filename=self._imagen,key=self._key,pad=(0,0),button_color=(background,background),border_width=0) 
 
     def getKey(self):
         return self._key     
 
     def getLayout(self):
-        return self._layout
+        return sg.Button("",image_filename=self._imagen,key=self._key,pad=(0,0),button_color=(self._background,self._background),border_width=0)
 
     def getFicha(self):
         return self._ficha

@@ -1,0 +1,128 @@
+{
+    "Facil": [
+        {
+            "fecha": "fecha",
+            "puntaje": 10
+        },
+        {
+            "fecha": "fecha",
+            "puntaje": 7
+        },
+        {
+            "fecha": "fecha",
+            "puntaje": 2
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        }
+    ],
+    "Medio": [
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        }
+    ],
+    "Dificil": [
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        },
+        {
+            "fecha": "xxxx",
+            "puntaje": 0
+        }
+    ]
+}

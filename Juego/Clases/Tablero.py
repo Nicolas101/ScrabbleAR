@@ -20,13 +20,13 @@ class Tablero:
         self._inicio = inicio 
         self._casillas = [] # matriz que contiene todos los objetos "casilla" del tablero
         self._palabra = [inicio[0]] # lista de keys de las fichas que estan formando la palabra
-        self._layout = self._armar() # layout para PySimpleGUI
+        #self._layout = self._armar() # layout para PySimpleGUI
         self._habilitado = False
     
     def getLayout(self):
         """Retorna el layout para la GUI
         """
-        return self._layout
+        return self._armar()
 
     def getLetraInicio(self):
         """Retorna la letra de la ficha de inicio
@@ -143,6 +143,7 @@ class Tablero:
                 aux = key.split('-')
                 letras_devolver.append(self._casillas[int(aux[0])-1][int(aux[1])-1].getFicha()) 
                 self._casillas[int(aux[0])-1][int(aux[1])-1].desocupar()
+                self._casillas[int(aux[0])-1][int(aux[1])-1].habilitar()
                          
                 #Actualizo el contenido de la casilla:
                 if self._casillas[int(aux[0])-1][int(aux[1])-1].esEspecial():

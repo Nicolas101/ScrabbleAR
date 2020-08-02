@@ -81,8 +81,37 @@ def verificar():
         json.dump(datos,archivo,indent=4)
 
         archivo.close()
+    
+    def crear_archivo_top(ubicacion_archivo):
+        """Crea el archivo de top 10 puntajes
+        """
+        import json
+        
+        archivo = open(ubicacion_archivo,'w')
 
-    lis_archivos = ['Facil.json','Medio.json','Dificil.json']
+        dic_data = {}
+        niveles = ['Facil','Medio','Dificil']
+        for nivel in niveles:
+            dic_data[nivel] = []
+            for num in range(1,11):
+                dic_data[nivel].append({'fecha':'xxxx','puntaje':0})
+        
+        json.dump(dic_data,archivo,indent=4)
+
+        archivo.close()
+    
+    def crear_archivo_partida(ubicacion_archivo):
+        """Crea el archivo de la partida guardada
+        """
+        import pickle
+
+        archivo = open(ubicacion_archivo,'wb')
+        
+        pickle.dump([False],archivo)
+
+        archivo.close()
+
+    lis_archivos = ['Facil.json','Medio.json','Dificil.json','TopDiez.json','partidaguardada.obj']
     dir_actual = os.getcwd()
     for archivo in lis_archivos:
         #intenta leer los archivos de lis_archivos, si alguno no existe lo crea
@@ -97,3 +126,7 @@ def verificar():
                 crear_archivo_medio(ubicacion_archivo)
             elif archivo == 'Dificil.json':
                 crear_archivo_dificil(ubicacion_archivo)
+            elif archivo == 'TopDiez.json':
+                crear_archivo_top(ubicacion_archivo)
+            elif archivo == 'partidaguardada.obj':
+                crear_archivo_partida(ubicacion_archivo)

@@ -1,4 +1,4 @@
-def start_game(nivel,datos):
+def start_game(nivel,datos,partida_guardada):
     """Muestra la ventana de juego y el desarrollo de la partida
     """
     if nivel != None:
@@ -12,31 +12,58 @@ def start_game(nivel,datos):
         from Windows import windowJuego, windowPausa
         import PySimpleGUI as sg
         import random
-          
-        #BOLSA DE FICHAS
-        bolsa_fichas = crear_bolsa(datos['letras'])
+        
+        if (not partida_guardada):
+            #BOLSA DE FICHAS
+            bolsa_fichas = crear_bolsa(datos['letras'])
 
-        #TABLERO
-        tablero,tamaño_tablero = crear_tablero(bolsa_fichas)
+            #TABLERO
+            tablero,tamaño_tablero = crear_tablero(bolsa_fichas)
 
-        #FILA DE FICHAS
-        fila_fichasJ = crear_fila_fichas(bolsa_fichas,False)
-        fila_fichasM = crear_fila_fichas(bolsa_fichas,True)
+            #FILA DE FICHAS
+            fila_fichasJ = crear_fila_fichas(bolsa_fichas,False)
+            fila_fichasM = crear_fila_fichas(bolsa_fichas,True)
+
+            #USUARIO Y MAQUINA
+            usuario = Jugador()
+            maquina = Maquina()
+
+            #TEMPORIZADOR
+            timer = Timer(datos['tiempo'])
+
+            turno = random.randint(0,1) # 0: turno del usuario // 1: turno del oponente
+        
+        else: #si es la continuacion de una partida guardada
+            
+            #BOLSA DE FICHAS
+            bolsa_fichas = datos[1]
+            
+            #TABLERO
+            tablero = datos[2]
+            tamaño_tablero = datos[3]
+            
+            #FILA DE FICHAS
+            fila_fichasJ = datos[4]
+            fila_fichasM = datos[5]
+            
+            #USUARIO Y MAQUINA
+            usuario = datos[6]
+            maquina = datos[7]
+            
+            #TEMPORIZADOR
+            timer = Timer(datos[10],datos[8],datos[9])
+            turno = datos[11]
+
+
+
 
         #PANTALLA DE JUEGO
-        window_game = windowJuego.hacer_ventana(tablero.getLayout(),fila_fichasJ.getLayout(),fila_fichasM.getLayout(),(1000,600))
+        window_game = windowJuego.hacer_ventana(tablero.getLayout(),fila_fichasJ.getLayout(),fila_fichasM.getLayout(),(1000,600),usuario.getPuntaje(),maquina.getPuntaje())
 
         #PANTALLA DE PAUSA
         window_pausa = windowPausa.hacer_ventana()
 
-        #USUARIO Y MAQUINA
-        usuario = Jugador()
-        maquina = Maquina()
 
-        #TEMPORIZADOR
-        timer = Timer(datos['tiempo'])
-
-        turno = random.randint(0,1) # 0: turno del usuario // 1: turno del oponente
         
         game_over = False
         if turno == 0 :
@@ -76,6 +103,9 @@ def start_game(nivel,datos):
                     #********************************* CERRAR LA VENTANA *********************************
                     if event is None:
                         #preguntar si desea salir sin guardar
+                        #si desea salir sin guardar primer dato de datos_partida en falso
+                        game_over = False
+                        datos_partida = [False]#este primer elemento de la lista dice si se debe guardar o no la partida
                         break
                     
                     #********************************* CLICK EN LA FILA DE FICHAS *********************************
@@ -152,7 +182,7 @@ def start_game(nivel,datos):
 
                             if (usuario.getTurnosPasados() == 3):
                                 window_game["-CAMBIAR_PASAR-"].Update(image_filename=r"Data\Images\Juego\Botones\boton-cambiar-fichas.png")
-                                usuario.agregarCambioDeFichas()
+                                usuario.verificarTurnosPasados()
 
                     #********************************* CLICK EN ACEPTAR (CAMBIAR FICHAS) *********************************    
                     elif event == '-ACEPTAR-':
@@ -191,24 +221,29 @@ def start_game(nivel,datos):
                         timer.pausar()
                         window_game.Disable()
                         window_pausa.UnHide()
-                        event, values = window_pausa.read()
-                        if event == "-REANUDAR-":
+                        event_pausa, values_pausa = window_pausa.read()
+                        if event_pausa == "-REANUDAR-":
                             timer.reanudar()
                             window_pausa.Hide()
                             window_game.Enable()
                             window_game.Hide()
                             window_game.UnHide()
-                        elif event == "-SALIR_SIN_GUARDAR-":
+                        elif event_pausa == "-SALIR_SIN_GUARDAR-":
                             window_pausa.Hide()
-                            game_over=True
+                            game_over = False
+                            datos_partida = [False]#este primer elemento de la lista dice si se debe guardar o no la partida
                             break
-                        elif event == "-SALIR_Y_GUARDAR-":
+                        elif event_pausa == "-SALIR_Y_GUARDAR-":
                             window_pausa.Hide()
-                            game_over=True
+                            game_over=False
+                            datos_partida = [True,bolsa_fichas,tablero,tamaño_tablero,fila_fichasJ,fila_fichasM,usuario,maquina,timer.getSegundos(),timer.getMinutos(),timer.getTiempoLimite(),turno,nivel]#true dice que la partida se guarda
                             #guardar_partida() (a implementar)
+                            break
 
                     #********************************* CLICK EN TERMINAR PARTIDA *********************************
-                    #a implementar    
+                    elif event == '-TERMINAR_PARTIDA-':
+                        game_over = True
+                        game_over_text = 'Has terminado la partida'
                     
                 else:
                     # *******************************************************************************************************************
@@ -219,60 +254,72 @@ def start_game(nivel,datos):
                     timer.actualizarTimer()
                     window_game['-RELOJ-'].Update(timer.tiempoActual())
 
-                    #la maquina intenta armar una palabra con sus fichas:
-                    palabra_maquina, cant_letras_a_cambiar = maquina.armarPalabra(fila_fichasM,bolsa_fichas,tablero,nivel)
-
-                    if palabra_maquina != 'xxxxxx': #Si encontro una palabra válida:
-                        window_game["-TEXT_CPU-"].update("PALABRA CORRECTA!")
-                        palabra_armada = True
-                        maquina.insertarPalabra(palabra_maquina, tablero, window_game, tamaño_tablero) #Inserta la palabra en el tablero
-                        maquina.sumarPuntos(bolsa_fichas.devolverPuntaje(palabra_maquina,tablero.copiaPalabra(),tablero.getCasillasEspeciales()))
-                        window_game["-PUNTOS_CPU-"].update(str(maquina.getPuntaje()))
-                        puede_cambiar = True #variable que avisa que se puede hacer el cambio de fichas
-
-                    else: #Si no pudo formar una palabra:
-                        palabra_armada = False
-
-                        if maquina.getCambiosFichas() == 0:  #Si la maquina no tiene más cambios de fichas:
-                            window_game["-TEXT_CPU-"].Update("TURNO PASADO")
-                            maquina.pasarTurno()
-                            maquina.verificarTurnosPasados()
-                            puede_cambiar = False
-
-                        else: #Si la maquina tiene cambios de fichas:
-                            window_game["-TEXT_CPU-"].Update("CAMBIO DE FICHAS")
-                            maquina.restarCambio()
-                            puede_cambiar = True  
-
-                    if puede_cambiar: #Si la palabra fue correcta o la maquina tenia cambios de fichas se realiza el cambio
-                        nuevas_letras = bolsa_fichas.letras_random(cant_letras_a_cambiar)
-
-                        if nuevas_letras != []: #Si se puede hacer el cambio   
-                            maquina.nuevasLetras(fila_fichasM, nuevas_letras, tablero, palabra_armada)  #Agrega las nuevas fichas
-
-                        else:  #Si no se pudo hacer el cambio de fichas:
-                            #Se termina el juego porque no hay mas fichas
-                            game_over = True
-                            game_over_text = "Se acabaron las fichas, juego terminado"
-
-                    cambiar_habilitado = True
-                    confirmar_habilitado = True
-                    turno = 0  
-
                     if timer.termino():
-                        game_over = True
-                        game_over_text = "Se acabo el tiempo, fin del juego"    
+                            game_over = True
+                            game_over_text = "Se acabo el tiempo, fin del juego"
+                    
+                    else:
+                        #la maquina intenta armar una palabra con sus fichas:
+                        palabra_maquina, cant_letras_a_cambiar = maquina.armarPalabra(fila_fichasM,bolsa_fichas,tablero,nivel)
+
+                        if palabra_maquina != 'xxxxxx': #Si encontro una palabra válida:
+                            window_game["-TEXT_CPU-"].update("PALABRA CORRECTA!")
+                            palabra_armada = True
+                            maquina.insertarPalabra(palabra_maquina, tablero, window_game, tamaño_tablero) #Inserta la palabra en el tablero
+                            maquina.sumarPuntos(bolsa_fichas.devolverPuntaje(palabra_maquina,tablero.copiaPalabra(),tablero.getCasillasEspeciales()))
+                            window_game["-PUNTOS_CPU-"].update(str(maquina.getPuntaje()))
+                            puede_cambiar = True #variable que avisa que se puede hacer el cambio de fichas
+
+                        else: #Si no pudo formar una palabra:
+                            palabra_armada = False
+
+                            if maquina.getCambiosFichas() == 0:  #Si la maquina no tiene más cambios de fichas:
+                                window_game["-TEXT_CPU-"].Update("TURNO PASADO")
+                                maquina.pasarTurno()
+                                maquina.verificarTurnosPasados()
+                                puede_cambiar = False
+
+                            else: #Si la maquina tiene cambios de fichas:
+                                window_game["-TEXT_CPU-"].Update("CAMBIO DE FICHAS")
+                                maquina.restarCambio()
+                                puede_cambiar = True  
+
+                        if puede_cambiar: #Si la palabra fue correcta o la maquina tenia cambios de fichas se realiza el cambio
+                            nuevas_letras = bolsa_fichas.letras_random(cant_letras_a_cambiar)
+
+                            if nuevas_letras != []: #Si se puede hacer el cambio   
+                                maquina.nuevasLetras(fila_fichasM, nuevas_letras, tablero, palabra_armada)  #Agrega las nuevas fichas
+
+                            else:  #Si no se pudo hacer el cambio de fichas:
+                                #Se termina el juego porque no hay mas fichas
+                                game_over = True
+                                game_over_text = "Se acabaron las fichas, juego terminado"
+
+                        cambiar_habilitado = True
+                        confirmar_habilitado = True
+                        turno = 0  
+
+                        if timer.termino():
+                            game_over = True
+                            game_over_text = "Se acabo el tiempo, fin del juego"    
 
             else:
                 window_game.Disable()
-                #terminar_juego() (a implementar)
-                sg.popup(game_over_text)
+                if usuario.getPuntaje()>maquina.getPuntaje():
+                    game_over_text_dos = '¡Ganaste!'
+                elif usuario.getPuntaje()<maquina.getPuntaje():
+                    game_over_text_dos = 'Perdiste, lo siento :('
+                else:
+                    game_over_text_dos = '¡Es un empate!'
+                sg.popup(game_over_text,game_over_text_dos,('Tu puntuación: '+str(usuario.getPuntaje())),('Puntos de la maquina: '+str(maquina.getPuntaje())))
+                datos_partida = [usuario.getPuntaje(),'fecha',nivel]
                 break
 
         window_game.close()
+        print(game_over)
+        print(datos_partida)
+        return [game_over,datos_partida]
 
-def terminar_juego():
-    pass
 
 def guardar_partida():
     pass
@@ -287,4 +334,4 @@ if __name__ == "__main__":
     archivo = open(ubicacion_archivo,'r')
     lis_datos = json.load(archivo)
     diccionario = lis_datos[len(lis_datos)-1]
-    start_game("-FACIL-",diccionario)
+    start_game("-FACIL-",diccionario,False)

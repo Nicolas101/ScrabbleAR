@@ -1,14 +1,14 @@
-def hacer_ventana(layout_tablero, layout_fichasJ, layout_fichasM,window_size):
+def hacer_ventana(layout_tablero, layout_fichasJ, layout_fichasM,window_size,puntos_jug,puntos_ma):
     import PySimpleGUI as sg
 
     datos_cpu = [
         [sg.Text("PASA EL TURNO",key="-TEXT_CPU-",size=(25,1),background_color="grey",pad=((10,0),(25,0)))],
-        [sg.Text("",key="-PUNTOS_CPU-",size=(5,1),background_color="grey",pad=((220,0),(25,0)))]
+        [sg.Text(str(puntos_ma),key="-PUNTOS_CPU-",size=(5,1),background_color="grey",pad=((220,0),(25,0)))]
     ]
 
     datos_jugador = [
         [sg.Text("PALABRA CORRECTA",key="-TEXT_JUGADOR-",size=(25,1),background_color="grey",pad=((10,0),(25,0)))],
-        [sg.Text("",key="-PUNTOS_JUGADOR-",size=(5,1),background_color="grey",pad=((220,0),(25,0)))]
+        [sg.Text(str(puntos_jug),key="-PUNTOS_JUGADOR-",size=(5,1),background_color="grey",pad=((220,0),(25,0)))]
     ]
 
     #COLUMNA DE LA CPU

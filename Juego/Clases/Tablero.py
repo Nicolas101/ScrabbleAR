@@ -70,6 +70,15 @@ class Tablero:
 
         return layout
 
+    def getLayoutActualizado(self):
+        layout = []
+        for fila in self._casillas:
+            fila_casilla = []
+            for casilla in fila:
+                fila_casilla.append(casilla.getLayout())
+            layout.append(fila_casilla)
+        return layout
+
     def click(self, event):
         """Retorna True si el evento fue en una de las casillas del tablero, False en caso contrario
         """

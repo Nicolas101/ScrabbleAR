@@ -70,8 +70,10 @@ class Maquina(Jugador):
                         break
                 if (encontro):
                     if ((letra_inicio != '0')and(letra_inicio in palabra))or(letra_inicio == '0'):
-                        if (dificultad != '-FACIL-'):
-                            valida = self._verificarPalabra(palabra)
+                        if (dificultad == '-FACIL-'):
+                            valida = self._verificarPalabra(palabra,['B-ADJP','B-VP','B-NP'])
+                        else:
+                            valida = self._verificarPalabra(palabra,['B-ADJP','B-VP'])
                         if(valida):
                             palabra_encontrada = palabra
                             break
@@ -84,12 +86,12 @@ class Maquina(Jugador):
         else:
             return 'xxxxxx'
             
-    def _verificarPalabra(self, palabra):
+    def _verificarPalabra(self, palabra,clases_validas):
         """Verifica que la palabra sea correcta para la especificacion
         de la dificultad en la que se esta jugando
         """
         aux = parse(palabra).split()[0][0][2]
-        if aux in ['B-ADJP','B-VP']:
+        if aux in clases_validas:
             return True
         else:
             return False

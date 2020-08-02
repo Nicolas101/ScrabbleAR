@@ -2,11 +2,23 @@
     "Facil": [
         {
             "fecha": "fecha",
+            "puntaje": 13
+        },
+        {
+            "fecha": "fecha",
+            "puntaje": 13
+        },
+        {
+            "fecha": "fecha",
             "puntaje": 12
         },
         {
             "fecha": "fecha",
             "puntaje": 10
+        },
+        {
+            "fecha": "fecha",
+            "puntaje": 9
         },
         {
             "fecha": "fecha",
@@ -27,18 +39,6 @@
         {
             "fecha": "fecha",
             "puntaje": 2
-        },
-        {
-            "fecha": "xxxx",
-            "puntaje": 0
-        },
-        {
-            "fecha": "xxxx",
-            "puntaje": 0
-        },
-        {
-            "fecha": "xxxx",
-            "puntaje": 0
         }
     ],
     "Medio": [

@@ -47,6 +47,12 @@ class FilaFichas():
         
         return [lis_fichas]
 
+    def getLayoutActualizado(self):
+        lis_fichas = []
+        for casilla in self._casillas:
+            lis_fichas.append(casilla.getLayout())
+        return [lis_fichas]
+
     def click(self, event):
         """Retorna True si el evento fue en una de las casillas de la fila de fichas, False en caso contrario
         """

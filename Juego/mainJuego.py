@@ -32,7 +32,20 @@ def start_game(nivel,datos,partida_guardada):
             timer = Timer(datos['tiempo'])
 
             turno = random.randint(0,1) # 0: turno del usuario // 1: turno del oponente
+
+            if turno == 0 :
+                confirmar_habilitado = True
+                cambiar_habilitado = True
+            else:
+                confirmar_habilitado = False
+                cambiar_habilitado = False
         
+            #PANTALLA DE JUEGO
+            window_game = windowJuego.hacer_ventana(tablero.getLayout(),fila_fichasJ.getLayout(),fila_fichasM.getLayout(),(1000,600),usuario.getPuntaje(),maquina.getPuntaje())
+
+            #PANTALLA DE PAUSA
+            window_pausa = windowPausa.hacer_ventana()
+
         else: #si es la continuacion de una partida guardada
             
             #BOLSA DE FICHAS
@@ -54,24 +67,19 @@ def start_game(nivel,datos,partida_guardada):
             timer = Timer(datos[10],datos[8],datos[9])
             turno = datos[11]
 
+            confirmar_habilitado = datos[12]
+            cambiar_habilitado = datos[13]
 
+            #PANTALLA DE JUEGO
+            window_game = windowJuego.hacer_ventana(tablero.getLayoutActualizado(),fila_fichasJ.getLayoutActualizado(),fila_fichasM.getLayoutActualizado(),(1000,600),usuario.getPuntaje(),maquina.getPuntaje())
 
-
-        #PANTALLA DE JUEGO
-        window_game = windowJuego.hacer_ventana(tablero.getLayout(),fila_fichasJ.getLayout(),fila_fichasM.getLayout(),(1000,600),usuario.getPuntaje(),maquina.getPuntaje())
-
-        #PANTALLA DE PAUSA
-        window_pausa = windowPausa.hacer_ventana()
+            #PANTALLA DE PAUSA
+            window_pausa = windowPausa.hacer_ventana()
 
 
         
         game_over = False
-        if turno == 0 :
-            confirmar_habilitado = True
-            cambiar_habilitado = True
-        else:
-            confirmar_habilitado = False
-            cambiar_habilitado = False
+        
         
         timer.iniciarTimer()
         while True:                 
@@ -236,7 +244,7 @@ def start_game(nivel,datos,partida_guardada):
                         elif event_pausa == "-SALIR_Y_GUARDAR-":
                             window_pausa.Hide()
                             game_over=False
-                            datos_partida = [True,bolsa_fichas,tablero,tamaño_tablero,fila_fichasJ,fila_fichasM,usuario,maquina,timer.getSegundos(),timer.getMinutos(),timer.getTiempoLimite(),turno,nivel]#true dice que la partida se guarda
+                            datos_partida = [True,bolsa_fichas,tablero,tamaño_tablero,fila_fichasJ,fila_fichasM,usuario,maquina,timer.getSegundos(),timer.getMinutos(),timer.getTiempoLimite(),turno,confirmar_habilitado,cambiar_habilitado,nivel]#true dice que la partida se guarda
                             #guardar_partida() (a implementar)
                             break
 

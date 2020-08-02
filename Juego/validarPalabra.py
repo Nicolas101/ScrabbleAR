@@ -13,7 +13,6 @@ def clasificar(palabra,clases_validas):
 def es_valida(palabra,dificultad):
     """
     """
-    clases_validas=['B-ADJP','B-VP'] #'B-ADJP': adjetivo Parse /// 'B-VP': verbo Parse
     if (not palabra.lower() in verbs):
         if (not palabra.lower() in spelling):
             if (not(palabra.lower() in lexicon) and not(palabra.upper() in lexicon) and not(palabra.capitalize() in lexicon)):
@@ -26,6 +25,6 @@ def es_valida(palabra,dificultad):
         ok=True
     if (ok==True):
         if (dificultad == '-FACIL-'):
-            return True
+            return clasificar(palabra,['B-ADJP','B-VP','B-NP'])
         else:
-            return clasificar(palabra,clases_validas)
+            return clasificar(palabra,['B-ADJP','B-VP'])  #'B-ADJP': adjetivo Parse /// 'B-VP': verbo Parse

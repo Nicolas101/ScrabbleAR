@@ -2,6 +2,10 @@
     "Facil": [
         {
             "fecha": "fecha",
+            "puntaje": 12
+        },
+        {
+            "fecha": "fecha",
             "puntaje": 10
         },
         {
@@ -10,23 +14,19 @@
         },
         {
             "fecha": "fecha",
+            "puntaje": 6
+        },
+        {
+            "fecha": "fecha",
+            "puntaje": 4
+        },
+        {
+            "fecha": "fecha",
             "puntaje": 2
         },
         {
-            "fecha": "xxxx",
-            "puntaje": 0
-        },
-        {
-            "fecha": "xxxx",
-            "puntaje": 0
-        },
-        {
-            "fecha": "xxxx",
-            "puntaje": 0
-        },
-        {
-            "fecha": "xxxx",
-            "puntaje": 0
+            "fecha": "fecha",
+            "puntaje": 2
         },
         {
             "fecha": "xxxx",

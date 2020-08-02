@@ -99,6 +99,7 @@ class FilaFichas():
         self._casillas[int(aux[1])-1].desocupar()
         self._casillas[int(aux[1])-1].setImagen(r"Data\Images\Juego\Fichas\Ficha-simple.png")
         self._casillas[int(aux[1])-1].deshabilitar()
+        self._letras.remove(self._casillas[int(aux[1])-1].getFicha())#sin esta linea no se borran las letras ya usadas 
         window[self._ficha_selected[1]].update(image_filename=self._casillas[int(aux[1])-1].getImagen())
 
         return self._casillas[int(aux[1])-1].getFicha()

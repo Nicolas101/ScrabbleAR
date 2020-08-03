@@ -62,15 +62,15 @@ class BolsaFichas():
         puntos = 0
         indice = 0
         for letra in palabra:
-            if (lis_keys[indice] in casillas_especiales['x2'][0]):
+            if (lis_keys[indice] in casillas_especiales['x2']):
                 puntos += (self._bolsa_fichas[letra]['puntuacion']*2)
-            elif (lis_keys[indice] in casillas_especiales['x3'][0]):
+            elif (lis_keys[indice] in casillas_especiales['x3']):
                 puntos += (self._bolsa_fichas[letra]['puntuacion']*3)
-            elif (lis_keys[indice] in casillas_especiales['-1'][0]):
+            elif (lis_keys[indice] in casillas_especiales['-1']):
                 puntos += (self._bolsa_fichas[letra]['puntuacion']-1)
-            elif (lis_keys[indice] in casillas_especiales['-2'][0]):
+            elif (lis_keys[indice] in casillas_especiales['-2']):
                 puntos += (self._bolsa_fichas[letra]['puntuacion']-2)
-            elif (lis_keys[indice] in casillas_especiales['-3'][0]):
+            elif (lis_keys[indice] in casillas_especiales['-3']):
                 puntos += (self._bolsa_fichas[letra]['puntuacion']-3)
             else:
                 puntos += self._bolsa_fichas[letra]['puntuacion']

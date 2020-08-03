@@ -1,15 +1,16 @@
-def hacer_ventana(layout_tablero, layout_fichasJ, layout_fichasM,window_size,puntos_jug,puntos_ma):
+def hacer_ventana(layout_tablero, layout_fichasJ, layout_fichasM,window_size,puntos_jug,puntos_ma,palabras_usuario,palabras_maquina):
     import PySimpleGUI as sg
 
     datos_cpu = [
-        [sg.Text("PASA EL TURNO",key="-TEXT_CPU-",size=(25,1),font=("Arial black",12),text_color="black",background_color="#6AB2E5",pad=((0,5),(30,0)))],
-        [sg.Text(str(puntos_ma),key="-PUNTOS_CPU-",size=(4,1),font=("Arial black",12),text_color="black",background_color="#6AB2E5",pad=((230,0),(10,0)))],
-
+        [sg.T("",key="-TEXT_CPU-",size=(20,1),font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0))],
+        [sg.Combo(palabras_maquina,key="-PALABRAS_CPU-",default_value="Palabras ingresadas:",size=(25,1),readonly=True)],
+        [sg.T("Puntos:",font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0)),sg.T("",key="-PUNTOS_CPU-",size=(4,1),font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0))]
     ]
 
     datos_jugador = [
-        [sg.Text("PALABRA CORRECTA",key="-TEXT_JUGADOR-",size=(25,1),font=("Arial black",12),text_color="black",background_color="#6AB2E5",pad=((0,5),(30,0)))],
-        [sg.Text(str(puntos_jug),key="-PUNTOS_JUGADOR-",size=(4,1),font=("Arial black",12),text_color="black",background_color="#6AB2E5",pad=((230,0),(10,0)))]
+        [sg.T("",key="-TEXT_JUGADOR-",size=(20,1),font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0))],
+        [sg.Combo(palabras_usuario,key="-PALABRAS_JUGADOR-",default_value="Palabras ingresadas:",size=(25,1),readonly=True)],
+        [sg.T("Puntos:",font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0)),sg.T("",key="-PUNTOS_JUGADOR-",size=(4,1),font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0))]
     ]
 
     #COLUMNA DE LA CPU

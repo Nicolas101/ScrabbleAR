@@ -43,7 +43,7 @@ def start_game(nivel,datos,partida_guardada):
                 cambiar_habilitado = False
         
             #PANTALLA DE JUEGO
-            window_game = windowJuego.hacer_ventana(tablero.getLayout(),fila_fichasJ.getLayout(),fila_fichasM.getLayout(),(1000,600),usuario.getPuntaje(),maquina.getPuntaje())
+            window_game = windowJuego.hacer_ventana(tablero.getLayout(),fila_fichasJ.getLayout(),fila_fichasM.getLayout(),(1000,600),usuario.getPuntaje(),maquina.getPuntaje(),"","")
 
             #PANTALLA DE PAUSA
             window_pausa = windowPausa.hacer_ventana()
@@ -84,7 +84,7 @@ def start_game(nivel,datos,partida_guardada):
             clases_validas = datos[14]
 
             #PANTALLA DE JUEGO
-            window_game = windowJuego.hacer_ventana(tablero.getLayoutActualizado(),fila_fichasJ.getLayoutActualizado(),fila_fichasM.getLayoutActualizado(),(1000,600),usuario.getPuntaje(),maquina.getPuntaje())
+            window_game = windowJuego.hacer_ventana(tablero.getLayoutActualizado(),fila_fichasJ.getLayoutActualizado(),fila_fichasM.getLayoutActualizado(),(1000,600),usuario.getPuntaje(),maquina.getPuntaje(),usuario.getPalabras(),maquina.getPalabras())
 
             #PANTALLA DE PAUSA
             window_pausa = windowPausa.hacer_ventana()
@@ -146,7 +146,6 @@ def start_game(nivel,datos,partida_guardada):
 
                     #********************************* CLICK EN EL TABLERO *********************************   
                     elif tablero.click(event) and tablero.estaHabilitado():
-                        #window_game["-CAMBIAR_PASAR-"].update(disabled=True)
                         ficha = fila_fichasJ.sacarFicha(window_game) 
                         tablero.insertarFicha(event,window_game,ficha) 
                         cambiar_habilitado = False                                 
@@ -155,19 +154,17 @@ def start_game(nivel,datos,partida_guardada):
                     #********************************* CLICK EN CONFIRMAR JUGADA *********************************
                     elif event == "-CONFIRMAR-" and confirmar_habilitado:
                         cambiar_habilitado = True
-                        #window_game["-CAMBIAR_PASAR-"].update(disabled=False)
                         palabra,con_inicio = tablero.verificarPalabra()
-                        print(palabra)
 
                         if es_valida(palabra,nivel,clases_validas): #Si la palabra es válida:
                             window_game['-TEXT_JUGADOR-'].update('PALABRA CORRECTA!',visible=True)
-                            usuario.sumarPuntos(bolsa_fichas.devolverPuntaje(palabra,tablero.copiaPalabra(),tablero.getCasillasEspeciales()))
+                            usuario.ingresarPalabra(palabra,bolsa_fichas.devolverPuntaje(palabra,tablero.copiaPalabra(),tablero.getCasillasEspeciales()))
+                            window_game['-PALABRAS_JUGADOR-'].Update("Palabras ingresadas:",usuario.getPalabras())
                             window_game["-PUNTOS_JUGADOR-"].update(str(usuario.getPuntaje()))
                             cant_letras = len(palabra)
                             if con_inicio:
                                 cant_letras -= 1
                             nuevas_fichas = bolsa_fichas.letras_random(cant_letras)
-                            print(nuevas_fichas)
 
                             #Verificar si se pueden reponer las fichas usadas:
                             if nuevas_fichas == []:
@@ -192,7 +189,6 @@ def start_game(nivel,datos,partida_guardada):
                                 fila_fichasJ.desmarcarFichaSelected(window_game)
                             tablero.deshabilitar()
                             confirmar_habilitado = False
-                            #window_game["-CONFIRMAR-"].Update(disabled=True)
 
                             bolsa_fichas.habilitar() 
                             window_game['-TEXT_JUGADOR-'].Update("Selecciones las fichas\n para cambiar")
@@ -211,7 +207,6 @@ def start_game(nivel,datos,partida_guardada):
                     elif event == '-ACEPTAR-':
                         usuario.restarCambio()
                         confirmar_habilitado = True
-                        #window_game['-CONFIRMAR-'].Update(disabled=False)
 
                         if fila_fichasJ.cambiarFichas(window_game,bolsa_fichas): #Si se pudo reponer todas las fichas a cambiar:
                             bolsa_fichas.deshabilitar()
@@ -237,7 +232,6 @@ def start_game(nivel,datos,partida_guardada):
                         window_game["-TEXT_JUGADOR-"].Update("")
                         fila_fichasJ.cancelarCambioDeFichas(window_game) 
                         confirmar_habilitado = True
-                        #window_game['-CONFIRMAR-'].Update(disabled=False)
 
                     #********************************* CLICK EN PAUSA *********************************
                     elif event == "-PAUSA-":
@@ -260,7 +254,6 @@ def start_game(nivel,datos,partida_guardada):
                             window_pausa.Hide()
                             game_over=False
                             datos_partida = [True,bolsa_fichas,tablero,tamaño_tablero,fila_fichasJ,fila_fichasM,usuario,maquina,timer.getSegundos(),timer.getMinutos(),timer.getTiempoLimite(),turno,confirmar_habilitado,cambiar_habilitado,clases_validas,nivel]#true dice que la partida se guarda
-                            #guardar_partida() (a implementar)
                             break
 
                     #********************************* CLICK EN TERMINAR PARTIDA *********************************
@@ -276,8 +269,6 @@ def start_game(nivel,datos,partida_guardada):
                     window_game.read(timeout=1000)
                     timer.actualizarTimer()
                     window_game['-RELOJ-'].Update(timer.tiempoActual())
-                    print('letras de la fila de fichas')
-                    print(fila_fichasM.getLetras())#####################################
                     if timer.termino():
                             game_over = True
                             game_over_text = "Se acabo el tiempo, fin del juego"
@@ -290,7 +281,8 @@ def start_game(nivel,datos,partida_guardada):
                             window_game["-TEXT_CPU-"].update("PALABRA CORRECTA!")
                             palabra_armada = True
                             maquina.insertarPalabra(palabra_maquina, tablero, window_game, tamaño_tablero) #Inserta la palabra en el tablero
-                            maquina.sumarPuntos(bolsa_fichas.devolverPuntaje(palabra_maquina,tablero.copiaPalabra(),tablero.getCasillasEspeciales()))
+                            maquina.ingresarPalabra(palabra_maquina,bolsa_fichas.devolverPuntaje(palabra_maquina,tablero.copiaPalabra(),tablero.getCasillasEspeciales()))
+                            window_game['-PALABRAS_CPU-'].Update('Palabras ingresadas:',maquina.getPalabras())
                             window_game["-PUNTOS_CPU-"].update(str(maquina.getPuntaje()))
                             puede_cambiar = True #variable que avisa que se puede hacer el cambio de fichas
 
@@ -335,6 +327,7 @@ def start_game(nivel,datos,partida_guardada):
 
             else:
                 window_game.Disable()
+                #restar letras que quedaron al puntaje y mostrarlas en la pantalla de fin de juego
                 if usuario.getPuntaje()>maquina.getPuntaje():
                     game_over_text_dos = '¡Ganaste!'
                 elif usuario.getPuntaje()<maquina.getPuntaje():

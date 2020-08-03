@@ -13,7 +13,7 @@ class Timer():
         self._ultima_actualizacion = None
 
     def iniciarTimer(self):
-        self._inicio = time.time() - self._segundos
+        self._inicio = time.time() - self._segundos - (self._minutos *60)
         self._termine = False
 
     def actualizarTimer(self):

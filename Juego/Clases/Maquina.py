@@ -33,7 +33,6 @@ class Maquina(Jugador):
                 palabra_encontrada = self._intentarArmar(lexicon.keys(),dificultad,lis_letras,letra_inicio,clases_validas)
         if (palabra_encontrada != 'xxxxxx'):
             #si se encontró una palabra la devuelve a esta junto con la cantidad de letras nuevas que necesita la maquina
-            print(palabra_encontrada)
             aux = list(map(lambda letra: letra,palabra_encontrada))
             if (letra_inicio != '0'):
                 aux.remove(letra_inicio)
@@ -45,7 +44,6 @@ class Maquina(Jugador):
             return [palabra_encontrada.upper(), cant_letras_a_cambiar]
         else:
             #si no encontró una palabra se devuelve 'xxxxxx' y se especifica que se deben cambiar todas las letras
-            print('xxxxx')
             cant_letras_a_cambiar = 7
             
             return ['xxxxxx', cant_letras_a_cambiar]

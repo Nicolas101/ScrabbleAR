@@ -9,6 +9,7 @@ class Jugador():
         self._puntaje = 0 #Puntos del jugador
         self._cambios_fichas = 3 #cantidad de cambio de fichas máximo para el jugador
         self._turnos_pasados = 0 #Cantidad de turnos pasados
+        self._palabras = []
     
     def getPuntaje(self):
         """Retorna el puntaje del jugador
@@ -25,15 +26,13 @@ class Jugador():
         """
         return self._turnos_pasados
 
+    def getPalabras(self):
+        return self._palabras
+
     def setPuntaje(self,puntos):
         """Setea el puntaje del jugador con el valor pasador por parámetro
         """
         self._puntaje = puntos
-
-    def sumarPuntos(self,puntos_nuevos):
-        """Suma al puntaje del jugador la cantidad pasada por parámetro
-        """
-        self._puntaje += puntos_nuevos
 
     def restarCambio(self):
         """Resta un cambio de fichas al jugador
@@ -51,5 +50,9 @@ class Jugador():
         if self._turnos_pasados == 3:
             self._cambios_fichas += 1
             self._turnos_pasados = 0
+
+    def ingresarPalabra(self,palabra,puntaje):
+        self._puntaje += puntaje
+        self._palabras.append(palabra+" - "+str(puntaje))
             
         

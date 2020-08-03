@@ -20,7 +20,6 @@ class Tablero:
         self._inicio = inicio 
         self._casillas = [] # matriz que contiene todos los objetos "casilla" del tablero
         self._palabra = [inicio[0]] # lista de keys de las fichas que estan formando la palabra
-        #self._layout = self._armar() # layout para PySimpleGUI
         self._habilitado = False
     
     def getLayout(self):
@@ -94,29 +93,9 @@ class Tablero:
     def habilitar(self):
         self._habilitado = True
 
-        # """Habilita todas las casillas del tablero que esten desocupadas (que no haya una ficha)
-        # """
-        # for fila in self._casillas:
-        #     for casilla in fila:
-        #         if casilla.estaOcupada():
-        #             continue
-        #         else:
-        #             casilla.habilitar()
-        #             window[casilla.getKey()].update(disabled=False)
-
     def deshabilitar(self):
         self._habilitado = False
 
-        # """Deshabilita todas las casillas del tablero que esten desocupadas (que no haya una ficha)
-        # """
-        # for fila in self._casillas:
-        #     for casilla in fila:
-        #         if casilla.estaOcupada():
-        #             continue
-        #         else:
-        #             casilla.deshabilitar()
-        #         window[casilla.getKey()].update(disabled=True)
-    
     def insertarFicha(self,key,window,letra):
         """Setea los parámetros necesarios para indicar que se inserto una ficha en la casilla especificada(key)
         """
@@ -261,7 +240,7 @@ def crear_tablero(bolsa_fichas):
         tablero = Tablero(tamaño,str(num_tablero),casillas_especiales2,inicio=("10-10",bolsa_fichas.letras_random(1)[0]))
     else:
         tamaño = 21
-        tablero = Tablero(tamaño,str(num_tablero),casillas_especiales2,inicio=("10-10",bolsa_fichas.letras_random(1)[0]))
+        tablero = Tablero(tamaño,str(num_tablero),casillas_especiales3,inicio=("11-11",bolsa_fichas.letras_random(1)[0]))
 
     return [tablero,tamaño]
 

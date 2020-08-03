@@ -19,7 +19,6 @@ class FilaFichas():
         self._casillas = [] # lista de objetos casilla de la fila
         self._ficha_selected = [False,None] # [True/False,key de la ficha seleccionada]   
         self._fichas_a_cambiar = [] # lista de keys de las fichas a cambiar
-        #self._layout = self._armar() # layout para PySimpleGUI
         self._habilitada = True
         
     def getLayout(self):

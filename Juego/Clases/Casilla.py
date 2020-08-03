@@ -22,8 +22,6 @@ class Casilla():
         self._ficha = ficha
         self._especial = especial
         self._background = background
-        # layout para PySimpleGUI:
-        #self._layout = sg.Button("",image_filename=self._imagen,key=self._key,pad=(0,0),button_color=(background,background),border_width=0) 
 
     def getKey(self):
         return self._key     

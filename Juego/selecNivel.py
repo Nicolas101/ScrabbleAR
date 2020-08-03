@@ -19,7 +19,8 @@ def seleccionar_nivel():
     window_nivel = windowNivel.hacer_ventana((1000,600))
 
     event, values= window_nivel.read()
-    datos = []        
+    datos = []   
+     
 
     #*********** CLICK EN FACIL **********
     if event == '-FACIL-':
@@ -30,12 +31,12 @@ def seleccionar_nivel():
         datos = cargar_datos('Medio.json')
     
     #*********** CLICK EN DIFICIL **********
-    elif event == '-DIFICIL':
+    elif event == '-DIFICIL-':
         datos = cargar_datos('Dificil.json')
     
     #*********** CLICK EN PERSONALIZADO **********
     elif event == '-PERSONALIZADO-':
-        pass
+        pass#hay que sacar lo de personalizado
 
     window_nivel.close()
     return [event,datos]

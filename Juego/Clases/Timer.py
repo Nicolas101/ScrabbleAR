@@ -18,7 +18,7 @@ class Timer():
 
     def actualizarTimer(self):
         self._segundos = int(time.time() - self._inicio) - self._minutos*60
-        if self._segundos == 60:
+        if self._segundos >= 60:
             self._minutos += 1
             self._segundos = 00
         if self._minutos == self._limite:

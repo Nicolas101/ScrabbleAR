@@ -12,7 +12,7 @@ import random
 class Maquina(Jugador):
     """Es una subclase de la clase Jugador que contiene todo el comportamiento del oponente 
     """
-    def armarPalabra(self, fila_fichas, bolsa_fichas, tablero, dificultad):
+    def armarPalabra(self, fila_fichas, bolsa_fichas, tablero, dificultad,clases_validas):
         """Intenta armar una palabra con sus fichas. \n
         Si la palabra es correcta retorna: la palabra y la cantidad de fichas a reponer\n
         Si no pudo formar una palabra retorna: "xxxxxx" y un 7, indicando que se deben cambiar todas las fichas
@@ -26,11 +26,11 @@ class Maquina(Jugador):
             letra_inicio = '0'
         palabra_encontrada = ''
         #se llama al metodo _intentarArmar para buscar una palabra que se pueda armar con las letras que se tiene
-        palabra_encontrada = self._intentarArmar(verbs.keys(),dificultad,lis_letras,letra_inicio)
+        palabra_encontrada = self._intentarArmar(verbs.keys(),dificultad,lis_letras,letra_inicio,clases_validas)
         if (palabra_encontrada == 'xxxxxx'):
-            palabra_encontrada = self._intentarArmar(lexicon.keys(),dificultad,lis_letras, letra_inicio)
+            palabra_encontrada = self._intentarArmar(lexicon.keys(),dificultad,lis_letras, letra_inicio,clases_validas)
             if (palabra_encontrada == 'xxxxxx'):
-                palabra_encontrada = self._intentarArmar(lexicon.keys(),dificultad,lis_letras,letra_inicio)
+                palabra_encontrada = self._intentarArmar(lexicon.keys(),dificultad,lis_letras,letra_inicio,clases_validas)
         if (palabra_encontrada != 'xxxxxx'):
             #si se encontró una palabra la devuelve a esta junto con la cantidad de letras nuevas que necesita la maquina
             print(palabra_encontrada)
@@ -47,10 +47,10 @@ class Maquina(Jugador):
             #si no encontró una palabra se devuelve 'xxxxxx' y se especifica que se deben cambiar todas las letras
             print('xxxxx')
             cant_letras_a_cambiar = 7
-            fila_fichas.eliminarTodasLasLetras()
+            
             return ['xxxxxx', cant_letras_a_cambiar]
 
-    def _intentarArmar(self, diccionario, dificultad, lis_letras, letra_inicio):
+    def _intentarArmar(self, diccionario, dificultad, lis_letras, letra_inicio,clases_validas):
         """Busca una palabra que pueda armarse con las letras que tiene la maquina en el diccionario
         pasado por parametro(verbs, lexicon o spelling)
         """
@@ -70,10 +70,8 @@ class Maquina(Jugador):
                         break
                 if (encontro):
                     if ((letra_inicio != '0')and(letra_inicio in palabra))or(letra_inicio == '0'):
-                        if (dificultad == '-FACIL-'):
-                            valida = self._verificarPalabra(palabra,['B-ADJP','B-VP','B-NP'])
-                        else:
-                            valida = self._verificarPalabra(palabra,['B-ADJP','B-VP'])
+                        if (dificultad != '-FACIL-'):
+                            valida = self._verificarPalabra(palabra,clases_validas)
                         if(valida):
                             palabra_encontrada = palabra
                             break
@@ -90,7 +88,7 @@ class Maquina(Jugador):
         """Verifica que la palabra sea correcta para la especificacion
         de la dificultad en la que se esta jugando
         """
-        aux = parse(palabra).split()[0][0][2]
+        aux = parse(palabra).split()[0][0][1]
         if aux in clases_validas:
             return True
         else:

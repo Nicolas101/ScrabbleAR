@@ -12,8 +12,10 @@ def start_game(nivel,datos,partida_guardada):
         from Windows import windowJuego, windowPausa
         import PySimpleGUI as sg
         import random
+        from datetime import date
         
         if (not partida_guardada):
+
             #BOLSA DE FICHAS
             bolsa_fichas = crear_bolsa(datos['letras'])
 
@@ -46,6 +48,15 @@ def start_game(nivel,datos,partida_guardada):
             #PANTALLA DE PAUSA
             window_pausa = windowPausa.hacer_ventana()
 
+            tipos_verbos = ['VB','VBD','VBG','VBN','VBP','VBZ']
+            tipos_adjetivos = ['DT','JJ','JJR','JJS','RB','RBR','RBS']
+            if nivel == '-DIFICIL-':
+                clases_validas = random.choice([tipos_verbos,tipos_adjetivos])
+            elif nivel == '-MEDIO-':
+                clases_validas = tipos_verbos+tipos_adjetivos
+            else:
+                clases_validas = None
+
         else: #si es la continuacion de una partida guardada
             
             #BOLSA DE FICHAS
@@ -70,16 +81,20 @@ def start_game(nivel,datos,partida_guardada):
             confirmar_habilitado = datos[12]
             cambiar_habilitado = datos[13]
 
+            clases_validas = datos[14]
+
             #PANTALLA DE JUEGO
             window_game = windowJuego.hacer_ventana(tablero.getLayoutActualizado(),fila_fichasJ.getLayoutActualizado(),fila_fichasM.getLayoutActualizado(),(1000,600),usuario.getPuntaje(),maquina.getPuntaje())
 
             #PANTALLA DE PAUSA
             window_pausa = windowPausa.hacer_ventana()
 
-
         
         game_over = False
         
+        if nivel == '-DIFICIL-':
+            print('tipos de palabras validas')
+            print(clases_validas)
         
         timer.iniciarTimer()
         while True:                 
@@ -144,7 +159,7 @@ def start_game(nivel,datos,partida_guardada):
                         palabra,con_inicio = tablero.verificarPalabra()
                         print(palabra)
 
-                        if es_valida(palabra,nivel): #Si la palabra es válida:
+                        if es_valida(palabra,nivel,clases_validas): #Si la palabra es válida:
                             window_game['-TEXT_JUGADOR-'].update('PALABRA CORRECTA!',visible=True)
                             usuario.sumarPuntos(bolsa_fichas.devolverPuntaje(palabra,tablero.copiaPalabra(),tablero.getCasillasEspeciales()))
                             window_game["-PUNTOS_JUGADOR-"].update(str(usuario.getPuntaje()))
@@ -244,7 +259,7 @@ def start_game(nivel,datos,partida_guardada):
                         elif event_pausa == "-SALIR_Y_GUARDAR-":
                             window_pausa.Hide()
                             game_over=False
-                            datos_partida = [True,bolsa_fichas,tablero,tamaño_tablero,fila_fichasJ,fila_fichasM,usuario,maquina,timer.getSegundos(),timer.getMinutos(),timer.getTiempoLimite(),turno,confirmar_habilitado,cambiar_habilitado,nivel]#true dice que la partida se guarda
+                            datos_partida = [True,bolsa_fichas,tablero,tamaño_tablero,fila_fichasJ,fila_fichasM,usuario,maquina,timer.getSegundos(),timer.getMinutos(),timer.getTiempoLimite(),turno,confirmar_habilitado,cambiar_habilitado,clases_validas,nivel]#true dice que la partida se guarda
                             #guardar_partida() (a implementar)
                             break
 
@@ -261,14 +276,15 @@ def start_game(nivel,datos,partida_guardada):
                     window_game.read(timeout=1000)
                     timer.actualizarTimer()
                     window_game['-RELOJ-'].Update(timer.tiempoActual())
-
+                    print('letras de la fila de fichas')
+                    print(fila_fichasM.getLetras())#####################################
                     if timer.termino():
                             game_over = True
                             game_over_text = "Se acabo el tiempo, fin del juego"
                     
                     else:
                         #la maquina intenta armar una palabra con sus fichas:
-                        palabra_maquina, cant_letras_a_cambiar = maquina.armarPalabra(fila_fichasM,bolsa_fichas,tablero,nivel)
+                        palabra_maquina, cant_letras_a_cambiar = maquina.armarPalabra(fila_fichasM,bolsa_fichas,tablero,nivel,clases_validas)
 
                         if palabra_maquina != 'xxxxxx': #Si encontro una palabra válida:
                             window_game["-TEXT_CPU-"].update("PALABRA CORRECTA!")
@@ -290,10 +306,16 @@ def start_game(nivel,datos,partida_guardada):
                             else: #Si la maquina tiene cambios de fichas:
                                 window_game["-TEXT_CPU-"].Update("CAMBIO DE FICHAS")
                                 maquina.restarCambio()
-                                puede_cambiar = True  
+                                puede_cambiar = True
 
                         if puede_cambiar: #Si la palabra fue correcta o la maquina tenia cambios de fichas se realiza el cambio
+                            if palabra_armada == False:
+                                letras_maquina_devolver = fila_fichasM.getLetras()
+                                fila_fichasM.eliminarTodasLasLetras()
                             nuevas_letras = bolsa_fichas.letras_random(cant_letras_a_cambiar)
+                            if palabra_armada == False:
+                                bolsa_fichas.devolverLetras(letras_maquina_devolver)
+                                
 
                             if nuevas_letras != []: #Si se puede hacer el cambio   
                                 maquina.nuevasLetras(fila_fichasM, nuevas_letras, tablero, palabra_armada)  #Agrega las nuevas fichas
@@ -320,26 +342,10 @@ def start_game(nivel,datos,partida_guardada):
                 else:
                     game_over_text_dos = '¡Es un empate!'
                 sg.popup(game_over_text,game_over_text_dos,('Tu puntuación: '+str(usuario.getPuntaje())),('Puntos de la maquina: '+str(maquina.getPuntaje())))
-                datos_partida = [usuario.getPuntaje(),'fecha',nivel]
+                datos_partida = [usuario.getPuntaje(),str(date.today()),nivel]
                 break
 
         window_game.close()
-        print(game_over)
-        print(datos_partida)
         return [game_over,datos_partida]
 
 
-def guardar_partida():
-    pass
-#(martin va a hacer estos dos procesos entre hoy y mañana,tranca nico ta todo controlado)
-
-if __name__ == "__main__":
-    import os
-    import json
-    
-    dir_actual = os.getcwd()
-    ubicacion_archivo = (dir_actual+'\\Data\\Facil.json')
-    archivo = open(ubicacion_archivo,'r')
-    lis_datos = json.load(archivo)
-    diccionario = lis_datos[len(lis_datos)-1]
-    start_game("-FACIL-",diccionario,False)

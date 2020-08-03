@@ -83,6 +83,14 @@ class BolsaFichas():
         for letra in letras_devolver:
             self._bolsa_fichas[letra]['cantidad'] += 1
 
+    def calcularPuntajeLista(self,lista):
+        """Calcula el puntaje de las letras que hay en la lista pasada por parametro
+        """
+        puntaje = 0
+        for letra in lista:
+            puntaje += self._bolsa_fichas[letra]['puntuacion']
+        return puntaje
+        
 # {---------------------------------------------------------------------------------}
 # {--------------------------- CREACIÓN DEL OBJETO ---------------------------------}
 # {---------------------------------------------------------------------------------}

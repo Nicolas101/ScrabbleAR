@@ -327,14 +327,15 @@ def start_game(nivel,datos,partida_guardada):
 
             else:
                 window_game.Disable()
-                #restar letras que quedaron al puntaje y mostrarlas en la pantalla de fin de juego
+                usuario.restarPuntaje(bolsa_fichas.calcularPuntajeLista(fila_fichasJ.getLetras()))
+                maquina.restarPuntaje(bolsa_fichas.calcularPuntajeLista(fila_fichasM.getLetras()))
                 if usuario.getPuntaje()>maquina.getPuntaje():
                     game_over_text_dos = '¡Ganaste!'
                 elif usuario.getPuntaje()<maquina.getPuntaje():
                     game_over_text_dos = 'Perdiste, lo siento :('
                 else:
                     game_over_text_dos = '¡Es un empate!'
-                sg.popup(game_over_text,game_over_text_dos,('Tu puntuación: '+str(usuario.getPuntaje())),('Puntos de la maquina: '+str(maquina.getPuntaje())))
+                sg.popup(game_over_text,game_over_text_dos,('Tu puntuación: '+str(usuario.getPuntaje())),('Fichas que te quedaron: '+str(fila_fichasJ.getLetras())),('Puntos de la maquina: '+str(maquina.getPuntaje())))
                 datos_partida = [usuario.getPuntaje(),str(date.today()),nivel]
                 break
 

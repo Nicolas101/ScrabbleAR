@@ -4,13 +4,13 @@ def hacer_ventana(layout_tablero, layout_fichasJ, layout_fichasM,window_size,pun
     datos_cpu = [
         [sg.T("",key="-TEXT_CPU-",size=(20,1),font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0))],
         [sg.Combo(palabras_maquina,key="-PALABRAS_CPU-",default_value="Palabras ingresadas:",size=(25,1),readonly=True)],
-        [sg.T("Puntos:",font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0)),sg.T("",key="-PUNTOS_CPU-",size=(4,1),font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0))]
+        [sg.T("Puntos:",font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0)),sg.T(puntos_ma,key="-PUNTOS_CPU-",size=(4,1),font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0))]
     ]
 
     datos_jugador = [
         [sg.T("",key="-TEXT_JUGADOR-",size=(20,1),font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0))],
         [sg.Combo(palabras_usuario,key="-PALABRAS_JUGADOR-",default_value="Palabras ingresadas:",size=(25,1),readonly=True)],
-        [sg.T("Puntos:",font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0)),sg.T("",key="-PUNTOS_JUGADOR-",size=(4,1),font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0))]
+        [sg.T("Puntos:",font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0)),sg.T(puntos_jug,key="-PUNTOS_JUGADOR-",size=(4,1),font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0))]
     ]
 
     #COLUMNA DE LA CPU

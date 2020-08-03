@@ -155,6 +155,7 @@ class FilaFichas():
             for key in self._fichas_a_cambiar:  
                 aux = key.split("-") #Se desarma la key para conseguir la posicion en la lista
                 letras_viejas.append(self._casillas[int(aux[1])-1].getFicha())
+                self._letras.remove(self._casillas[int(aux[1])-1].getFicha())#elimina las letras a cambiar de self._letras
                 self._casillas[int(aux[1])-1].desocupar()  
             cant_letras_a_cambiar = len(self._fichas_a_cambiar)
 

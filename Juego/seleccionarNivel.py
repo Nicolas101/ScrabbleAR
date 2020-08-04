@@ -1,5 +1,6 @@
 def seleccionar_nivel():
-    """Muestra la ventana para seleccionar el nivel del juego, retorna el nivel elegido y los datos del mismo
+    """Muestra la ventana para seleccionar el nivel del juego.\n
+    Retorna el nivel elegido y los datos del mismo
     """
     def cargar_datos(nombre_archivo):
         """Retorna los datos del archivo de nivel pasado por parámetro
@@ -15,28 +16,23 @@ def seleccionar_nivel():
         
         return diccionario
 
-    from Windows import windowNivel
-    window_nivel = windowNivel.hacer_ventana((1000,600))
+    from Windows import windowSeleccionarNivel
+    window_nivel = windowSeleccionarNivel.hacer_ventana()
 
     event, values= window_nivel.read()
     datos = []   
      
-
-    #*********** CLICK EN FACIL **********
+    #**************** CLICK EN FACIL ****************
     if event == '-FACIL-':
         datos = cargar_datos('Facil.json')
     
-    #*********** CLICK EN MEDIO **********
+    #**************** CLICK EN MEDIO ****************
     elif event == '-MEDIO-':
         datos = cargar_datos('Medio.json')
     
-    #*********** CLICK EN DIFICIL **********
+    #**************** CLICK EN DIFICIL ****************
     elif event == '-DIFICIL-':
         datos = cargar_datos('Dificil.json')
-    
-    #*********** CLICK EN PERSONALIZADO **********
-    elif event == '-PERSONALIZADO-':
-        pass#hay que sacar lo de personalizado
 
     window_nivel.close()
     return [event,datos]

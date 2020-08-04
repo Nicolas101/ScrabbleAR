@@ -1,4 +1,6 @@
 def guardar_partida(datos):
+    """Guarda las variables de la partida, pasados por parametro, en un archivo .obj
+    """
     import pickle
     import os
     dir_actual = os.getcwd()
@@ -8,6 +10,8 @@ def guardar_partida(datos):
     f.close()
 
 def hay_partida_guardada():
+    """Retorna True si hay una partida guardada, False en caso contrario
+    """
     import pickle
     import os
     dir_actual = os.getcwd()
@@ -29,16 +33,24 @@ def obtener_datos():
     return [nivel,datos]
 
 def continuar_partida():
+    """Muestra una ventana para saber si desea continuar con la partida.\n
+    Retorna True si clickea en SI, False si clickea en NO
+    """
     from Windows import windowPartidaGuardada
 
     window = windowPartidaGuardada.hacer_ventana()
     event, values = window.read()
-    continuar = event == '-SI-'
+    if event == "-SI-":
+        valor = True
+    else:
+        valor = False
     window.close()
 
-    return continuar
+    return valor
 
 def eliminar_partida():
+    """Setea el primer dato del archivo de partida guardada en False, para indicar que no hay una partida guardada
+    """
     import pickle
     import os
     dir_actual = os.getcwd()

@@ -6,4 +6,4 @@ def hacer_ventana():
         [sg.Button('Si',key='-SI-'),sg.Button('No',key='-NO-')]
     ]
 
-    return sg.Window('Partida guardada',layout)
+    return sg.Window('Partida guardada',layout,disable_close=True)

@@ -23,9 +23,23 @@ class Tablero:
         self._habilitado = False
     
     def getLayout(self):
-        """Retorna el layout para la GUI
+        """Crea un layout para PySimpleGUI y lo retorna
         """
         return self._armar()
+
+    def getLayoutActualizado(self):
+        """Retorna el layout para PySimpleGUI guardado anteriormente
+        """
+        layout = []
+        for fila in self._casillas:
+            fila_casilla = []
+            for casilla in fila:
+                fila_casilla.append(casilla.getLayout())
+            layout.append(fila_casilla)
+        return layout
+
+    def getTamaño(self):
+        return self._tamaño
 
     def getLetraInicio(self):
         """Retorna la letra de la ficha de inicio
@@ -67,15 +81,6 @@ class Tablero:
             self._casillas.append(fila_casillas)     
             layout.append(fila_layout)
 
-        return layout
-
-    def getLayoutActualizado(self):
-        layout = []
-        for fila in self._casillas:
-            fila_casilla = []
-            for casilla in fila:
-                fila_casilla.append(casilla.getLayout())
-            layout.append(fila_casilla)
         return layout
 
     def click(self, event):
@@ -242,7 +247,7 @@ def crear_tablero(bolsa_fichas):
         tamaño = 21
         tablero = Tablero(tamaño,str(num_tablero),casillas_especiales3,inicio=("11-11",bolsa_fichas.letras_random(1)[0]))
 
-    return [tablero,tamaño]
+    return tablero
 
 
 

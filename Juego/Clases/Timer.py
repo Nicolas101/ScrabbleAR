@@ -40,8 +40,11 @@ class Timer():
         self._inicio += time.time() - self._hora_pausada
 
     def ajustarTiempo(self):
-        if time.time() - self._ultima_actualizacion != 0.0:
-            time.sleep(time.time() - self._ultima_actualizacion)
+        try:
+            if time.time() - self._ultima_actualizacion != 0.0:
+                time.sleep(time.time() - self._ultima_actualizacion)
+        except:
+            pass
 
     def getSegundos(self):
         return self._segundos

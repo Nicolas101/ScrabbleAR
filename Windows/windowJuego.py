@@ -1,15 +1,15 @@
-def hacer_ventana(layout_tablero, layout_fichasJ, layout_fichasM,window_size,puntos_jug,puntos_ma,palabras_usuario,palabras_maquina):
+def hacer_ventana(layout_tablero, layout_fichasJ, layout_fichasM,puntos_jug,puntos_ma,palabras_usuario,palabras_maquina):
     import PySimpleGUI as sg
 
     datos_cpu = [
         [sg.T("",key="-TEXT_CPU-",size=(20,1),font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0))],
-        [sg.Combo(palabras_maquina,key="-PALABRAS_CPU-",default_value="Palabras ingresadas:",size=(25,1),readonly=True)],
+        [sg.Combo(palabras_maquina,key="-PALABRAS_CPU-",default_value="Palabras ingresadas:",size=(25,1),readonly=True,background_color="#6AB2E5")],
         [sg.T("Puntos:",font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0)),sg.T(puntos_ma,key="-PUNTOS_CPU-",size=(4,1),font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0))]
     ]
 
     datos_jugador = [
         [sg.T("",key="-TEXT_JUGADOR-",size=(20,1),font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0))],
-        [sg.Combo(palabras_usuario,key="-PALABRAS_JUGADOR-",default_value="Palabras ingresadas:",size=(25,1),readonly=True)],
+        [sg.Combo(palabras_usuario,key="-PALABRAS_JUGADOR-",default_value="Palabras ingresadas:",size=(25,1),readonly=True,background_color="#6AB2E5")],
         [sg.T("Puntos:",font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0)),sg.T(puntos_jug,key="-PUNTOS_JUGADOR-",size=(4,1),font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0))]
     ]
 
@@ -57,7 +57,7 @@ def hacer_ventana(layout_tablero, layout_fichasJ, layout_fichasM,window_size,pun
         [sg.Column(layout_tablero,background_color="#40B7C9"),
         sg.Column(barra_datos,background_color="#2781D3",size=(400,590))]
     ]
-    window = sg.Window("ScrabbleAR - En partida",layout,size=window_size,background_color="#40B7C9",margins=(0,0))
+    window = sg.Window("ScrabbleAR - En partida",layout,size=(1000,600),background_color="#40B7C9",margins=(0,0))
 
     return window
     

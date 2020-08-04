@@ -95,9 +95,10 @@ class Maquina(Jugador):
     def insertarPalabra(self, palabra, tablero, window, tamaño):
         """Inserta la palabra generada por la maquina en el tablero
         """
-        if tablero.copiaPalabra() != []:
-            self._insertarConInicio(palabra, tablero, window) #si la palabra utiliza la letra de inicio se usa este metodo
-        else:
+        if tablero.copiaPalabra() != []: #Si la palabra contiene la ficha inicial:
+            self._insertarConInicio(palabra, tablero, window) 
+
+        else: #Si la palabra no contiene la ficha inicial:
             self._insertarSinInicio(palabra, tablero, window,tamaño)
         
     def _insertarConInicio(self, palabra, tablero, window):

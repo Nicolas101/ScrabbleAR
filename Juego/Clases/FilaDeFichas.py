@@ -26,6 +26,14 @@ class FilaFichas():
         """
         return self._armar()
 
+    def getLayoutActualizado(self):
+        """Retorna el layout para PySimpleGUI guardado anteriormente
+        """
+        lis_fichas = []
+        for casilla in self._casillas:
+            lis_fichas.append(casilla.getLayout())
+        return [lis_fichas]
+
     def _armar(self):
         """Arma una lista para PySimpleGUI que contiene tantas casillas como letras tenga la fila de fichas
         """
@@ -44,12 +52,6 @@ class FilaFichas():
                 self._casillas.append(casilla)
                 lis_fichas.append(casilla.getLayout())
         
-        return [lis_fichas]
-
-    def getLayoutActualizado(self):
-        lis_fichas = []
-        for casilla in self._casillas:
-            lis_fichas.append(casilla.getLayout())
         return [lis_fichas]
 
     def click(self, event):
@@ -204,6 +206,6 @@ class FilaFichas():
 # {--------------------------- CREACIÓN DEL OBJETO ---------------------------------}
 # {---------------------------------------------------------------------------------}
 
-def crear_fila_fichas(bolsa_fichas, genero):
-    fila_fichas = FilaFichas(bolsa_fichas.letras_random(7),genero)
-    return fila_fichas
+def crear_fichas(letras, genero):
+    fichas = FilaFichas(letras,genero)
+    return fichas

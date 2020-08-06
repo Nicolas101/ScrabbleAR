@@ -6,17 +6,14 @@ def start_game(nivel,variables):
     from Juego import pausa,terminarPartida
     from Windows import windowSalirJuego
     from datetime import date
-    import PySimpleGUI as sg
     
     game_over = False
+    maquina_pasa_turno = True
     
     window_salir = windowSalirJuego.hacer_ventana()
-
-    if nivel == '-DIFICIL-':
-        print('tipos de palabras validas')
-        print(variables["Clases_validas"])
     
     variables["Timer"].iniciarTimer()
+
     while True:                 
         variables["Window_juego"].read(timeout=0) 
 
@@ -26,7 +23,8 @@ def start_game(nivel,variables):
                 # *******************************************************************************************************************
                 # ************************************************** TURNO DEL USUARIO **********************************************
                 # *******************************************************************************************************************
-                variables["Window_juego"]["-TEXT_JUGADOR-"].update("TU TURNO!")
+                if maquina_pasa_turno:
+                    variables["Window_juego"]["-TEXT_JUGADOR-"].update("TU TURNO! - FORMA UNA PALABRA")
                 variables["Fichas_jugador"].habilitar()
 
                 no_event = True
@@ -44,6 +42,7 @@ def start_game(nivel,variables):
                         game_over = True
                         game_over_text = "Se acabo el tiempo, fin del juego"
                         break
+
                 #********************************* CLICK EN LA X (CERRAR VENTANA) *********************************
                 if event is None:
                     event_salir, values_salir = window_salir.read()
@@ -89,6 +88,8 @@ def start_game(nivel,variables):
                         variables["Fichas_jugador"].agregarFichaACambiar(event,variables["Window_juego"])
 
                     else: #Si quiere poner una ficha en el tablero:
+                        variables["Window_juego"]["-TEXT_CPU-"].update("")
+
                         if not variables["Fichas_jugador"].hayFichaSelected():
                             variables["Fichas_jugador"].marcarFichaSelected(variables["Window_juego"],event) 
                         else:
@@ -129,7 +130,7 @@ def start_game(nivel,variables):
                             variables["Turno"] = 1
 
                     else: #Si la palabra no es válida:
-                        variables["Window_juego"]['-TEXT_JUGADOR-'].update('PALABRA INCORRECTA!',visible=True)
+                        variables["Window_juego"]['-TEXT_JUGADOR-'].update('PALABRA INCORRECTA!\nINTENTE NUEVAMENTE',visible=True)
                         fichas_a_devolver = variables["Tablero"].devolverFichas(variables["Window_juego"])
                         variables["Fichas_jugador"].insertarFichas(variables["Window_juego"],fichas_a_devolver)  
 
@@ -139,16 +140,18 @@ def start_game(nivel,variables):
 
                         if variables["Fichas_jugador"].hayFichaSelected():
                             variables["Fichas_jugador"].desmarcarFichaSelected(variables["Window_juego"])
+
                         variables["Tablero"].deshabilitar()
                         variables["Confirmar_habilitado"] = False
-
                         variables["Bolsa_de_fichas"].habilitar() 
-                        variables["Window_juego"]['-TEXT_JUGADOR-'].Update("Selecciones las fichas\n para cambiar")
+                        variables["Window_juego"]["-TEXT_JUGADOR-"].update("SELECCIONA LAS FICHAS\nPARA CAMBIAR")
+                        variables["Window_juego"]["-TEXT_CPU-"].update("")
                         variables["Window_juego"]['-ACEPTAR-'].Update(visible=True)
                         variables["Window_juego"]["-CANCELAR-"].Update(visible=True)
 
                     else: #Si no tiene cambios disponibles
                         variables["Usuario"].pasarTurno()
+                        variables["Window_juego"]["-TEXT_JUGADOR-"].update("HAS PASADO EL TURNO")
                         variables["Turno"] = 1
 
                         if (variables["Usuario"].getTurnosPasados() == 3):
@@ -185,20 +188,26 @@ def start_game(nivel,variables):
                     variables["Fichas_jugador"].cancelarCambioDeFichas(variables["Window_juego"]) 
                     variables["Confirmar_habilitado"] = True
                 
+                maquina_pasa_turno = False
+
             else:
                 # *******************************************************************************************************************
                 # ********************************************* TURNO DE LA MAQUINA *************************************************
                 # *******************************************************************************************************************
                 variables["Window_juego"]["-TEXT_CPU-"].update("TURNO DEL OPONENTE")
                 variables["Window_juego"].read(timeout=1000)
+
                 variables["Timer"].actualizarTimer()
                 variables["Window_juego"]['-RELOJ-'].Update(variables["Timer"].tiempoActual())
+
                 if variables["Timer"].termino():
                         game_over = True
                         game_over_text = "Se acabo el tiempo, fin del juego"
-                
-                else:
+
+                else: #Si no se acabo el tiempo de la partida:
                     #la maquina intenta armar una palabra con sus fichas:
+                    variables["Window_juego"]["-TEXT_JUGADOR-"].update("")
+
                     palabra_maquina, cant_letras_a_cambiar = variables["Maquina"].armarPalabra(variables["Fichas_maquina"],variables["Bolsa_de_fichas"],variables["Tablero"],nivel,variables["Clases_validas"])
 
                     if palabra_maquina != 'xxxxxx': #Si encontro una palabra válida:
@@ -243,12 +252,8 @@ def start_game(nivel,variables):
 
                     variables["Cambiar_habilitado"] = True
                     variables["Confirmar_habilitado"]  = True
+                    maquina_pasa_turno = True
                     variables["Turno"] = 0  
-
-                    if variables["Timer"].termino():
-                        #fin del juego porque se termino el tiempo
-                        game_over = True
-                        game_over_text = "Se acabo el tiempo, fin del juego"    
 
         else: #Si termino el juego:
 
@@ -270,6 +275,7 @@ def start_game(nivel,variables):
             break
 
     variables["Window_juego"].close()
+
     return [game_over,datos_partida]
 
 

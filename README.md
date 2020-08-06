@@ -16,9 +16,9 @@ Para poder ejecutar exitosamente el juego, se debe tener:
 ## Abrir el juego
 El juego se inicia ejecutando el archivo Scrabblear.py
 
-### Derechos de autor
+## Derechos de autor
 Todas las imagenes utilizadas en este juego fueron creadas por Nicolas Hermida y Martin Souto, todos los derechos reservados.
 
-### Cómo contactarnos
+## Cómo contactarnos
 * Nicolás: nshermida101@gmail.com
 * Martin: msouto2001@gmail.com

@@ -8,12 +8,12 @@ def hacer_ventana(layout_tablero, layout_fichasJ, layout_fichasM,puntos_jug,punt
                     sg.Image(r"Data\Images\Juego\Clases-validas\clase-sustantivos.png",background_color="#2781D3",pad=((5,0),(0,0))),
                     sg.Image(r"Data\Images\Juego\Clases-validas\clase-seleccionada-adjetivos.png",background_color="#2781D3",pad=((0,0),(0,0)))]
             else:
-                layout = [sg.Image(r"Data\Images\Juego\Clases-validas\clase-verbos.png",background_color="#2781D3",pad=((12,0),(0,0))),
-                    sg.Image(r"Data\Images\Juego\Clases-validas\clase-seleccionada-sustantivos.png",background_color="#2781D3",pad=((0,0),(0,0))),
+                layout = [sg.Image(r"Data\Images\Juego\Clases-validas\clase-seleccionada-verbos.png",background_color="#2781D3",pad=((0,0),(0,0))),
+                    sg.Image(r"Data\Images\Juego\Clases-validas\clase-sustantivos.png",background_color="#2781D3",pad=((0,5),(0,0))),
                     sg.Image(r"Data\Images\Juego\Clases-validas\clase-adjetivos.png",background_color="#2781D3",pad=((0,0),(0,0)))]
         elif nivel == "-MEDIO-":
-            layout = [sg.Image(r"Data\Images\Juego\Clases-validas\clase-verbos.png",background_color="#2781D3",pad=((10,0),(0,0))),
-                    sg.Image(r"Data\Images\Juego\Clases-validas\clase-seleccionada-sustantivos.png",background_color="#2781D3",pad=((0,0),(0,0))),
+            layout = [sg.Image(r"Data\Images\Juego\Clases-validas\clase-seleccionada-verbos.png",background_color="#2781D3",pad=((0,0),(0,0))),
+                    sg.Image(r"Data\Images\Juego\Clases-validas\clase-sustantivos.png",background_color="#2781D3",pad=((0,0),(0,0))),
                     sg.Image(r"Data\Images\Juego\Clases-validas\clase-seleccionada-adjetivos.png",background_color="#2781D3",pad=((0,0),(0,0)))]
         else:
             layout = [sg.Image(r"Data\Images\Juego\Clases-validas\clase-seleccionada-verbos.png",background_color="#2781D3",pad=((0,0),(0,0))),

@@ -3,15 +3,15 @@
         "letras": {
             "A": {
                 "puntuacion": 1,
-                "cantidad": 11
+                "cantidad": 8
             },
             "B": {
                 "puntuacion": 3,
-                "cantidad": 3
+                "cantidad": 5
             },
             "C": {
-                "puntuacion": 2,
-                "cantidad": 4
+                "puntuacion": 1,
+                "cantidad": 5
             },
             "D": {
                 "puntuacion": 2,
@@ -19,26 +19,26 @@
             },
             "E": {
                 "puntuacion": 1,
-                "cantidad": 11
+                "cantidad": 8
             },
             "F": {
                 "puntuacion": 4,
-                "cantidad": 2
+                "cantidad": 4
             },
             "G": {
                 "puntuacion": 2,
-                "cantidad": 2
+                "cantidad": 3
             },
             "H": {
-                "puntuacion": 4,
-                "cantidad": 2
+                "puntuacion": 3,
+                "cantidad": 3
             },
             "I": {
                 "puntuacion": 1,
                 "cantidad": 6
             },
             "J": {
-                "puntuacion": 6,
+                "puntuacion": 5,
                 "cantidad": 2
             },
             "K": {
@@ -46,7 +46,7 @@
                 "cantidad": 1
             },
             "L": {
-                "puntuacion": 1,
+                "puntuacion": 2,
                 "cantidad": 4
             },
             "M": {
@@ -54,8 +54,8 @@
                 "cantidad": 3
             },
             "N": {
-                "puntuacion": 1,
-                "cantidad": 5
+                "puntuacion": 2,
+                "cantidad": 4
             },
             "\u00d1": {
                 "puntuacion": 8,
@@ -63,23 +63,23 @@
             },
             "O": {
                 "puntuacion": 1,
-                "cantidad": 8
+                "cantidad": 7
             },
             "P": {
                 "puntuacion": 3,
-                "cantidad": 2
+                "cantidad": 3
             },
             "Q": {
-                "puntuacion": 8,
+                "puntuacion": 6,
                 "cantidad": 1
             },
             "R": {
                 "puntuacion": 1,
-                "cantidad": 4
+                "cantidad": 5
             },
             "S": {
                 "puntuacion": 1,
-                "cantidad": 7
+                "cantidad": 6
             },
             "T": {
                 "puntuacion": 1,

@@ -56,7 +56,7 @@ def crear_variables(nivel, letras, tiempo_limite):
     return variables
     
 
-def cargar_variables(datos):
+def cargar_variables(nivel, datos):
     """Carga y retorna las variables de la partida con los datos guardados anteriormente
     """
     from Juego.Clases.Timer import Timer
@@ -90,7 +90,7 @@ def cargar_variables(datos):
         variables["Maquina"].getPuntaje(),
         variables["Usuario"].getPalabras(),
         variables["Maquina"].getPalabras(),
-        datos[14],
+        nivel,
         variables["Clases_validas"]
     )
 

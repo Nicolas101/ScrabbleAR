@@ -1,4 +1,4 @@
-def hacer_ventana(window_size):
+def hacer_ventana(window_size,f_text,m_text,d_text):
     import PySimpleGUI as sg 
     
     nivel_facil = [
@@ -6,7 +6,7 @@ def hacer_ventana(window_size):
         [sg.Button("Tiempo",key='-TIEMPO_F-',tooltip="Limite de tiempo máximo de juego en este nivel.  \nHaga click para modificar",size=(10,2),pad=((0,0),(0,10)))],
         [sg.Button("Puntaje",key='-PUNTOS_F-',tooltip="Puntaje por letra en este nivel.  \nHaga click para modificar",size=(10,2),pad=((0,0),(0,10)))],
         [sg.Button("Fichas",key='-FICHAS_F-',tooltip="Cantidad de fichas por letra en este nivel.  \nHaga click para modificar",size=(10,2),pad=((0,0),(0,10)))],
-        [sg.Text("*Predeterminado*",background_color="#71B3BD",text_color="#767676")]
+        [sg.Text(f_text,key='text_facil',background_color="#71B3BD",text_color="#767676",size=(15,1))]
     ]
 
     nivel_medio = [
@@ -14,7 +14,7 @@ def hacer_ventana(window_size):
         [sg.Button("Tiempo",key='-TIEMPO_M-',tooltip="Limite de tiempo máximo de juego en este nivel.  \nHaga click para modificar",size=(10,2),pad=((0,0),(0,10)))],
         [sg.Button("Puntaje",key='-PUNTOS_M-',tooltip="Puntaje por letra en este nivel.  \nHaga click para modificar",size=(10,2),pad=((0,0),(0,10)))],
         [sg.Button("Fichas",key='-FICHAS_M-',tooltip="Cantidad de fichas por letra en este nivel.  \nHaga click para modificar",size=(10,2),pad=((0,0),(0,10)))],
-        [sg.Text("*Predeterminado*",background_color="#71B3BD",text_color="#767676")]
+        [sg.Text(m_text,key='text_medio',background_color="#71B3BD",text_color="#767676",size=(15,1))]
     ]
 
     nivel_dificil = [
@@ -22,7 +22,7 @@ def hacer_ventana(window_size):
         [sg.Button("Tiempo",key='-TIEMPO_D-',tooltip="Limite de tiempo máximo de juego en este nivel.  \nHaga click para modificar",size=(10,2),pad=((0,0),(0,10)))],
         [sg.Button("Puntaje",key='-PUNTOS_D-',tooltip="Puntaje por letra en este nivel.  \nHaga click para modificar",size=(10,2),pad=((0,0),(0,10)))],
         [sg.Button("Fichas",key='-FICHAS_D-',tooltip="Cantidad de fichas por letra en este nivel.  \nHaga click para modificar",size=(10,2),pad=((0,0),(0,10)))],
-        [sg.Text("*Predeterminado*",background_color="#71B3BD",text_color="#767676")]
+        [sg.Text(d_text,key='text_dificil',background_color="#71B3BD",text_color="#767676",size=(15,1))]
     ]
 
     layout = [

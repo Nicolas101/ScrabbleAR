@@ -21,7 +21,7 @@ while True:
             if partidaGuardada.continuar_partida(): #Si quiere continuar con la partida guardada:
                 #Cargo los datos de la partida guardada
                 nivel, datos = partidaGuardada.obtener_datos()
-                variables_juego = variablesDeJuego.cargar_variables(datos)
+                variables_juego = variablesDeJuego.cargar_variables(nivel, datos)
 
             else: #Si no quiere continuar con la partida guardada:
                 #Guardo los datos y el nivel elegido para jugar

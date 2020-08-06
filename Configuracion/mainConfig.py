@@ -9,7 +9,6 @@ def mostrar_configuracion():
     import os
     import json
 
-    window_config = windowConfiguracion.hacer_ventana((1000,600))
 
     lis_ubicaciones = generar_ubicaciones()#en lis ubicaciones quedan las direcciones de los archivos facil medio y dificil
     
@@ -19,6 +18,20 @@ def mostrar_configuracion():
     data_medio = obtener_datos_archivo(lis_ubicaciones[1])
     data_dificil = obtener_datos_archivo(lis_ubicaciones[2])
 
+    #si hay una modificacion muestra la palabra modificado, si no muestra predeterminado, esto es independiente de cada nivel
+    if len(data_facil) == 1:
+        facil_text = '*Predeterminado*'
+    else:
+        facil_text = '*Modificado*'
+    if len(data_medio) == 1:
+        medio_text = '*Predeterminado*'
+    else:
+        medio_text = '*Modificado*'
+    if len(data_dificil) == 1:
+        dificil_text = '*Predeterminado*'
+    else:
+        dificil_text = '*Modificado*'
+
     #guardan la conf original o la copia si es que hay
     dic_facil_aux = copiar_diccionario(data_facil[(len(data_facil)-1)])
     dic_medio_aux = copiar_diccionario(data_medio[(len(data_medio)-1)])
@@ -27,6 +40,8 @@ def mostrar_configuracion():
     facil_modifico = False
     medio_modifico = False
     dificil_modifico = False
+
+    window_config = windowConfiguracion.hacer_ventana((1000,600),facil_text,medio_text,dificil_text)
 
     while True:
         event, values = window_config.read()
@@ -107,17 +122,23 @@ def mostrar_configuracion():
         #****************CLICK EN RESTAURAR VALORES*********************
         elif event == '-RESTAURAR_VALORES-':
             dic_facil_aux = copiar_diccionario(restaurar_valores(data_facil, lis_ubicaciones[0]))
+            window_config['text_facil'].Update('*Predeterminado*')
             dic_medio_aux = copiar_diccionario(restaurar_valores(data_medio, lis_ubicaciones[1]))
+            window_config['text_facil'].Update('*Predeterminado*')
             dic_dificil_aux = copiar_diccionario(restaurar_valores(data_dificil, lis_ubicaciones[2]))
+            window_config['text_facil'].Update('*Predeterminado*')
 
         #****************CLICK EN GUARDAR*********************
         elif event == '-GUARDAR-':
             if facil_modifico:
                 guardar_cambios(dic_facil_aux,data_facil,lis_ubicaciones[0])
+                window_config['text_facil'].Update('*Modificado*')
             if medio_modifico:
                 guardar_cambios(dic_medio_aux,data_medio,lis_ubicaciones[1])
+                window_config['text_medio'].Update('*Modificado*')
             if dificil_modifico:
                 guardar_cambios(dic_dificil_aux,data_dificil,lis_ubicaciones[2])
+                window_config['text_dificil'].Update('*Modificado*')
     
     window_config.close()
 

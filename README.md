@@ -1,6 +1,6 @@
 <img src= "https://github.com/Nicolas101/ScrabbleAR/blob/master/Data/Images/Menu/Titulo.png" align=center></img> 
 
-# README.MD
+# README
 Este es nuestro proyecto de ScrabbleAr, un juego hecho para la materia de python de la UNLP.
 
 ## Integrantes

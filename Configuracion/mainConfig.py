@@ -4,12 +4,12 @@ def mostrar_configuracion():
     -Puntos que vale cada letra
     -Cantidad de fichas por letra
     """
-    from Windows import windowConfig  
+    from Windows import windowConfiguracion  
     from Configuracion import tiempo,letras
     import os
     import json
 
-    window_config = windowConfig.hacer_ventana((1000,600))
+    window_config = windowConfiguracion.hacer_ventana((1000,600))
 
     lis_ubicaciones = generar_ubicaciones()#en lis ubicaciones quedan las direcciones de los archivos facil medio y dificil
     

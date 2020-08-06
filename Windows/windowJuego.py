@@ -1,21 +1,43 @@
-def hacer_ventana(layout_tablero, layout_fichasJ, layout_fichasM,puntos_jug,puntos_ma,palabras_usuario,palabras_maquina):
+def hacer_ventana(layout_tablero, layout_fichasJ, layout_fichasM,puntos_jug,puntos_ma,palabras_usuario,palabras_maquina,nivel,clases_validas):
     import PySimpleGUI as sg
+
+    def armar_clases(nivel, clases):
+        if nivel == "-DIFICIL-": 
+            if "JJ" in clases:
+                layout = [sg.Image(r"Data\Images\Juego\Clases-validas\clase-verbos.png",background_color="#2781D3",pad=((0,0),(0,0))),
+                    sg.Image(r"Data\Images\Juego\Clases-validas\clase-sustantivos.png",background_color="#2781D3",pad=((5,5),(0,0))),
+                    sg.Image(r"Data\Images\Juego\Clases-validas\clase-seleccionada-adjetivos.png",background_color="#2781D3",pad=((0,0),(0,0)))]
+            else:
+                layout = [sg.Image(r"Data\Images\Juego\Clases-validas\clase-verbos.png",background_color="#2781D3",pad=((0,0),(0,0))),
+                    sg.Image(r"Data\Images\Juego\Clases-validas\clase-seleccionada-sustantivos.png",background_color="#2781D3",pad=((5,5),(0,0))),
+                    sg.Image(r"Data\Images\Juego\Clases-validas\clase-adjetivos.png",background_color="#2781D3",pad=((0,0),(0,0)))]
+        elif nivel == "-MEDIO-":
+            layout = [sg.Image(r"Data\Images\Juego\Clases-validas\clase-verbos.png",background_color="#2781D3",pad=((0,0),(0,0))),
+                    sg.Image(r"Data\Images\Juego\Clases-validas\clase-seleccionada-sustantivos.png",background_color="#2781D3",pad=((5,5),(0,0))),
+                    sg.Image(r"Data\Images\Juego\Clases-validas\clase-seleccionada-adjetivos.png",background_color="#2781D3",pad=((0,0),(0,0)))]
+        else:
+            layout = [sg.Image(r"Data\Images\Juego\Clases-validas\clase-seleccionada-verbos.png",background_color="#2781D3",pad=((0,0),(0,0))),
+                    sg.Image(r"Data\Images\Juego\Clases-validas\clase-seleccionada-sustantivos.png",background_color="#2781D3",pad=((5,5),(0,0))),
+                    sg.Image(r"Data\Images\Juego\Clases-validas\clase-seleccionada-adjetivos.png",background_color="#2781D3",pad=((0,0),(0,0)))]
+
+        return [layout]
+
 
     datos_cpu = [
         [sg.T("",key="-TEXT_CPU-",size=(20,1),font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0))],
-        [sg.Combo(palabras_maquina,key="-PALABRAS_CPU-",default_value="Palabras ingresadas:",size=(25,1),readonly=True,background_color="#6AB2E5")],
+        [sg.Combo(palabras_maquina,key="-PALABRAS_CPU-",default_value="Palabras ingresadas:",size=(25,1),readonly=True)],
         [sg.T("Puntos:",font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0)),sg.T(puntos_ma,key="-PUNTOS_CPU-",size=(4,1),font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0))]
     ]
 
     datos_jugador = [
         [sg.T("",key="-TEXT_JUGADOR-",size=(20,1),font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0))],
-        [sg.Combo(palabras_usuario,key="-PALABRAS_JUGADOR-",default_value="Palabras ingresadas:",size=(25,1),readonly=True,background_color="#6AB2E5")],
+        [sg.Combo(palabras_usuario,key="-PALABRAS_JUGADOR-",default_value="Palabras ingresadas:",size=(25,1),readonly=True)],
         [sg.T("Puntos:",font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0)),sg.T(puntos_jug,key="-PUNTOS_JUGADOR-",size=(4,1),font=("Arial black",10),text_color="black",background_color="#6AB2E5",pad=(0,0))]
     ]
 
     #COLUMNA DE LA CPU
     cpu = [
-        [sg.Image(r"Data\Images\Juego\Avatar-CPU.png",background_color="#6AB2E5",pad=(5,5)),sg.Column(datos_cpu,background_color="#6AB2E5")],
+        [sg.Image(r"Data\Images\Juego\Avatar-CPU.png",background_color="#6AB2E5",pad=(5,5)),sg.Column(datos_cpu,background_color="#6AB2E5",pad=((0,0),(20,0)))],
         [sg.Column(layout_fichasM,background_color="#6AB2E5")]
     ]
 
@@ -45,14 +67,15 @@ def hacer_ventana(layout_tablero, layout_fichasJ, layout_fichasM,puntos_jug,punt
     ]
 
     barra_datos = [
-        [sg.Image(r"Data\Images\Juego\titulo-barra-datos.png",background_color="#2781D3",pad=(30,10))],
+        [sg.Image(r"Data\Images\Juego\titulo-barra-datos.png",background_color="#2781D3",pad=((30,30),(10,0)))],
+        [sg.Column(armar_clases(nivel, clases_validas),background_color="#2781D3",pad=((5,0),(0,5)))],
         [sg.Column(cpu,size=(385,175),background_color="#6AB2E5",pad=((5,0),(0,0)))],
         [sg.Column(botones,background_color="#2781D3")],
         [sg.Column(jugador,size=(385,175),background_color="#6AB2E5",pad=((5,0),(0,0)))],   
         [sg.Column(tiempo,background_color="#2781D3")]
     ]
 
-    #VENTANA COMPLETA
+    #VENTANA COMPLETA      
     layout = [
         [sg.Column(layout_tablero,background_color="#40B7C9"),
         sg.Column(barra_datos,background_color="#2781D3",size=(400,590))]

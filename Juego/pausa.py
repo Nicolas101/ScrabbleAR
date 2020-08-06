@@ -3,7 +3,7 @@ def main(nivel,variables):
     window = windowPausa.hacer_ventana()
 
     event, values = window.read()
-    if event == "-SALIR_Y_GUARDAR-":
+    if event == "-GUARDAR_Y_SALIR-":
         seguir = False
         game_over = False
         datos_partida = [True,

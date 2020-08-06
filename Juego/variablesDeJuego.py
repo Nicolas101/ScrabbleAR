@@ -33,14 +33,6 @@ def crear_variables(nivel, letras, tiempo_limite):
         variables["Confirmar_habilitado"] = False
         variables["Cambiar_habilitado"] = False
 
-    variables["Window_juego"] = windowJuego.hacer_ventana(
-        variables["Tablero"].getLayout(),
-        variables["Fichas_jugador"].getLayout(),
-        variables["Fichas_maquina"].getLayout(),
-        variables["Usuario"].getPuntaje(),
-        variables["Maquina"].getPuntaje(),
-        "","")
-
     tipos_verbos = ['VB','VBD','VBG','VBN','VBP','VBZ']
     tipos_adjetivos = ['DT','JJ','JJR','JJS','RB','RBR','RBS']
 
@@ -50,6 +42,16 @@ def crear_variables(nivel, letras, tiempo_limite):
         variables["Clases_validas"] = tipos_verbos+tipos_adjetivos
     else:
         variables["Clases_validas"] = None
+
+    variables["Window_juego"] = windowJuego.hacer_ventana(
+        variables["Tablero"].getLayout(),
+        variables["Fichas_jugador"].getLayout(),
+        variables["Fichas_maquina"].getLayout(),
+        variables["Usuario"].getPuntaje(),
+        variables["Maquina"].getPuntaje(),
+        "","",
+        nivel,
+        variables["Clases_validas"])
 
     return variables
     
@@ -87,7 +89,9 @@ def cargar_variables(datos):
         variables["Usuario"].getPuntaje(),
         variables["Maquina"].getPuntaje(),
         variables["Usuario"].getPalabras(),
-        variables["Maquina"].getPalabras()
+        variables["Maquina"].getPalabras(),
+        datos[14],
+        variables["Clases_validas"]
     )
 
     return variables

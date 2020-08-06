@@ -55,7 +55,5 @@ class Jugador():
         self._puntaje += puntaje
         self._palabras.append(palabra+" - "+str(puntaje))
 
-    def restarPuntaje(self,puntos):
-        self._puntaje -= puntos
             
         

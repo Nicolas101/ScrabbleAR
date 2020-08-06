@@ -3,12 +3,15 @@ def start_game(nivel,variables):
     Retorna si termino la partida y los datos de ella
     """
     from Juego.validarPalabra import es_valida, clasificar
-    from Juego import pausa
+    from Juego import pausa,terminarPartida
+    from Windows import windowSalirJuego
     from datetime import date
     import PySimpleGUI as sg
     
     game_over = False
     
+    window_salir = windowSalirJuego.hacer_ventana()
+
     if nivel == '-DIFICIL-':
         print('tipos de palabras validas')
         print(variables["Clases_validas"])
@@ -41,19 +44,45 @@ def start_game(nivel,variables):
                         game_over = True
                         game_over_text = "Se acabo el tiempo, fin del juego"
                         break
+                #********************************* CLICK EN LA X (CERRAR VENTANA) *********************************
+                if event is None:
+                    event_salir, values_salir = window_salir.read()
+                    if event_salir == "-GUARDAR_Y_SALIR2-":
+                        datos_partida = [True,
+                            variables["Bolsa_de_fichas"],
+                            variables["Tablero"],
+                            variables["Fichas_jugador"],
+                            variables["Fichas_maquina"],
+                            variables["Usuario"],
+                            variables["Maquina"],
+                            variables["Timer"].getSegundos(),
+                            variables["Timer"].getMinutos(),
+                            variables["Timer"].getTiempoLimite(),
+                            variables["Turno"],
+                            variables["Confirmar_habilitado"],
+                            variables["Cambiar_habilitado"],
+                            variables["Clases_validas"],
+                            nivel
+                        ] #El primer elemento si es True indica que hay una partida guardada, False en caso contrario
 
-                #********************************* CLICK EN PAUSA O EN LA X *********************************
-                if event in (sg.WIN_CLOSED,"-PAUSA-"):
+                    else:
+                        datos_partida = [False]
+
+                    window_salir.close()
+                    break 
+
+                #********************************* CLICK EN PAUSA *********************************
+                elif event == "-PAUSA-":
                     variables["Timer"].pausar()
                     output, game_over, datos_partida = pausa.main(nivel,variables)
                     if output == "-REANUDAR-":
                         variables["Timer"].reanudar()
-                    elif output in ("-SALIR_Y_GUARDAR-","-SALIR_SIN_GUARDAR-"):
+                    elif output in ("-GUARDAR_Y_SALIR-","-SALIR_SIN_GUARDAR-"):
                         break
                     elif output == "-TERMINAR_PARTIDA-":
                         game_over_text = "Fin del juego, partida finalizada"
                         continue
-
+                
                 #********************************* CLICK EN LA FILA DE FICHAS *********************************
                 elif variables["Fichas_jugador"].click(event) and variables["Fichas_jugador"].estaHabilitada():
                     if variables["Bolsa_de_fichas"].estaHabilitada(): #Si quiere cambiar fichas:
@@ -93,7 +122,7 @@ def start_game(nivel,variables):
                         if nuevas_fichas == []:
                             #fin del juego 
                             game_over = True
-                            game_over_text = "Se acabaron las fichas, juego terminado"
+                            game_over_text = "No hay mas fichas, juego terminado"
                         else:               
                             variables["Fichas_jugador"].insertarFichas(variables["Window_juego"],nuevas_fichas)
                             variables["Tablero"].reiniciarPalabra()
@@ -141,7 +170,7 @@ def start_game(nivel,variables):
                     else: #Si no se pudieron reponer todas las fichas a cambiar:
                         #Se termina el juego porque no hay fichas suficientes
                         game_over = True
-                        game_over_text = "Se acabaron las fichas, juego terminado"
+                        game_over_text = "No hay mas fichas, juego terminado"
 
                     if (variables["Usuario"].getCambiosFichas() == 0): #Si no le quedan mas cambios de ficha:
                         #Se actualiza el boton de "cambiar fichas" a "pasar turno"
@@ -210,7 +239,7 @@ def start_game(nivel,variables):
                         else:  #Si no se pudo hacer el cambio de fichas:
                             #Se termina el juego porque no hay mas fichas
                             game_over = True
-                            game_over_text = "Se acabaron las fichas, juego terminado"
+                            game_over_text = "No hay mas fichas, juego terminado"
 
                     variables["Cambiar_habilitado"] = True
                     variables["Confirmar_habilitado"]  = True
@@ -222,17 +251,22 @@ def start_game(nivel,variables):
                         game_over_text = "Se acabo el tiempo, fin del juego"    
 
         else: #Si termino el juego:
-            variables["Window_juego"].Disable()
-            variables["Usuario"].restarPuntaje(variables["Bolsa_de_fichas"].calcularPuntajeLista(variables["Fichas_jugador"].getLetras()))
-            variables["Maquina"].restarPuntaje(variables["Bolsa_de_fichas"].calcularPuntajeLista(variables["Fichas_maquina"].getLetras()))
-            if variables["Usuario"].getPuntaje()>variables["Maquina"].getPuntaje():
-                game_over_text_dos = '¡Ganaste!'
-            elif variables["Usuario"].getPuntaje()<variables["Maquina"].getPuntaje():
-                game_over_text_dos = 'Perdiste, lo siento :('
-            else:
-                game_over_text_dos = '¡Es un empate!'
-            sg.popup(game_over_text,game_over_text_dos,('Tu puntuación: '+str(variables["Usuario"].getPuntaje())),('Fichas que te quedaron: '+str(variables["Fichas_jugador"].getLetras())),('Puntos de la maquina: '+str(variables["Maquina"].getPuntaje())))
-            datos_partida = [variables["Usuario"].getPuntaje(),str(date.today()),nivel]
+
+            if variables['Turno'] == 0: 
+                #Si termino el juego en el turno del jugador y no termino de completar una palabra, devuelvo las fichas al jugador
+                fichas_devolver = variables['Tablero'].devolverFichas(variables['Window_juego'])
+                variables['Fichas_jugador'].insertarFichas(variables['Window_juego'],fichas_devolver)
+            
+            total_usuario = terminarPartida.main(variables["Maquina"].getPuntaje(),
+                variables["Bolsa_de_fichas"].calcularPuntajeLista(variables["Fichas_maquina"].getLetras()),
+                variables["Fichas_maquina"].getLetras(),
+                variables["Usuario"].getPuntaje(),
+                variables["Bolsa_de_fichas"].calcularPuntajeLista(variables["Fichas_jugador"].getLetras()),
+                variables["Fichas_jugador"].getLetras(),
+                game_over_text
+            )
+
+            datos_partida = [total_usuario,str(date.today()),nivel]
             break
 
     variables["Window_juego"].close()

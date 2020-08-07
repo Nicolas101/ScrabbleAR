@@ -1,4 +1,7 @@
 def hacer_ventana(letras_maquina, letras_usuario,text_game_over):
+    """Devuelve una ventana que muestra las letras que quedaron en los atriles al finalizar la partida
+    y da la opcion de calcular el puntaje final
+    """
     import PySimpleGUI as sg
 
     def hacer_fichas(letras):

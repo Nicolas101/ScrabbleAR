@@ -14,6 +14,8 @@ def calcular_puntaje_final(puntaje_maquina,restar_maquina,puntaje_usuario,restar
     return [ganador, total_maquina, total_usuario]
 
 def main(puntaje_maquina,restar_maquina,letras_maquina, puntaje_usuario,restar_usuario,letras_usuario,game_over_text):
+    """Muestra las ventanas de fin de juego y quien es el ganador de la partida
+    """
 
     from Windows import windowPartidaTerminada,windowJuegoFinal
     window = windowPartidaTerminada.hacer_ventana(letras_maquina,letras_usuario,game_over_text)

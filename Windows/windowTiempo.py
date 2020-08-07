@@ -1,11 +1,15 @@
-def hacer_ventanta(valor_por_defecto):
+def hacer_ventanta(valor_por_defecto,lis_values):
+    """Devuelve la ventana de 'Selecconar el tiempo que dura la partida'
+    """
     import PySimpleGUI as sg
 
-    lis_values = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
     layout = [
-        [sg.Text('Tiempo')],
-        [sg.Listbox(lis_values,default_values=[valor_por_defecto], key='Listbox',size=(5,5))],
-        [sg.Button('Ok'),sg.Button('Cancelar')]
-    ]
+        [sg.Image(r"Data\Images\Configuracion\Tiempo\titulo.png",background_color='#40B7C9',pad=((115,0),(10,10)))],
+        [sg.Image(r"Data\Images\Configuracion\Tiempo\texto.png",background_color='#40B7C9',pad=((30,0),(0,10)))],
+        [sg.Listbox(lis_values,default_values=[valor_por_defecto], key='Listbox',size=(40,9),pad=((90,0),(0,0)))],
+        [sg.Button(image_filename=r"Data\Images\Configuracion\Letras\boton-confirmar.png",key="-CONFIRMAR-",button_color=('#40B7C9','#40B7C9'),border_width=0,pad=((80,0),(20,0))),sg.Button(image_filename=r"Data\Images\Configuracion\Letras\boton-cancelar.png",key="-CANCELAR-",button_color=('#40B7C9','#40B7C9'),border_width=0,pad=((10,0),(20,0)))]
+    ] 
 
-    return sg.Window('Tiempo',layout)
+    window = sg.Window("ScrabbleAR - Tiempo",layout,size=(500,400),background_color='#40B7C9') 
+
+    return window

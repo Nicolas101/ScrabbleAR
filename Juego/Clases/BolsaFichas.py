@@ -96,6 +96,8 @@ class BolsaFichas():
 # {---------------------------------------------------------------------------------}
 
 def crear_bolsa(dic_fichas):
+    """Crea la bolsa de fichas y la devuelve
+    """
     
     bolsa_fichas = BolsaFichas(dic_fichas)
     return bolsa_fichas

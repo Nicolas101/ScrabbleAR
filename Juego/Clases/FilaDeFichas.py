@@ -207,5 +207,7 @@ class FilaFichas():
 # {---------------------------------------------------------------------------------}
 
 def crear_fichas(letras, genero):
+    """Crea una fila de fichas y la devuelve
+    """
     fichas = FilaFichas(letras,genero)
     return fichas

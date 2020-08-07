@@ -52,6 +52,9 @@ class Jugador():
             self._turnos_pasados = 0
 
     def ingresarPalabra(self,palabra,puntaje):
+        """Suma al puntaje del jugador el puntaje pasado por parámetro y 
+        agrega la palabra pasada por parámetro a la lista de palabras ingresadas por el jugador
+        """
         self._puntaje += puntaje
         self._palabras.append(palabra+" - "+str(puntaje))
 

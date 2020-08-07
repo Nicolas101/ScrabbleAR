@@ -1,4 +1,6 @@
 def hacer_ventana(imagen_titulo, total_maquina, puntaje_maquina, restar_maquina, total_usuario, puntaje_usuario, restar_usuario):
+    """Devuelve una ventana donde se muestran los puntajes finales y el ganador
+    """
     import PySimpleGUI as sg
 
     layout = [

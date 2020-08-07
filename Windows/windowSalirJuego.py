@@ -1,4 +1,6 @@
 def hacer_ventana():
+    """Devuelve una ventana que pregunta si desea guardar la partida al salir del juego
+    """
     import PySimpleGUI as sg
     layout = [
         [sg.Image(r"Data\Images\Juego\Ventana-salir\titulo.png",background_color="#40B7C9",pad=((200,0),(100,50)))],

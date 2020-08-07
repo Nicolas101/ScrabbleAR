@@ -2,7 +2,7 @@ from pattern.text.es import verbs, tag, spelling, lexicon, parse, split
 import string
 
 def clasificar(palabra,clases_validas):
-    """
+    """Verfica que la palabra pasada por parámetro pertenezca a una de las clases pasadas por parámetro
     """
     aux = parse(palabra).split()[0][0][1]
     if aux in clases_validas:
@@ -11,7 +11,8 @@ def clasificar(palabra,clases_validas):
         return False
 
 def es_valida(palabra,dificultad,clases_validas=None):
-    """
+    """Dada una palabra pasada por parametro, devuelve si esta es válida para el nivel en que se esta jugando
+    para esto debe encontrarse en uno de los diccionarios de Pattern y ser de una clase válida
     """
     if (not palabra.lower() in verbs):
         if (not palabra.lower() in spelling):

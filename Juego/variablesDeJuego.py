@@ -56,7 +56,7 @@ def crear_variables(nivel, letras, tiempo_limite):
     return variables
     
 
-def cargar_variables(nivel, datos):
+def cargar_variables(nivel,datos):
     """Carga y retorna las variables de la partida con los datos guardados anteriormente
     """
     from Juego.Clases.Timer import Timer

@@ -1,4 +1,6 @@
 def hacer_ventana():
+    """Devuelve la ventana de pausa
+    """
     import PySimpleGUI as sg
 
     layout = [

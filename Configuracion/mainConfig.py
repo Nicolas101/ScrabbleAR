@@ -9,7 +9,6 @@ def mostrar_configuracion():
     import os
     import json
 
-
     lis_ubicaciones = generar_ubicaciones()#en lis ubicaciones quedan las direcciones de los archivos facil medio y dificil
     
     #cada variable data tiene una lista que puede tener uno o dos elementos dependiendo si solo esta la config.
@@ -32,16 +31,16 @@ def mostrar_configuracion():
     else:
         dificil_text = '*Modificado*'
 
-    #guardan la conf original o la copia si es que hay
+    #guardan la configuracion original o la copia si es que hay
     dic_facil_aux = copiar_diccionario(data_facil[(len(data_facil)-1)])
     dic_medio_aux = copiar_diccionario(data_medio[(len(data_medio)-1)])
-    dic_dificil_aux = copiar_diccionario(data_dificil[(len(data_medio)-1)])
+    dic_dificil_aux = copiar_diccionario(data_dificil[(len(data_dificil)-1)])
 
     facil_modifico = False
     medio_modifico = False
     dificil_modifico = False
 
-    window_config = windowConfiguracion.hacer_ventana((1000,600),facil_text,medio_text,dificil_text)
+    window_config = windowConfiguracion.hacer_ventana(facil_text, medio_text, dificil_text)
 
     while True:
         event, values = window_config.read()
@@ -52,7 +51,7 @@ def mostrar_configuracion():
         
         #****************CLICK EN TIEMPO DE FACIL*********************
         elif event == '-TIEMPO_F-':
-            tiempo_facil = tiempo.ejecutar(dic_facil_aux['tiempo'])
+            tiempo_facil = tiempo.ejecutar(dic_facil_aux['tiempo'],'facil')
             if tiempo_facil != None:
                 dic_facil_aux['tiempo'] = tiempo_facil
                 facil_modifico = True
@@ -75,7 +74,7 @@ def mostrar_configuracion():
 
         #****************CLICK EN TIEMPO DE MEDIO*********************
         elif event == '-TIEMPO_M-':
-            tiempo_medio = tiempo.ejecutar(dic_medio_aux['tiempo'])
+            tiempo_medio = tiempo.ejecutar(dic_medio_aux['tiempo'],'medio')
             if tiempo_medio != None:
                 dic_medio_aux['tiempo'] = tiempo_medio
                 medio_modifico = True
@@ -98,7 +97,7 @@ def mostrar_configuracion():
 
         #****************CLICK EN TIEMPO DE DIFICIL*********************
         elif event == '-TIEMPO_D-':
-            tiempo_dificil = tiempo.ejecutar(dic_dificil_aux['tiempo'])
+            tiempo_dificil = tiempo.ejecutar(dic_dificil_aux['tiempo'],'dificil')
             if tiempo_dificil != None:
                 dic_dificil_aux['tiempo'] = tiempo_dificil
                 dificil_modifico = True
@@ -123,10 +122,13 @@ def mostrar_configuracion():
         elif event == '-RESTAURAR_VALORES-':
             dic_facil_aux = copiar_diccionario(restaurar_valores(data_facil, lis_ubicaciones[0]))
             window_config['text_facil'].Update('*Predeterminado*')
+            facil_modifico = False
             dic_medio_aux = copiar_diccionario(restaurar_valores(data_medio, lis_ubicaciones[1]))
-            window_config['text_facil'].Update('*Predeterminado*')
+            window_config['text_medio'].Update('*Predeterminado*')
+            medio_modifico = False
             dic_dificil_aux = copiar_diccionario(restaurar_valores(data_dificil, lis_ubicaciones[2]))
-            window_config['text_facil'].Update('*Predeterminado*')
+            window_config['text_dificil'].Update('*Predeterminado*')
+            dificil_modifico = False
 
         #****************CLICK EN GUARDAR*********************
         elif event == '-GUARDAR-':

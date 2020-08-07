@@ -24,7 +24,7 @@ def start_game(nivel,variables):
                 # ************************************************** TURNO DEL USUARIO **********************************************
                 # *******************************************************************************************************************
                 if maquina_pasa_turno:
-                    variables["Window_juego"]["-TEXT_JUGADOR-"].update("TU TURNO! - FORMA UNA PALABRA")
+                    variables["Window_juego"]["-TEXT_JUGADOR-"].update("TU TURNO!\nFORMA UNA PALABRA")
                 variables["Fichas_jugador"].habilitar()
 
                 no_event = True

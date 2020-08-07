@@ -1,4 +1,6 @@
 def ejecutar(diccionario,categoria):
+    """Muestra la ventana de seleccionar puntaje/cantidad de cada letra
+    """
     from Windows import windowLetras
 
     if categoria == 'Puntos':
@@ -10,11 +12,12 @@ def ejecutar(diccionario,categoria):
 
     event,values = window.read()
     
-    if event == 'Ok':
+    if event == '-CONFIRMAR-':
         valores = values
-    elif event in ['Cancelar',None]:
+    elif event in ['-CANCELAR-',None]:
         valores = None
     window.close()
+
     return valores
     
 

@@ -1,4 +1,9 @@
 def main(nivel,variables):
+    """Despliega la venta de pausa la cual para el tiempo de la partida y permite:
+    -Reanudar
+    -Guardar y salir
+    -Salir sin guardar
+    """
     from Windows import windowPausa
     window = windowPausa.hacer_ventana()
 

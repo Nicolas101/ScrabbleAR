@@ -1,4 +1,6 @@
 def hacer_ventana():
+    """Devuelve la ventana de seleccionar nivel
+    """
     import PySimpleGUI as sg
 
     layout = [

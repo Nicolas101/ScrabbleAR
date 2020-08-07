@@ -24,44 +24,72 @@ class Casilla():
         self._background = background
 
     def getKey(self):
+        """Devuelve la key de la casilla
+        """
         return self._key     
 
     def getLayout(self):
+        """Devuelve el layout de la casilla(para PySimpleGUI)
+        """
         return sg.Button("",image_filename=self._imagen,key=self._key,pad=(0,0),button_color=(self._background,self._background),border_width=0)
 
     def getFicha(self):
+        """Devuelve el contenido de la casilla
+        """
         return self._ficha
 
     def setFicha(self,ficha):
+        """la variable self._ficha pasa a valer el valor pasado por parámetro
+        """
         self._ficha = ficha
 
     def getImagen(self):
+        """Devuelve la imagen de la casilla
+        """
         return self._imagen
 
     def setImagen(self,imagen):
+        """La imagen de la casilla pasa a ser la pasada por parámetro
+        """
         self._imagen = imagen
 
     def ocupar(self):
+        """Pone la variable ocupada en True
+        """
         self._ocupada = True
 
     def desocupar(self):
+        """Pone la variable ocupada en False
+        """
         self._ocupada = False
 
     def estaOcupada(self):
+        """Devuelve True si la casilla esta ocupada, False si no
+        """
         return self._ocupada    
 
     def habilitar(self):
+        """Habilita la casilla
+        """
         self._deshabilitada = False
 
     def deshabilitar(self):
+        """Deshabilita la casilla
+        """
         self._deshabilitada = True
 
-    def estaDeshabilitada(self): 
+    def estaDeshabilitada(self):
+        """Devuelve True si la casilla esta deshabilitada, False si no
+        """
         return self._deshabilitada
 
     def esEspecial(self):
+        """Devuelve True si la casilla es especial, False si no
+        """
         return self._especial[0]
 
     def getEspecial(self):
+        """Devuelve el tipo de especial que es la casilla
+        """
         return self._especial[1]
 

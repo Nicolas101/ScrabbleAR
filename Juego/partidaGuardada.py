@@ -22,6 +22,8 @@ def hay_partida_guardada():
     return datos[0]
 
 def obtener_datos():
+    """Devuelve los datos de la partida guardada para poder continuarla
+    """
     import pickle
     import os
     dir_actual = os.getcwd()

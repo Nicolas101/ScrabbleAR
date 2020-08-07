@@ -19,6 +19,6 @@ El juego se inicia ejecutando el archivo Scrabblear.py
 ### Derechos de autor
 Todas las imagenes utilizadas en este juego fueron creadas por Nicolas Hermida y Martin Souto, todos los derechos reservados.
 
-## Cómo contacarnos
+## Cómo contactarnos
 * nshermida101@gmail.com
 * msouto2001@gmail.com

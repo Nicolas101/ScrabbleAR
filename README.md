@@ -1,6 +1,6 @@
 <img src= "https://github.com/Nicolas101/ScrabbleAR/blob/master/Data/Images/Menu/Titulo.png" align=center></img> 
 
-# README.MD
+# README
 Este es nuestro proyecto de ScrabbleAr, un juego hecho para la materia de python de la UNLP.
 
 ## Integrantes
@@ -18,3 +18,7 @@ El juego se inicia ejecutando el archivo Scrabblear.py
 
 ### Derechos de autor
 Todas las imagenes utilizadas en este juego fueron creadas por Nicolas Hermida y Martin Souto, todos los derechos reservados.
+
+## Cómo contacarnos
+* nshermida101@gmail.com
+* msouto2001@gmail.com

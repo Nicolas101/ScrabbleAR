@@ -1,4 +1,4 @@
-import PySimpleGUI as sg 
+import PySimpleGUI as sg
 import random
 
 # {---------------------------------------------------------------------------------}
@@ -12,7 +12,7 @@ class Casilla():
     tipo: String de la casilla/ficha\n
     deshabilitada: booleano que indica si se puede clickear o no en la casilla\n
     ocupada: booleano que indica si hay una ficha en la casilla\n
-    especial: tupla que indica si la casilla es "especial"  
+    especial: tupla que indica si la casilla es "especial"
     """
     def __init__(self, imagen, key=None,deshabilitada=False, ocupada=False, especial=(False,None), ficha=None,background=None):
         self._imagen = imagen
@@ -26,7 +26,7 @@ class Casilla():
     def getKey(self):
         """Devuelve la key de la casilla
         """
-        return self._key     
+        return self._key
 
     def getLayout(self):
         """Devuelve el layout de la casilla(para PySimpleGUI)
@@ -66,7 +66,7 @@ class Casilla():
     def estaOcupada(self):
         """Devuelve True si la casilla esta ocupada, False si no
         """
-        return self._ocupada    
+        return self._ocupada
 
     def habilitar(self):
         """Habilita la casilla
@@ -92,4 +92,3 @@ class Casilla():
         """Devuelve el tipo de especial que es la casilla
         """
         return self._especial[1]
-

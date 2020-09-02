@@ -1,4 +1,4 @@
-import PySimpleGUI as sg 
+import PySimpleGUI as sg
 import random
 from Juego.Clases.Casilla import Casilla
 
@@ -15,12 +15,12 @@ class FilaFichas():
     """
     def __init__(self, letras, fichas_cpu):
         self._letras = letras
-        self._fichas_cpu = fichas_cpu 
+        self._fichas_cpu = fichas_cpu
         self._casillas = [] # lista de objetos casilla de la fila
-        self._ficha_selected = [False,None] # [True/False,key de la ficha seleccionada]   
+        self._ficha_selected = [False,None] # [True/False,key de la ficha seleccionada]
         self._fichas_a_cambiar = [] # lista de keys de las fichas a cambiar
         self._habilitada = True
-        
+
     def getLayout(self):
         """Retorna el layout para la GUI
         """
@@ -41,17 +41,17 @@ class FilaFichas():
         if self._fichas_cpu :
             #Arma las fichas de la maquina:
             for i in range(1,len(self._letras)+1):
-                casilla = Casilla(r"Data\Images\Juego\Fichas\Ficha-simple.png",deshabilitada=True,background="#6AB2E5")
+                casilla = Casilla(r"Data/Images/Juego/Fichas/Ficha-simple.png",deshabilitada=True,background="#6AB2E5")
                 self._casillas.append(casilla)
                 lis_fichas.append(casilla.getLayout())
         else:
             #Arma las fichas del jugador:
             for i in range(1,len(self._letras)+1):
                 key = 'FICHA-'+ str(i)
-                casilla = Casilla(r"Data\Images\Juego\Fichas\letra-"+self._letras[i-1].upper()+".png",key,ocupada=True,ficha=self._letras[i-1],background="#6AB2E5")
+                casilla = Casilla(r"Data/Images/Juego/Fichas/letra-"+self._letras[i-1].upper()+".png",key,ocupada=True,ficha=self._letras[i-1],background="#6AB2E5")
                 self._casillas.append(casilla)
                 lis_fichas.append(casilla.getLayout())
-        
+
         return [lis_fichas]
 
     def click(self, event):
@@ -67,7 +67,7 @@ class FilaFichas():
 
     def habilitar(self):
         self._habilitada = True
-    
+
     def deshabilitar(self):
         self._habilitada = False
 
@@ -75,18 +75,18 @@ class FilaFichas():
         """Setea la imagen de la ficha para indicar que esta seleccionada
         """
         self._ficha_selected[0] = True
-        self._ficha_selected[1] = key 
+        self._ficha_selected[1] = key
         aux = key.split("-") #Se desarma la key para conseguir la posicion en la lista
-        self._casillas[int(aux[1])-1].setImagen(r"Data\Images\Juego\Fichas\letra-seleccionada-"+self._casillas[int(aux[1])-1].getFicha().upper()+".png")  
-        window[key].update(image_filename=self._casillas[int(aux[1])-1].getImagen())
+        self._casillas[int(aux[1])-1].setImagen(r"Data/Images/Juego/Fichas/letra-seleccionada-"+self._casillas[int(aux[1])-1].getFicha().upper()+".png")
+        window.Element(key).Update(image_filename=self._casillas[int(aux[1])-1].getImagen())
 
     def desmarcarFichaSelected(self,window):
         """Setea la imagen de la ficha para indicar que no esta selecccionada
         """
         self._ficha_selected[0] = False
         aux = self._ficha_selected[1].split("-") #Se desarma la key para conseguir la posicion en la lista
-        self._casillas[int(aux[1])-1].setImagen(r"Data\Images\Juego\Fichas\letra-"+self._casillas[int(aux[1])-1].getFicha().upper()+".png")
-        window[self._ficha_selected[1]].update(image_filename=self._casillas[int(aux[1])-1].getImagen())
+        self._casillas[int(aux[1])-1].setImagen(r"Data/Images/Juego/Fichas/letra-"+self._casillas[int(aux[1])-1].getFicha().upper()+".png")
+        window.Element(self._ficha_selected[1]).Update(image_filename=self._casillas[int(aux[1])-1].getImagen())
 
     def hayFichaSelected(self):
         """Retorna True si hay una ficha seleccionada, False en caso contrario
@@ -104,10 +104,10 @@ class FilaFichas():
         self._ficha_selected[0] = False
         aux = self._ficha_selected[1].split("-") #Se desarma la key para conseguir la posicion en la lista
         self._casillas[int(aux[1])-1].desocupar()
-        self._casillas[int(aux[1])-1].setImagen(r"Data\Images\Juego\Fichas\Ficha-simple.png")
+        self._casillas[int(aux[1])-1].setImagen(r"Data/Images/Juego/Fichas/Ficha-simple.png")
         self._casillas[int(aux[1])-1].deshabilitar()
-        self._letras.remove(self._casillas[int(aux[1])-1].getFicha())#sin esta linea no se borran las letras ya usadas 
-        window[self._ficha_selected[1]].update(image_filename=self._casillas[int(aux[1])-1].getImagen())
+        self._letras.remove(self._casillas[int(aux[1])-1].getFicha())#sin esta linea no se borran las letras ya usadas
+        window.Element(self._ficha_selected[1]).Update(image_filename=self._casillas[int(aux[1])-1].getImagen())
 
         return self._casillas[int(aux[1])-1].getFicha()
 
@@ -118,13 +118,13 @@ class FilaFichas():
         for casilla in self._casillas:
             if not casilla.estaOcupada():
                 letra = fichas.pop()
-                casilla.setImagen(r"Data\Images\Juego\Fichas\letra-"+letra.upper()+".png")
+                casilla.setImagen(r"Data/Images/Juego/Fichas/letra-"+letra.upper()+".png")
                 casilla.setFicha(letra)
                 casilla.ocupar()
                 casilla.habilitar()
                 self._letras.append(letra)
-                window[casilla.getKey()].Update(image_filename=casilla.getImagen())
-    
+                window.Element(casilla.getKey()).Update(image_filename=casilla.getImagen())
+
     def getLetras(self):
         """Retorna una lista con las letras que posee la fila actualmente
         """
@@ -137,32 +137,32 @@ class FilaFichas():
         if (key not in self._fichas_a_cambiar): #Si la key no esta agregada:
             self._fichas_a_cambiar.append(key)
             aux = key.split("-") #Se desarma la key para conseguir la posicion en la lista
-            self._casillas[int(aux[1])-1].setImagen(r"Data\Images\Juego\Fichas\letra-seleccionada-"+self._casillas[int(aux[1])-1].getFicha().upper()+".png")  
-            window[key].update(image_filename=self._casillas[int(aux[1])-1].getImagen())
+            self._casillas[int(aux[1])-1].setImagen(r"Data/Images/Juego/Fichas/letra-seleccionada-"+self._casillas[int(aux[1])-1].getFicha().upper()+".png")
+            window.Element(key).Update(image_filename=self._casillas[int(aux[1])-1].getImagen())
 
         else: #Si la key estaba agregada:
             self._fichas_a_cambiar.remove(key)
             aux = key.split("-") #Se desarma la key para conseguir la posicion en la lista
-            self._casillas[int(aux[1])-1].setImagen(r"Data\Images\Juego\Fichas\letra-"+self._casillas[int(aux[1])-1].getFicha().upper()+".png") 
-            window[key].update(image_filename=self._casillas[int(aux[1])-1].getImagen())
-    
+            self._casillas[int(aux[1])-1].setImagen(r"Data/Images/Juego/Fichas/letra-"+self._casillas[int(aux[1])-1].getFicha().upper()+".png")
+            window.Element(key).Update(image_filename=self._casillas[int(aux[1])-1].getImagen())
+
     def cambiarFichas(self, window, bolsa_fichas):
         """Cambia las fichas seleccionadas por otras, elegidas por la bolsa de fichas.\n
         Retorna True si se realizo correctamente, False en caso contrario
         """
         if (self._fichas_a_cambiar != []): #Si hay fichas seleccionadas para cambiar
             letras_viejas = []
-            
+
             #Guardo las letras viejas y desocupo las casillas a cambiar
-            for key in self._fichas_a_cambiar:  
+            for key in self._fichas_a_cambiar:
                 aux = key.split("-") #Se desarma la key para conseguir la posicion en la lista
                 letras_viejas.append(self._casillas[int(aux[1])-1].getFicha())
                 self._letras.remove(self._casillas[int(aux[1])-1].getFicha())#elimina las letras a cambiar de self._letras
-                self._casillas[int(aux[1])-1].desocupar()  
+                self._casillas[int(aux[1])-1].desocupar()
             cant_letras_a_cambiar = len(self._fichas_a_cambiar)
 
             #traigo nuevas letras de la bolsa de fichas (si no hay mas letras devuelve lista vacia)
-            lis_nuevas_letras = bolsa_fichas.letras_random(cant_letras_a_cambiar) 
+            lis_nuevas_letras = bolsa_fichas.letras_random(cant_letras_a_cambiar)
 
             if (lis_nuevas_letras == []): #Si no hay nuevas letras:
                 return False
@@ -172,15 +172,15 @@ class FilaFichas():
                 self.insertarFichas(window, lis_nuevas_letras) #inserto las nuevas en la fila de fichas
                 self._fichas_a_cambiar = []
                 return True
-        else: 
+        else:
             return True
-    
+
     def eliminarLetras(self, palabra):
         """Elimina de la variable _letras las letras del string pasado por parametro
         """
         for letra in palabra:
             self._letras.remove(letra)
-        
+
     def eliminarTodasLasLetras(self):
         """Deja la variable _letras vacia(se usa cuando la maquina tiene que cambiar letras)
         """
@@ -197,8 +197,8 @@ class FilaFichas():
         if self._fichas_a_cambiar != []: #
             for key in self._fichas_a_cambiar:
                 aux = key.split("-") #Se desarma la key para conseguir la posicion en la lista
-                self._casillas[int(aux[1])-1].setImagen(r"Data\Images\Juego\Fichas\letra-"+self._casillas[int(aux[1])-1].getFicha().upper()+".png") 
-                window[key].update(image_filename=self._casillas[int(aux[1])-1].getImagen())
+                self._casillas[int(aux[1])-1].setImagen(r"Data/Images/Juego/Fichas/letra-"+self._casillas[int(aux[1])-1].getFicha().upper()+".png")
+                window.Element(key).Update(image_filename=self._casillas[int(aux[1])-1].getImagen())
             self._fichas_a_cambiar = []
 
 

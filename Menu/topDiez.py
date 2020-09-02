@@ -5,7 +5,7 @@ def nuevo_puntaje(datos):
     import os
 
     dir_actual = os.getcwd()
-    direc = dir_actual+'\\Data\\Files\\TopDiez.json'
+    direc = dir_actual+'/Data/Files/TopDiez.json'
     archivo = open(direc,'r')
     data_arch = json.load(archivo)
     archivo.close()
@@ -34,14 +34,13 @@ def mostrar_topDiez():
     import os
 
     dir_actual = os.getcwd()
-    direc = dir_actual+'\\Data\\Files\\TopDiez.json'
+    direc = dir_actual+'/Data/Files/TopDiez.json'
     archivo = open(direc,'r')
     data_arch = json.load(archivo)
     archivo.close()
 
     window = windowTopDiez.hacer_ventana(data_arch['Facil'],data_arch['Medio'],data_arch['Dificil'])
 
-    event,values = window.read()
+    event,values = window.Read()
 
-    window.close()
-
+    window.Close()

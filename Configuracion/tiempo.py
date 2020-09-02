@@ -12,7 +12,7 @@ def ejecutar(valor_por_defecto,nivel):
     window = windowTiempo.hacer_ventanta(valor_por_defecto,lis_values)
 
     while True:
-        event,values = window.read()
+        event,values = window.Read()
 
         if event in [None,'-CANCELAR-']:
             resultado = None
@@ -22,5 +22,5 @@ def ejecutar(valor_por_defecto,nivel):
             resultado = values['Listbox'][0]
             break
 
-    window.close()
+    window.Close()
     return resultado

@@ -1,5 +1,5 @@
 def crear_variables(nivel, letras, tiempo_limite):
-    """Crea y retorna todas las variables para la partida 
+    """Crea y retorna todas las variables para la partida
     """
     from Juego.Clases.BolsaFichas import crear_bolsa
     from Juego.Clases.Tablero import crear_tablero
@@ -9,7 +9,7 @@ def crear_variables(nivel, letras, tiempo_limite):
     from Juego.Clases.Timer import Timer
     from Windows import windowJuego
     import random
-    
+
     variables = {}
 
     variables["Bolsa_de_fichas"] = crear_bolsa(letras)
@@ -43,18 +43,10 @@ def crear_variables(nivel, letras, tiempo_limite):
     else:
         variables["Clases_validas"] = None
 
-    variables["Window_juego"] = windowJuego.hacer_ventana(
-        variables["Tablero"].getLayout(),
-        variables["Fichas_jugador"].getLayout(),
-        variables["Fichas_maquina"].getLayout(),
-        variables["Usuario"].getPuntaje(),
-        variables["Maquina"].getPuntaje(),
-        "","",
-        nivel,
-        variables["Clases_validas"])
+    variables["Window_juego"] = windowJuego.hacer_ventana(variables["Tablero"].getLayout(),variables["Fichas_jugador"].getLayout(),variables["Fichas_maquina"].getLayout(),variables["Usuario"].getPuntaje(),variables["Maquina"].getPuntaje(),[""],[""],nivel,variables["Clases_validas"])
 
     return variables
-    
+
 
 def cargar_variables(nivel,datos):
     """Carga y retorna las variables de la partida con los datos guardados anteriormente
@@ -72,7 +64,7 @@ def cargar_variables(nivel,datos):
 
     variables["Usuario"] = datos[5]
     variables["Maquina"] = datos[6]
-        
+
     variables["Timer"] = Timer(datos[9],datos[7],datos[8])
 
     variables["Turno"] = datos[10]

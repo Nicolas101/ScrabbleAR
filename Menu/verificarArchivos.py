@@ -8,7 +8,7 @@ def verificar():
         """Crea el archivo facil.json
         """
         import json
-        
+
         archivo = open(ubicacion_archivo,'w')
 
         dic_fichas = {'A':{'puntuacion':1,'cantidad':11},'B':{'puntuacion':3,'cantidad':3},'C':{'puntuacion':2,'cantidad':4},
@@ -25,7 +25,7 @@ def verificar():
 
         datos = [{'letras':dic_fichas,
                 'tiempo':tiempo}]
-        
+
         json.dump(datos,archivo,indent=4)
 
         archivo.close()
@@ -34,7 +34,7 @@ def verificar():
         """Crea el archivo medio.json
         """
         import json
-        
+
         archivo = open(ubicacion_archivo,'w')
 
         dic_fichas = {'A':{'puntuacion':1,'cantidad':8},'B':{'puntuacion':3,'cantidad':5},'C':{'puntuacion':1,'cantidad':5},
@@ -51,7 +51,7 @@ def verificar():
 
         datos = [{'letras':dic_fichas,
                 'tiempo':tiempo}]
-        
+
         json.dump(datos,archivo,indent=4)
 
         archivo.close()
@@ -60,7 +60,7 @@ def verificar():
         """Crea el archivo dificil.json
         """
         import json
-        
+
         archivo = open(ubicacion_archivo,'w')
 
         dic_fichas = {'A':{'puntuacion':1,'cantidad':8},'B':{'puntuacion':3,'cantidad':4},'C':{'puntuacion':1,'cantidad':5},
@@ -77,16 +77,16 @@ def verificar():
 
         datos = [{'letras':dic_fichas,
                 'tiempo':tiempo}]
-        
+
         json.dump(datos,archivo,indent=4)
 
         archivo.close()
-    
+
     def crear_archivo_top(ubicacion_archivo):
         """Crea el archivo de top 10 puntajes
         """
         import json
-        
+
         archivo = open(ubicacion_archivo,'w')
 
         dic_data = {}
@@ -95,18 +95,18 @@ def verificar():
             dic_data[nivel] = []
             for num in range(1,11):
                 dic_data[nivel].append({'fecha':'xxxx','puntaje':0})
-        
+
         json.dump(dic_data,archivo,indent=4)
 
         archivo.close()
-    
+
     def crear_archivo_partida(ubicacion_archivo):
         """Crea el archivo de la partida guardada
         """
         import pickle
 
         archivo = open(ubicacion_archivo,'wb')
-        
+
         pickle.dump([False],archivo)
 
         archivo.close()
@@ -116,7 +116,7 @@ def verificar():
     for archivo in lis_archivos:
         #intenta leer los archivos de lis_archivos, si alguno no existe lo crea
         try:
-            ubicacion_archivo = (dir_actual+'\\Data\\Files\\'+archivo)
+            ubicacion_archivo = (dir_actual+'/Data/Files/'+archivo)
             f = open(ubicacion_archivo,'r')
             f.close()
         except FileNotFoundError:

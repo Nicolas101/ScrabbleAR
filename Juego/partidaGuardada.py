@@ -4,7 +4,7 @@ def guardar_partida(datos):
     import pickle
     import os
     dir_actual = os.getcwd()
-    ubicacion_archivo = (dir_actual+'\\Data\\Files\\'+'partidaguardada.obj')
+    ubicacion_archivo = (dir_actual+'/Data/Files/'+'partidaguardada.obj')
     f = open(ubicacion_archivo,'wb')
     pickle.dump(datos,f)
     f.close()
@@ -15,7 +15,7 @@ def hay_partida_guardada():
     import pickle
     import os
     dir_actual = os.getcwd()
-    ubicacion_archivo = (dir_actual+'\\Data\\Files\\'+'partidaguardada.obj')
+    ubicacion_archivo = (dir_actual+'/Data/Files/'+'partidaguardada.obj')
     f = open(ubicacion_archivo,'rb')
     datos = pickle.load(f)
     f.close()
@@ -27,7 +27,7 @@ def obtener_datos():
     import pickle
     import os
     dir_actual = os.getcwd()
-    ubicacion_archivo = (dir_actual+'\\Data\\Files\\'+'partidaguardada.obj')
+    ubicacion_archivo = (dir_actual+'/Data/Files/'+'partidaguardada.obj')
     f = open(ubicacion_archivo,'rb')
     datos = pickle.load(f)
     nivel = datos.pop()
@@ -41,12 +41,12 @@ def continuar_partida():
     from Windows import windowPartidaGuardada
 
     window = windowPartidaGuardada.hacer_ventana()
-    event, values = window.read()
+    event, values = window.Read()
     if event == "-SI-":
         valor = True
     else:
         valor = False
-    window.close()
+    window.Close()
 
     return valor
 
@@ -56,9 +56,7 @@ def eliminar_partida():
     import pickle
     import os
     dir_actual = os.getcwd()
-    ubicacion_archivo = (dir_actual+'\\Data\\Files\\'+'partidaguardada.obj')
+    ubicacion_archivo = (dir_actual+'/Data/Files/'+'partidaguardada.obj')
     f = open(ubicacion_archivo,'wb')
     pickle.dump([False],f)
     f.close()
-
-

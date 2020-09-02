@@ -4,13 +4,13 @@ def mostrar_configuracion():
     -Puntos que vale cada letra
     -Cantidad de fichas por letra
     """
-    from Windows import windowConfiguracion  
+    from Windows import windowConfiguracion
     from Configuracion import tiempo,letras
     import os
     import json
 
     lis_ubicaciones = generar_ubicaciones()#en lis ubicaciones quedan las direcciones de los archivos facil medio y dificil
-    
+
     #cada variable data tiene una lista que puede tener uno o dos elementos dependiendo si solo esta la config.
     #original o tambien hay una modificada
     data_facil = obtener_datos_archivo(lis_ubicaciones[0])
@@ -43,12 +43,12 @@ def mostrar_configuracion():
     window_config = windowConfiguracion.hacer_ventana(facil_text, medio_text, dificil_text)
 
     while True:
-        event, values = window_config.read()
+        event, values = window_config.Read()
 
         #****************CLICK EN VOLVER*********************
         if event in (None,"-BACK-"):
             break
-        
+
         #****************CLICK EN TIEMPO DE FACIL*********************
         elif event == '-TIEMPO_F-':
             tiempo_facil = tiempo.ejecutar(dic_facil_aux['tiempo'],'facil')
@@ -63,7 +63,7 @@ def mostrar_configuracion():
                 facil_modifico = True
                 for letra in valores:
                     dic_facil_aux['letras'][letra]['puntuacion'] = valores[letra][0]
-        
+
         #****************CLICK EN FICHAS DE FACIL*********************
         elif event == '-FICHAS_F-':
             valores = letras.ejecutar(dict(dic_facil_aux['letras']),'Cantidad de Fichas')
@@ -78,7 +78,7 @@ def mostrar_configuracion():
             if tiempo_medio != None:
                 dic_medio_aux['tiempo'] = tiempo_medio
                 medio_modifico = True
-        
+
         #****************CLICK EN PUNTOS DE MEDIO*********************
         elif event == '-PUNTOS_M-':
             valores = letras.ejecutar(dict(dic_medio_aux['letras']),'Puntos')
@@ -86,7 +86,7 @@ def mostrar_configuracion():
                 medio_modifico = True
                 for letra in valores:
                     dic_medio_aux['letras'][letra]['puntuacion'] = valores[letra][0]
-        
+
         #****************CLICK EN FICHAS DE MEDIO*********************
         elif event == '-FICHAS_M-':
             valores = letras.ejecutar(dict(dic_medio_aux['letras']),'Cantidad de Fichas')
@@ -101,7 +101,7 @@ def mostrar_configuracion():
             if tiempo_dificil != None:
                 dic_dificil_aux['tiempo'] = tiempo_dificil
                 dificil_modifico = True
-        
+
         #****************CLICK EN PUNTOS DE DIFICIL*********************
         elif event == '-PUNTOS_D-':
             valores = letras.ejecutar(dict(dic_dificil_aux['letras']),'Puntos')
@@ -109,7 +109,7 @@ def mostrar_configuracion():
                 dificil_modifico = True
                 for letra in valores:
                     dic_dificil_aux['letras'][letra]['puntuacion'] = valores[letra][0]
-        
+
         #****************CLICK EN FICHAS DE DIFICIL*********************
         elif event == '-FICHAS_D-':
             valores = letras.ejecutar(dict(dic_dificil_aux['letras']),'Cantidad de Fichas')
@@ -121,28 +121,28 @@ def mostrar_configuracion():
         #****************CLICK EN RESTAURAR VALORES*********************
         elif event == '-RESTAURAR_VALORES-':
             dic_facil_aux = copiar_diccionario(restaurar_valores(data_facil, lis_ubicaciones[0]))
-            window_config['text_facil'].Update('*Predeterminado*')
+            window_config.Element('text_facil').Update('*Predeterminado*')
             facil_modifico = False
             dic_medio_aux = copiar_diccionario(restaurar_valores(data_medio, lis_ubicaciones[1]))
-            window_config['text_medio'].Update('*Predeterminado*')
+            window_config.Element('text_medio').Update('*Predeterminado*')
             medio_modifico = False
             dic_dificil_aux = copiar_diccionario(restaurar_valores(data_dificil, lis_ubicaciones[2]))
-            window_config['text_dificil'].Update('*Predeterminado*')
+            window_config.Element('text_dificil').Update('*Predeterminado*')
             dificil_modifico = False
 
         #****************CLICK EN GUARDAR*********************
         elif event == '-GUARDAR-':
             if facil_modifico:
                 guardar_cambios(dic_facil_aux,data_facil,lis_ubicaciones[0])
-                window_config['text_facil'].Update('*Modificado*')
+                window_config.Element('text_facil').Update('*Modificado*')
             if medio_modifico:
                 guardar_cambios(dic_medio_aux,data_medio,lis_ubicaciones[1])
-                window_config['text_medio'].Update('*Modificado*')
+                window_config.Element('text_medio').Update('*Modificado*')
             if dificil_modifico:
                 guardar_cambios(dic_dificil_aux,data_dificil,lis_ubicaciones[2])
-                window_config['text_dificil'].Update('*Modificado*')
-    
-    window_config.close()
+                window_config.Element('text_dificil').Update('*Modificado*')
+
+    window_config.Close()
 
 def restaurar_valores(data, ubicacion):
     """borra las modificaciones si es que hay y devuelve la configuracion original
@@ -175,9 +175,9 @@ def generar_ubicaciones():
     lis_archivos = ['Facil.json','Medio.json','Dificil.json']
     dir_actual = os.getcwd()
     for arch in lis_archivos:
-        direc = dir_actual+'\\Data\\Files\\'+arch
+        direc = dir_actual+'/Data/Files/'+arch
         lis_ubicaciones.append(direc)
-    
+
     return lis_ubicaciones
 
 def obtener_datos_archivo(ubicacion):
@@ -199,4 +199,4 @@ def copiar_diccionario(dic_viejo):
     return dic_nuevo
 
 if __name__ == "__main__":
-    mostrar_configuracion()   
+    mostrar_configuracion()

@@ -10,17 +10,12 @@ def ejecutar(diccionario,categoria):
 
     window = windowLetras.hacer_ventana(diccionario,categoria,clave)
 
-    event,values = window.read()
-    
+    event,values = window.Read()
+
     if event == '-CONFIRMAR-':
         valores = values
     elif event in ['-CANCELAR-',None]:
         valores = None
-    window.close()
+    window.Close()
 
     return valores
-    
-
-
-
-

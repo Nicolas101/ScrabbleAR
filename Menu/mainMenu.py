@@ -14,12 +14,12 @@ def mostrar_menu():
     window_menu = windowMenu.hacer_ventana()
 
     while True:
-        event,values = window_menu.read()
-        
+        event,values = window_menu.Read()
+
         #********************************* CERRAR LA VENTANA *********************************
         if event in (None,"-SALIR-"):
             break
-        
+
         #********************************* CLICK EN JUGAR *********************************
         elif event == "-JUGAR-":
             if partidaGuardada.hay_partida_guardada(): #Si hay una partida guardada:
@@ -31,11 +31,11 @@ def mostrar_menu():
 
                 else: #Si no quiere continuar con la partida guardada:
                     #Guardo los datos y el nivel elegido para jugar
-                    nivel, datos = seleccionarNivel.seleccionar_nivel() 
+                    nivel, datos = seleccionarNivel.seleccionar_nivel()
                     if nivel != None: variables_juego = variablesDeJuego.crear_variables(nivel,datos['letras'],datos['tiempo'])
 
-                partidaGuardada.eliminar_partida()    
-            
+                partidaGuardada.eliminar_partida()
+
             else: #Si no hay una partida guardada:
                 nivel, datos = seleccionarNivel.seleccionar_nivel() #Guardo los datos y el nivel elegido para jugar
                 if nivel != None: variables_juego = variablesDeJuego.crear_variables(nivel,datos['letras'],datos['tiempo'])
@@ -53,14 +53,14 @@ def mostrar_menu():
 
             window_menu.UnHide()
 
-        
+
         #********************************* CLICK EN TOP 10 *********************************
         elif event == '-TOP10-':
             window_menu.Hide()
             topDiez.mostrar_topDiez()
             window_menu.UnHide()
 
-        
+
         #********************************* CLICK EN COMO JUGAR *********************************
         elif event == '-COMO_JUGAR-':
             window_menu.Hide()
@@ -73,4 +73,4 @@ def mostrar_menu():
             mainConfig.mostrar_configuracion()
             window_menu.UnHide()
 
-    window_menu.close()
+    window_menu.Close()

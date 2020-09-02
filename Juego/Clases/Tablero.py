@@ -1,4 +1,4 @@
-import PySimpleGUI as sg 
+import PySimpleGUI as sg
 import random
 from Juego.Clases.Casilla import Casilla
 
@@ -14,14 +14,14 @@ class Tablero:
     inicio: es una tupla que contiene la key de la casilla de inicio del juego y una letra para esa casilla (key,letra).\n
     """
     def __init__(self, tamaño, tipo, casilas_especiales=None, inicio=(None,None)):
-        self._tamaño = tamaño  
+        self._tamaño = tamaño
         self._tipo = tipo
-        self._casillas_especiales = casilas_especiales 
-        self._inicio = inicio 
+        self._casillas_especiales = casilas_especiales
+        self._inicio = inicio
         self._casillas = [] # matriz que contiene todos los objetos "casilla" del tablero
         self._palabra = [inicio[0]] # lista de keys de las fichas que estan formando la palabra
         self._habilitado = False
-    
+
     def getLayout(self):
         """Crea un layout para PySimpleGUI y lo retorna
         """
@@ -54,7 +54,7 @@ class Tablero:
     def _armar(self):
         """Retorna una lista para PySimpleGUI que contiene una lista(matriz) de objetos Casilla
         """
-        layout = [] 
+        layout = []
         for i in range(1, self._tamaño + 1):
             fila_layout = []
             fila_casillas = []
@@ -66,19 +66,19 @@ class Tablero:
                 for clave in self._casillas_especiales:
                     if key in self._casillas_especiales[clave]:
                         especial = True
-                        casilla = Casilla(r"Data\Images\Juego\Tablero"+self._tipo+r"\casilla-especial"+clave+".png",key,especial=(True,clave),background="#40B7C9")
+                        casilla = Casilla(r"Data/Images/Juego/Tablero"+self._tipo+r"/casilla-especial"+clave+".png",key,especial=(True,clave),background="#40B7C9")
 
                 if not especial:
                     if key == self._inicio[0]:
                         #Creación de la casilla de inicio:
-                        casilla = Casilla(r"Data\Images\Juego\Tablero"+self._tipo+r"\letra-"+self._inicio[1]+".png",key,deshabilitada=True,ocupada=True,ficha=self._inicio[1],background="#40B7C9")
+                        casilla = Casilla(r"Data/Images/Juego/Tablero"+self._tipo+r"/letra-"+self._inicio[1]+".png",key,deshabilitada=True,ocupada=True,ficha=self._inicio[1],background="#40B7C9")
                     else:
                         #Creacion de una casilla vacia:
-                        casilla = Casilla(r"Data\Images\Juego\Tablero"+self._tipo+r"\casilla-vacia.png",key,background="#40B7C9")
+                        casilla = Casilla(r"Data/Images/Juego/Tablero"+self._tipo+r"/casilla-vacia.png",key,background="#40B7C9")
 
                 fila_casillas.append(casilla)
                 fila_layout.append(casilla.getLayout())
-            self._casillas.append(fila_casillas)     
+            self._casillas.append(fila_casillas)
             layout.append(fila_layout)
 
         return layout
@@ -90,7 +90,7 @@ class Tablero:
             for casilla in fila:
                 if event == casilla.getKey() and not casilla.estaDeshabilitada():
                     return True
-        return False        
+        return False
 
     def estaHabilitado(self):
         return self._habilitado
@@ -108,9 +108,9 @@ class Tablero:
         aux = key.split("-")
         self._casillas[int(aux[0])-1][int(aux[1])-1].ocupar()
         self._casillas[int(aux[0])-1][int(aux[1])-1].deshabilitar()
-        self._casillas[int(aux[0])-1][int(aux[1])-1].setImagen(r"Data\Images\Juego\Tablero"+self._tipo+r"\letra-"+letra+".png")
+        self._casillas[int(aux[0])-1][int(aux[1])-1].setImagen(r"Data/Images/Juego/Tablero"+self._tipo+r"/letra-"+letra+".png")
         self._casillas[int(aux[0])-1][int(aux[1])-1].setFicha(letra)
-        window[key].update(image_filename=self._casillas[int(aux[0])-1][int(aux[1])-1].getImagen())
+        window.Element(key).Update(image_filename=self._casillas[int(aux[0])-1][int(aux[1])-1].getImagen())
 
     def reiniciarPalabra(self):
         """Setea la palabra a vacío
@@ -134,16 +134,16 @@ class Tablero:
 
             if key != self._inicio[0]: #Si no es la ficha de inicio:
                 aux = key.split('-')
-                letras_devolver.append(self._casillas[int(aux[0])-1][int(aux[1])-1].getFicha()) 
+                letras_devolver.append(self._casillas[int(aux[0])-1][int(aux[1])-1].getFicha())
                 self._casillas[int(aux[0])-1][int(aux[1])-1].desocupar()
                 self._casillas[int(aux[0])-1][int(aux[1])-1].habilitar()
-                         
+
                 #Actualizo el contenido de la casilla:
                 if self._casillas[int(aux[0])-1][int(aux[1])-1].esEspecial():
-                    self._casillas[int(aux[0])-1][int(aux[1])-1].setImagen(r"Data\Images\Juego\Tablero"+self._tipo+r"\casilla-especial"+self._casillas[int(aux[0])-1][int(aux[1])-1].getEspecial()+".png")  
+                    self._casillas[int(aux[0])-1][int(aux[1])-1].setImagen(r"Data/Images/Juego/Tablero"+self._tipo+r"/casilla-especial"+self._casillas[int(aux[0])-1][int(aux[1])-1].getEspecial()+".png")
                 else:
-                    self._casillas[int(aux[0])-1][int(aux[1])-1].setImagen(r"Data\Images\Juego\Tablero"+self._tipo+r"\casilla-vacia.png")
-                window[key].Update(image_filename=self._casillas[int(aux[0])-1][int(aux[1])-1].getImagen())
+                    self._casillas[int(aux[0])-1][int(aux[1])-1].setImagen(r"Data/Images/Juego/Tablero"+self._tipo+r"/casilla-vacia.png")
+                window.Element(key).Update(image_filename=self._casillas[int(aux[0])-1][int(aux[1])-1].getImagen())
 
         self.reiniciarPalabraInicio()
         return letras_devolver
@@ -167,12 +167,12 @@ class Tablero:
             horizontal = True
             vertical = True
             for e in lis_ord:
-                if(e[0] != a_comparar1)or(e[1] != a_comparar2): 
+                if(e[0] != a_comparar1)or(e[1] != a_comparar2):
                     horizontal = False
                 a_comparar2 += 1
             if (not horizontal):
                 lis_ord = sorted(lis_aux, key=lambda valor: valor[0]) # ordena de menor a mayor las keys segun la fila
-                a_comparar1 = lis_ord[0][1] 
+                a_comparar1 = lis_ord[0][1]
                 a_comparar2 = lis_ord[0][0] # guardo el num de fila mas chico
                 for e in lis_ord:
                     if(e[1] != a_comparar1)or(e[0] != a_comparar2):
@@ -188,7 +188,7 @@ class Tablero:
                 return ['xxxxxx',con_inicio]
         else:
             return ['xxxxxx',con_inicio]
-        
+
     def ordenarPalabra(self, lis_keys_ordenada):
         """Ordena los elementos de la palabra en su orden correcto
         """
@@ -218,15 +218,15 @@ def crear_tablero(bolsa_fichas):
     casillas_especiales1 = {
     "x2":("2-6","2-10","6-2","6-14","7-7","7-9","9-7","9-9","10-2","10-14","14-6","14-10"),
     "x3":("1-4","1-12","3-7","3-9","4-1","4-8","4-15","7-3","7-13","8-4","8-12","9-3","9-13","12-1","12-15","12-8","13-7","13-9","15-4","15-12"),
-    "-3":("1-1","1-8","1-15","8-1","8-15","15-1","15-8","15-15"), 
-    "-2":("2-2","2-14","3-3","3-13","13-3","13-13","14-2","14-14"), 
-    "-1":("4-4","4-12","5-5","5-11","6-6","6-10","10-6","10-10","11-5","11-11","12-4","12-12"), 
+    "-3":("1-1","1-8","1-15","8-1","8-15","15-1","15-8","15-15"),
+    "-2":("2-2","2-14","3-3","3-13","13-3","13-13","14-2","14-14"),
+    "-1":("4-4","4-12","5-5","5-11","6-6","6-10","10-6","10-10","11-5","11-11","12-4","12-12"),
     }
     casillas_especiales2 = {
-        "x2":('2-5','2-12','4-10','5-2','8-8','8-12','8-18','10-3','10-17','12-2','12-8','12-12','15-18','16-10','18-8','18-15'), 
-        "x3":('1-17','3-19','7-10','13-10','17-1','19-3'), 
-        "-3":('2-15','5-18','8-4','8-16','12-4','12-16','15-2','18-5'), 
-        "-2":('1-3','3-1','5-7','5-13','15-7','15-13','17-19','19-17'), 
+        "x2":('2-5','2-12','4-10','5-2','8-8','8-12','8-18','10-3','10-17','12-2','12-8','12-12','15-18','16-10','18-8','18-15'),
+        "x3":('1-17','3-19','7-10','13-10','17-1','19-3'),
+        "-3":('2-15','5-18','8-4','8-16','12-4','12-16','15-2','18-5'),
+        "-2":('1-3','3-1','5-7','5-13','15-7','15-13','17-19','19-17'),
         "-1":('2-8','8-2','10-7','10-13','12-18','18-12'),
     }
     casillas_especiales3 = {
@@ -250,6 +250,3 @@ def crear_tablero(bolsa_fichas):
         tablero = Tablero(tamaño,str(num_tablero),casillas_especiales3,inicio=("11-11",bolsa_fichas.letras_random(1)[0]))
 
     return tablero
-
-
-

@@ -5,9 +5,10 @@ def main(nivel,variables):
     -Salir sin guardar
     """
     from Windows import windowPausa
+    import PySimpleGUI as sg
     window = windowPausa.hacer_ventana()
 
-    event, values = window.read()
+    event, values = window.Read()
     if event == "-GUARDAR_Y_SALIR-":
         seguir = False
         game_over = False
@@ -27,6 +28,7 @@ def main(nivel,variables):
             variables["Clases_validas"],
             nivel
         ] #El primer elemento si es True indica que hay una partida guardada, False en caso contrario
+        sg.Popup('Partida guardada correctamente!')
 
     elif event == "-SALIR_SIN_GUARDAR-":
         game_over = False
@@ -35,11 +37,10 @@ def main(nivel,variables):
     elif event == "-REANUDAR-":
         datos_partida = None
         game_over = False
-    
+
     elif event == "-TERMINAR_PARTIDA-":
         game_over = True
         datos_partida = None
 
-    window.close()
+    window.Close()
     return [event, game_over, datos_partida]
-

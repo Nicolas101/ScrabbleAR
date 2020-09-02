@@ -5,6 +5,6 @@ def main():
 
     window = windowComoJugar.hacer_ventana()
 
-    event,values =window.read()
+    event,values =window.Read()
 
-    window.close()
+    window.Close()

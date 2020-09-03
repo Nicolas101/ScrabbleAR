@@ -9,7 +9,9 @@ Este es nuestro proyecto de ScrabbleAr, un juego hecho para la materia de python
 
 ## Requisitos previos
 Para poder ejecutar exitosamente el juego, se debe tener: 
+Lenguaje:
 * Python 3.6
+Módulos:
 * PySimpleGUI 3.25
 * Pattern 2.6
 

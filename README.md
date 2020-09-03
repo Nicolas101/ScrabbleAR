@@ -20,7 +20,7 @@ El juego se inicia ejecutando el archivo Scrabblear.py
 Todas las imagenes utilizadas en este juego fueron creadas por Nicolas Hermida y Martin Souto, todos los derechos reservados.
 
 ## Informe del proyecto
-Para ver el informe haz click <a src="https://github.com/Nicolas101/ScrabbleAR/blob/master/Informe.pdf">aqui</a>
+Para ver el informe haz click <a href="https://github.com/Nicolas101/ScrabbleAR/blob/master/Informe.pdf">aqui</a>
 
 ## Cómo contactarnos
 * Nicolás: nshermida101@gmail.com
